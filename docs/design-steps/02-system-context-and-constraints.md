@@ -18,6 +18,8 @@ We will not track statistics between games, only statistics **within a single ga
 
 **Game results** will not be persisted, and statistics will only be displayed at the end of the game. The game will not include a timer, and users can exit by entering a specific character. The game will automatically end when no more valid moves are possible.
 
+<br />
+
 ## **Main Subsystems**
 
 ### <ins>1. Grid</ins>
@@ -69,7 +71,7 @@ The **Bonuses subsystem** defines and executes bonus rules.
 - **Event-Based Approach**:
     - Events and their contexts are evaluated to determine whether a bonus action should be applied.
 
-
+<br />
 
 ## **Domain**
 
@@ -84,7 +86,7 @@ The **Bonuses subsystem** defines and executes bonus rules.
 ### <ins>3. Score</ins>
 - Represents the **user’s current score**, which increases when combinations or bonuses occur.
 
-
+<br />
 
 ## **Functionality**
 
@@ -103,6 +105,7 @@ The **Bonuses subsystem** defines and executes bonus rules.
 4. **Game Progression**:
     - The game continues until no valid combinations remain on the board.
 
+<br />
 
 ## **Libraries**
 
