@@ -1,8 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThreeInARow.UI", "src\ThreeInARow.UI\ThreeInARow.UI.csproj", "{D7982D12-3F42-42E3-AA36-ED61BD411A7F}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThreeInARow.Board", "src\ThreeInARow.Board\ThreeInARow.Board.csproj", "{7F955B77-B932-4DDA-9B90-7758187FEA90}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThreeInARow.Core", "src\ThreeInARow.Core\ThreeInARow.Core.csproj", "{7F955B77-B932-4DDA-9B90-7758187FEA90}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -10,10 +8,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{D7982D12-3F42-42E3-AA36-ED61BD411A7F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D7982D12-3F42-42E3-AA36-ED61BD411A7F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D7982D12-3F42-42E3-AA36-ED61BD411A7F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D7982D12-3F42-42E3-AA36-ED61BD411A7F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{7F955B77-B932-4DDA-9B90-7758187FEA90}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{7F955B77-B932-4DDA-9B90-7758187FEA90}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7F955B77-B932-4DDA-9B90-7758187FEA90}.Release|Any CPU.ActiveCfg = Release|Any CPU

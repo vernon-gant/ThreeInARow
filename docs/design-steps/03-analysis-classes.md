@@ -45,3 +45,30 @@ Handles notifications related to matches and triggers relevant bonus actions.
 ### FiftyMovesHandler
 Triggers a special bonus by refreshing the board after 50 moves.
 
+
+StableBoard
+
+Represents a board where all elements are stable, and no empty cells exist.
+Operations:
+HasPotentialMatches
+Swap
+ClearOfType
+Matches
+ClearMatches
+ToFillableBoard
+FillableBoard
+
+Responsible for filling empty cells in a board, conceptually adding new elements.
+Operations:
+WithOneNew – Add exactly one new element.
+WithRandom – Fill empty cells with random new elements.
+WithZeroNew – No new elements are added.
+This allows incremental control of how new elements enter the board.
+FallingColumnsBoard
+
+Represents a board with falling elements. Focuses on incremental shifting of elements and dropping new ones as needed.
+Operations:
+ShiftColumns – Shift all columns downward to fill empty cells.
+ShiftWithImmediateNew – Shift columns while immediately adding new elements at the top.
+FillNextEmpty – Add a new element only to the next free position.
+DropNewToNextFree – Drop new elements to the next free positions in a falling manner.

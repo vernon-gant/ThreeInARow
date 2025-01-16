@@ -1,47 +1,45 @@
 ﻿# **Domain description**
 
-The game "Three-in-a-Row" revolves around a player interacting with an 8x8 board filled with 5 types of elements. 
-Player swaps adjacent cells to create matches (3 or more identical elements in a row or column). 
-Valid moves result in matches being destroyed, followed by cells above falling, and new elements spawning to fill the empty spaces. 
-The game tracks scores, bonuses, and statistics, ensuring a balance between randomness and playability.
+Our goal is to create a game where the player has to match emojis on a grid. The game will have a score system that rewards the player for matching emojis. The player can swap emojis to create matches and the game will automatically add new emojis to the board. The game ends when there are no more possible matches.
+
+We will operate with element ids on the board layout as it allows us to add behavior to the elements. For example, we can add a bomb element that explodes when matched, destroying nearby elements.
 
 ---
 
 ## **Abstract Data Types (ADTs)**
 
-### **1. Board**
-- **Purpose**: Represents the 8x8 grid, managing its structure and operations.
+### **1. BoardLayout**
+- **Purpose**: Represents the grid and is only responsible for the layout of the board. It does not contain any information about the contents of the cells.
 - **Responsibilities**:
-    - Maintain grid state (e.g., cell contents).
-    - Enable cell swaps and clearings.
-    - Abstract querying operations for other modules.
+    - Swap cells and rollback if no match is found.
+    - Shift columns and add new cells to the board.
+    - Build view to allow other components to access the grid.
 
-### **2. Combination Finder**
-- **Purpose**: Detects and evaluates matching patterns on the board.
+### **2. Match**
+- **Purpose**: Represents a valid match of emojis on the board.
 - **Responsibilities**:
-    - Identify valid combinations (e.g., rows or columns).
-    - Validate moves for potential matches.
-    - Analyze grid state for continuity of gameplay.
+    - Store the cells that form the match.
+    - Merge matches if they share cells.
 
-### **3. Score Tracker**
-- **Purpose**: Manages the scoring system.
+### **3. MatchingStrategy**
+- **Purpose**: Defines the rules for matching patterns.
 - **Responsibilities**:
-    - Calculate points for matches and bonuses.
-    - Track the player’s current score.
+    - Find matches like vertical, horizontal, and L-shape.
+    - Return the matches found on the board.
 
-### **4. Bonus**
-- **Purpose**: Represents a specific bonus triggered by patterns or moves.
+### **4. ScoreTracker**
+- **Purpose**: Keeps track of the player's score.
 - **Responsibilities**:
-    - Encapsulate bonus activation rules.
-    - Define the effect on the board (e.g., clear rows or columns).
+    - Update score based on matches.
+    - Provide score information to the user interface.
 
-### **5. Bonus Manager**
-- **Purpose**: Tracks and applies bonuses during gameplay.
+### **5. EmojiRegistry**
+- **Purpose**: Manages the emoji assets used in the game.
 - **Responsibilities**:
-    - Monitor game events to trigger bonuses.
-    - Apply active bonuses and manage their lifecycle.
+    - Register game emojis.
+    - Store which element is mapped to which emoji.
 
-### **6. Statistics Recorder**
-- **Purpose**: Tracks game metrics and events.
+### **6. ElementGenerator**
+- **Purpose**: Generates random elements for the board.
 - **Responsibilities**:
-    - Log moves, bonuses, and scores.
+    - Generate random elements for the board.
