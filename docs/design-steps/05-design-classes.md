@@ -1,9 +1,13 @@
-﻿### Mediator + Observer
+﻿### MatchingStrategy
 
-The MediatrR .NET library provides a very convenient way to decouple the system components and also to implement the observer pattern. After validating
-the user move we will emit events to notify other components. Thus the producers and consumers of the events are decoupled.
+Implements strategy pattern to define the strategy for matching elements on the board. It is responsible for detecting matches and bonuses. As an example we may have a vertical matching strategy and a horizontal matching strategy.
+We can also have a strategy that detects matches of a specific length, or a strategy that detects matches of a specific shape.
 
-### Chain of Responsibility
+### Mediator
 
-The concrete flow of the game can be implemented usng the Chain of Responsibility pattern. The game flow is a sequence of steps that are executed in a specific order.
-The only challenge is to decide how to pass the return value of the previous step to the next step. This can be done by using a context object that will be passed to each step.
+Is delivered by the MediatR library. It is used to implement the Mediator pattern for decoupling components.
+
+### Observer pattern
+
+Is not represented by a single class rather we use the same mediatr library for sending events and notifications. The observer pattern is used to notify other components about events that have occurred.
+For example, when a match is detected, we can notify the score tracker to update the score.
