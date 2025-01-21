@@ -18,70 +18,44 @@ We will not track statistics between games, only statistics **within a single ga
 
 **Game results** will not be persisted, and statistics will only be displayed at the end of the game. The game will not include a timer, and users can exit by entering a specific character. The game will automatically end when no more valid moves are possible.
 
-<br />
-
 ## **Main Subsystems**
 
-### <ins>1. Grid</ins>
+### <ins>1. Board</ins>
 
-The **Grid subsystem** handles all operations related to the game grid and its elements.
-
-- **Elements**:
-    - Elements have a **visual representation** in standard format (e.g., "A") and in a modified format (e.g., strike-through or empty) when part of a match and removed from the grid.
-
-- **Layers of Abstraction**:
-    1. **Modifiable Grid**:
-        - Offers operations like `Swap`, `DeleteRow`, and `DeleteColumn`.
-    2. **Grid Snapshot**:
-        - Provides APIs for examining elements in their **neighborhood context**, enabling decoupled investigation of possible combinations or valid moves.
-
-- **Element Generator**:
-    - Responsible for generating new elements to fill the grid when combinations are removed.
+The **Board subsystem** handles all operations related to the board layout. Position and Move are also included in this subsystem. Mechanism for adding new elements to the board is also included in this subsystem.
+But no the generation, just the addition of new elements to the board.
 
 
-### <ins>2. Combination</ins>
+### <ins>2. Match</ins>
 
-The **Combination subsystem** inspects the **Grid Snapshot** to detect combinations.
-
-- **Responsibilities**:
-    - Implements the logic for detecting combinations (e.g., horizontal and vertical matches only).
-    - Validates user moves by analyzing whether they produce a valid combination.
-    - Evaluates the element context to determine if moves are valid.
+The **Match subsystem** is responsible for detecting and managing matches of elements. Detects whether we need to merge a match or not.
+Also delivers whether there are possible moves left on the board.
 
 
 ### <ins>3. Statistics</ins>
 
-The **Statistics subsystem** records and manages gameplay statistics.
-
-- **Event-Based Approach**:
-    - Notifications and their respective consumers are initialized at the start of a new game, updated during gameplay, and disposed of at the end.
-
-- **Responsibilities**:
-    - Records game events (e.g., moves, combinations, bonuses).
-    - Does not handle computations related to bonuses or other gameplay logic—its sole focus is tracking and logging events.
+The **Statistics subsystem** records and manages gameplay statistics. Uses an event based approach to track and log events. Is not responsible for handling computations related to bonuses or other gameplay logic.
+Mainly uses event based approach to track and log events.
 
 
-### <ins>4. Bonuses</ins>
+### <ins>4. Score</ins>
 
-The **Bonuses subsystem** defines and executes bonus rules.
+The **Score subsystem** defines and executes scoring rules. For example that we get 10 points for each match of 3 elements.
 
-- **Examples**:
-    - Bonuses triggered by matching 5 or more elements.
-
-- **Event-Based Approach**:
-    - Events and their contexts are evaluated to determine whether a bonus action should be applied.
+- 10 points for each match of 3 elements.
+- Bonuses triggered by matching 5 or more elements.
 
 <br />
 
 ## **Domain**
 
-### <ins>1. Grid</ins>
+### <ins>1. Board</ins>
 - Represents the **matrix** where users can swap elements.
 
-### <ins>2. Combination</ins>
+### <ins>2. Match</ins>
 - A **horizontal or vertical sequence** of 3 or more matching elements on the board. These combinations emerge:
-    - After filling the board with new elements.
-    - As a result of a user swap.
+- After filling the board with new elements.
+- As a result of a user swap.
 
 ### <ins>3. Score</ins>
 - Represents the **user’s current score**, which increases when combinations or bonuses occur.
@@ -91,16 +65,14 @@ The **Bonuses subsystem** defines and executes bonus rules.
 ## **Functionality**
 
 1. **Start a New Game**:
-    - The user can swap elements on the grid to form combinations.
+    - Users can start a new game by entering a specific command.
 
 2. **Swapping Elements**:
     - Swaps are performed based on user input (e.g., entering `1 1` and `2 2` to swap elements at these coordinates).
     - Only **horizontal and vertical swaps of adjacent elements** are allowed.
 
 3. **Scoring**:
-    - The score increases when:
-        - A combination occurs.
-        - A bonus condition is triggered.
+    - The score increases when a match is detected or a bonus is triggered.
 
 4. **Game Progression**:
     - The game continues until no valid combinations remain on the board.

@@ -1,45 +1,40 @@
 ﻿# **Domain description**
 
-Our goal is to create a game where the player has to match emojis on a grid. The game will have a score system that rewards the player for matching emojis. The player can swap emojis to create matches and the game will automatically add new emojis to the board. The game ends when there are no more possible matches.
+Our goal is to create a 3 in a row game where we have a 8 to 8 board with elements which are represented by specific emojis. User can make moves which are swaps of adjacent elements. If elements have same emojis and are placed in a row of 3 elements they form a match. This match is deleted and new elements are added to the board. If new matches are detected after a drop of new elements we remove them and stabilize the board again.
 
-We will operate with element ids on the board layout as it allows us to add behavior to the elements. For example, we can add a bomb element that explodes when matched, destroying nearby elements.
+Game ends when there are no possible moves on the board. User can also stop the game by entering appropriate command.
 
----
 
-## **Abstract Data Types (ADTs)**
 
-### **1. BoardLayout**
-- **Purpose**: Represents the grid and is only responsible for the layout of the board. It does not contain any information about the contents of the cells.
-- **Responsibilities**:
-    - Swap cells and rollback if no match is found.
-    - Shift columns and add new cells to the board.
-    - Build view to allow other components to access the grid.
+### ADTs
 
-### **2. Match**
-- **Purpose**: Represents a valid match of emojis on the board.
-- **Responsibilities**:
-    - Store the cells that form the match.
-    - Merge matches if they share cells.
 
-### **3. MatchingStrategy**
-- **Purpose**: Defines the rules for matching patterns.
-- **Responsibilities**:
-    - Find matches like vertical, horizontal, and L-shape.
-    - Return the matches found on the board.
+1. BoardLayout
 
-### **4. ScoreTracker**
-- **Purpose**: Keeps track of the player's score.
-- **Responsibilities**:
-    - Update score based on matches.
-    - Provide score information to the user interface.
 
-### **5. EmojiRegistry**
-- **Purpose**: Manages the emoji assets used in the game.
-- **Responsibilities**:
-    - Register game emojis.
-    - Store which element is mapped to which emoji.
+This ADT is needed to operate with the positioning of elements on the board. We can swap elements, remove element from the layout, check if the layout is stable. When adding new elements to the board we can push an element to a column and shift columns down.
 
-### **6. ElementGenerator**
-- **Purpose**: Generates random elements for the board.
-- **Responsibilities**:
-    - Generate random elements for the board.
+2. Match
+
+
+Represents a sequence of elements which form a match. They all have same emojis. We can merge matches if two matches reference the same element. Can be either vertical or horizontal.
+
+3. EmojiRegistry
+
+
+Here we store all possible game emojis - this allows us to register them at the beginning and then get random emojis for generation of new elements.
+
+4. MatchFinder
+
+
+This ADT is responsible for finding matches on the board and also checking whether potential matches are found.
+
+5. ScoreTracker
+
+
+Used to track and update score. Offers operations like Add certain amount of points or double them.
+
+6. BonusCondition
+
+
+Describes a cituation when a bonus effect is produces. Exposes methods apply and reset.
