@@ -22,8 +22,7 @@ We will not track statistics between games, only statistics **within a single ga
 
 ### <ins>1. Board</ins>
 
-The **Board subsystem** handles all operations related to the board layout. Position and Move are also included in this subsystem. Mechanism for adding new elements to the board is also included in this subsystem.
-But no the generation, just the addition of new elements to the board.
+The **Board subsystem** handles all operations related to the board layout. Position and Move are also included in this subsystem.
 
 
 ### <ins>2. Match</ins>
@@ -49,16 +48,12 @@ The **Score subsystem** defines and executes scoring rules. For example that we 
 
 ## **Domain**
 
-### <ins>1. Board</ins>
-- Represents the **matrix** where users can swap elements.
-
-### <ins>2. Match</ins>
-- A **horizontal or vertical sequence** of 3 or more matching elements on the board. These combinations emerge:
-- After filling the board with new elements.
-- As a result of a user swap.
-
-### <ins>3. Score</ins>
-- Represents the **user’s current score**, which increases when combinations or bonuses occur.
+1. Match - a sequence of three or more cells that form a valid match, either horizontally or vertically.
+2. Emoji - representation of a single cell on the board.
+3. Score - amount of points earned by the player.
+4. Bonus - special actions triggered by specific events.
+5. Move - a player's action of swapping two adjacent cells on the board.
+6. Board - the game board as a collection of positions and states.
 
 <br />
 
@@ -82,9 +77,9 @@ The **Score subsystem** defines and executes scoring rules. For example that we 
 ## **Libraries**
 
 1. **MediatR**:
-    - A robust solution for implementing an **event-based approach** with notifications and handlers.
-    - Suitable for managing **bonuses** and **statistics** subsystems.
+- Used to implement the **Mediator pattern** for decoupling components.
+- Supports **request/response** and **notification** patterns for handling user input and system events.
 
 2. **OneOf**:
-    - Useful for handling **union types** (e.g., success or error states).
-    - Can also be extended with custom types to manage state transitions and results effectively.
+- Useful for handling **union types** (e.g., success or error states).
+- Can also be extended with custom types to manage state transitions and results effectively.

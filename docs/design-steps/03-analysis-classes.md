@@ -1,74 +1,23 @@
-﻿# Matching Layer
+﻿### BoardLayout
+This ADT allows us to manipulate the layout of the board where we can swap elements, shift elements down and fill the board with new elements.
+This ADT is not responsible for detecting matches or scoring points. It is only responsible for the layout of the board.
 
 ### Match
-Represents a sequence of three or more cells that form a valid match, either horizontally or vertically.
+Represents a match of elements on the board. A match is a sequence of three or more cells that form a valid match, either horizontally or vertically.
+We can check if two matches intersect, merge two matches or check if they are sequential.
 
-### Cell
-Represents a single conceptual cell, independent of its position on the board.
+### EmojiRegistry
+Used to store game emojis as we operate on the layout with emoji ids. This registry is used to map emoji ids to emojis.
 
-### CellSequence
-Encapsulates a list of cells used to detect matches or potential matches.
-
-### MatchingContext
-Provides a high-level abstraction for detecting matches and potential matches in the current context.
-
----
-
-# Board Layer
-
-### Grid
-Represents the game board as a collection of positions and states.
-
-### BoardElement
-Represents a visual element on the game board with attributes like type and rendering properties.
-
----
-
-# Statistics Layer
-
-### Score
-Tracks the player's current score and supports scoring operations.
+### ScoreTracker
+Simple ADT to keep track of the score. It is responsible for updating the score by adding points and resetting the score.
 
 ### Move
 Represents a player's action of swapping two adjacent cells on the board.
 
----
+### StatisticsUnit
+Represents a single unit of statistics. It is used to track events and log them. Is characterized by a name, description and a value.
 
-# Bonuses Layer
-
-### MatchesRegistry
-Maintains a registry of all detected matches for use by bonus handlers.
-
-### MatchesNotificationHandler
-Handles notifications related to matches and triggers relevant bonus actions.
-
-### FiftyMovesHandler
-Triggers a special bonus by refreshing the board after 50 moves.
-
-
-StableBoard
-
-Represents a board where all elements are stable, and no empty cells exist.
-Operations:
-HasPotentialMatches
-Swap
-ClearOfType
-Matches
-ClearMatches
-ToFillableBoard
-FillableBoard
-
-Responsible for filling empty cells in a board, conceptually adding new elements.
-Operations:
-WithOneNew – Add exactly one new element.
-WithRandom – Fill empty cells with random new elements.
-WithZeroNew – No new elements are added.
-This allows incremental control of how new elements enter the board.
-FallingColumnsBoard
-
-Represents a board with falling elements. Focuses on incremental shifting of elements and dropping new ones as needed.
-Operations:
-ShiftColumns – Shift all columns downward to fill empty cells.
-ShiftWithImmediateNew – Shift columns while immediately adding new elements at the top.
-FillNextEmpty – Add a new element only to the next free position.
-DropNewToNextFree – Drop new elements to the next free positions in a falling manner.
+### MatchingStrategy
+Defines the strategy for matching elements on the board. It is responsible for detecting matches and bonuses. As an example we may have
+a vertical matching strategy and a horizontal matching strategy.
