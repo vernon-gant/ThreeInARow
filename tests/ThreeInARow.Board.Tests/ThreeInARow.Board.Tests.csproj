@@ -21,7 +21,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\ThreeInARow.Board\ThreeInARow.Board.csproj" />
+      <ProjectReference Include="..\..\src\ThreeInARow.Board\ThreeInARow.Board.csproj" />
     </ItemGroup>
 
 </Project>

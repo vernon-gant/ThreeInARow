@@ -2,7 +2,7 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "src\ThreeInARow.Board", "src\ThreeInARow.Board\ThreeInARow.Board.csproj", "{10287E80-7813-4400-BE78-8A4EB95C6CF6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "src\ThreeInARow.Board.Tests", "src\ThreeInARow.Board.Tests\ThreeInARow.Board.Tests.csproj", "{88B3A71F-2AEC-4ADE-B089-7A3ADA690D11}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tests\ThreeInARow.Board.Tests", "tests\ThreeInARow.Board.Tests\ThreeInARow.Board.Tests.csproj", "{88B3A71F-2AEC-4ADE-B089-7A3ADA690D11}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
