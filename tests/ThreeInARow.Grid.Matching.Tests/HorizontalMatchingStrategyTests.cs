@@ -46,7 +46,7 @@ public class HorizontalMatchingStrategyTests : ICellsFromGridConverter
         var grid = new[,]
         {
             { "A", "B", "C", "D", "E", "F", "G", "H" },
-            { "B", "A", "A", "A", "B", "C", "D", "E" }, // AAA match at positions (1,1), (1,2), (1,3)
+            { "B", "A", "A", "A", "B", "C", "D", "E" },
             { "C", "D", "E", "F", "G", "H", "A", "B" },
         };
         var cells = this.CreateCellsFromGrid(grid);
@@ -59,6 +59,30 @@ public class HorizontalMatchingStrategyTests : ICellsFromGridConverter
 
         var matchPositions = matches[0].Select(cell => (cell.RowIndex, cell.ColumnIndex)).OrderBy(pos => pos.ColumnIndex);
         var expectedPositions = new[] { (1, 1), (1, 2), (1, 3) };
+        Assert.That(matchPositions, Is.EqualTo(expectedPositions));
+    }
+
+    [Test]
+    public void When_GridHasHorizontalMatchLongerThanMinimum_Then_ReturnsOneMatchWithCorrectLength()
+    {
+        // Given
+        var grid = new[,]
+        {
+            { "A", "B", "C", "D", "E", "F", "G", "H" },
+            { "B", "A", "A", "A", "A", "A", "D", "E" },
+            { "C", "D", "E", "F", "G", "H", "A", "B" },
+        };
+        var cells = this.CreateCellsFromGrid(grid);
+
+        // When
+        var matches = _strategy.FindMatches(cells);
+
+        // Then
+        Assert.That(matches, Has.Count.EqualTo(1));
+        Assert.That(matches[0].Count, Is.EqualTo(5));
+
+        var matchPositions = matches[0].Select(cell => (cell.RowIndex, cell.ColumnIndex)).OrderBy(pos => pos.ColumnIndex);
+        var expectedPositions = new[] { (1, 1), (1, 2), (1, 3), (1, 4), (1, 5) };
         Assert.That(matchPositions, Is.EqualTo(expectedPositions));
     }
 }
