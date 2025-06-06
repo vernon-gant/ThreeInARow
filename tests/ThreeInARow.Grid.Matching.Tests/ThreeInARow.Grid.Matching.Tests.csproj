@@ -20,4 +20,8 @@
         <Using Include="NUnit.Framework"/>
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\..\src\ThreeInARow.Grid.Matching\ThreeInARow.Grid.Matching.csproj" />
+    </ItemGroup>
+
 </Project>

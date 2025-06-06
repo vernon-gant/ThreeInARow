@@ -1,5 +1,4 @@
-﻿using ThreeInARow.Grid.ADT;
-using ThreeInARow.Grid.ValueObjects;
+﻿using ThreeInARow.Grid.ValueObjects;
 
 namespace ThreeInARow.Grid.Matching.ADT;
 

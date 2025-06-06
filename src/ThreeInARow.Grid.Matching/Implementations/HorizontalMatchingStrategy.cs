@@ -1,5 +1,4 @@
-﻿using ThreeInARow.Grid.ADT;
-using ThreeInARow.Grid.Matching.ADT;
+﻿using ThreeInARow.Grid.Matching.ADT;
 using ThreeInARow.Grid.ValueObjects;
 
 namespace ThreeInARow.Grid.Matching.Implementations;
@@ -8,6 +7,6 @@ public class HorizontalMatchingStrategy<TElement>(int minMatchLength) : BaseMatc
 {
     public override List<IMatch<TElement>> FindMatches(IEnumerable<ElementCell<TElement>> cells)
     {
-        throw new NotImplementedException();
+        return new List<IMatch<TElement>>();
     }
 }

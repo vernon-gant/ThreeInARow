@@ -12,7 +12,6 @@ namespace ThreeInARow.Grid.ADT;
 /// <typeparam name="TElement"></typeparam>
 public interface IManageableGrid<TElement>
 {
-
     // Commands
 
     /// <remarks>Postcondition: The two cells are swapped.</remarks>
