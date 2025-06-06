@@ -220,4 +220,38 @@ public class HorizontalMatchingStrategyTests : ICellsFromGridConverter
         var expectedPositions = new[] { (0, 0), (0, 1), (0, 2) };
         Assert.That(matchPositions, Is.EqualTo(expectedPositions));
     }
+
+    [Test]
+    public void When_GridHasMatchesSeparatedByEmptyCells_Then_ReturnsBothMatches()
+    {
+        // Given
+        var grid = new[,]
+        {
+            { "A", "A", "A", null, null, "A", "A", "A" }, // AAA at (0,0-2) and AAA at (0,5-7)
+            { "B", "C", "D", "E", "F", "G", "H", "I" },
+            { "C", "D", "E", "F", "G", "H", "I", "J" },
+        };
+        var cells = this.CreateCellsFromGrid(grid);
+
+        // When
+        var matches = _strategy.FindMatches(cells);
+
+        // Then
+        Assert.That(matches, Has.Count.EqualTo(2));
+
+        var firstMatch = matches.First(m => m.Any(cell => cell.ColumnIndex == 0));
+        var secondMatch = matches.First(m => m.Any(cell => cell.ColumnIndex == 5));
+
+        Assert.That(firstMatch.Count, Is.EqualTo(3));
+        Assert.That(secondMatch.Count, Is.EqualTo(3));
+
+        var firstMatchPositions = firstMatch.Select(cell => (cell.RowIndex, cell.ColumnIndex)).OrderBy(pos => pos.ColumnIndex);
+        var secondMatchPositions = secondMatch.Select(cell => (cell.RowIndex, cell.ColumnIndex)).OrderBy(pos => pos.ColumnIndex);
+
+        var expectedFirstPositions = new[] { (0, 0), (0, 1), (0, 2) };
+        var expectedSecondPositions = new[] { (0, 5), (0, 6), (0, 7) };
+
+        Assert.That(firstMatchPositions, Is.EqualTo(expectedFirstPositions));
+        Assert.That(secondMatchPositions, Is.EqualTo(expectedSecondPositions));
+    }
 }
