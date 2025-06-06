@@ -33,8 +33,8 @@ public abstract class ReadableGridBehaviorTests<TGrid> where TGrid : IReadableGr
         // Then operation succeeds and returns valid ElementCell
         Assert.That(result.IsT0, Is.True, "TryGetCell should return ElementCell for valid coordinates");
         var cell = result.AsT0;
-        Assert.That(cell.IsInRow(row), Is.True, "ElementCell should be in correct row");
-        Assert.That(cell.IsInColumn(column), Is.True, "ElementCell should be in correct column");
+        Assert.That(cell.RowIndex, Is.EqualTo(row), "ElementCell should have correct row index");
+        Assert.That(cell.ColumnIndex, Is.EqualTo(column), "ElementCell should have correct column index");
     }
 
     [Test]
