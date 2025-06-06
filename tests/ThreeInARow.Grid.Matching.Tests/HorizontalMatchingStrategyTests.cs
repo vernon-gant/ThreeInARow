@@ -153,4 +153,23 @@ public class HorizontalMatchingStrategyTests : ICellsFromGridConverter
         Assert.That(firstRowPositions, Is.EqualTo(expectedFirstRowPositions));
         Assert.That(thirdRowPositions, Is.EqualTo(expectedThirdRowPositions));
     }
+
+    [Test]
+    public void When_GridHasEmptyCellsBreakingMatch_Then_ReturnsNoMatches()
+    {
+        // Given
+        var grid = new[,]
+        {
+            { "A", "A", null, "A", "A", "B", "C", "D" }, // AA-AA broken by empty cell
+            { "B", "C", "C", null, "C", "C", "D", "E" }, // CC-CC broken by empty cell
+            { "C", "D", "E", "F", "G", "H", "I", "J" },
+        };
+        var cells = this.CreateCellsFromGrid(grid);
+
+        // When
+        var matches = _strategy.FindMatches(cells);
+
+        // Then
+        Assert.That(matches, Is.Empty);
+    }
 }
