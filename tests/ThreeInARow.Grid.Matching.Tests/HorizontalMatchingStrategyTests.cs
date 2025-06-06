@@ -119,4 +119,38 @@ public class HorizontalMatchingStrategyTests : ICellsFromGridConverter
         Assert.That(firstMatchPositions, Is.EqualTo(expectedFirstPositions));
         Assert.That(secondMatchPositions, Is.EqualTo(expectedSecondPositions));
     }
+
+    [Test]
+    public void When_GridHasHorizontalMatchesInDifferentRows_Then_ReturnsAllMatches()
+    {
+        // Given
+        var grid = new[,]
+        {
+            { "A", "A", "A", "B", "C", "D", "E", "F" }, // AAA match at (0,0-2)
+            { "B", "C", "D", "E", "F", "G", "H", "I" },
+            { "C", "D", "B", "B", "B", "E", "F", "G" }, // BBB match at (2,2-4)
+        };
+        var cells = this.CreateCellsFromGrid(grid);
+
+        // When
+        var matches = _strategy.FindMatches(cells);
+
+        // Then
+        Assert.That(matches, Has.Count.EqualTo(2));
+
+        var firstRowMatch = matches.First(m => m.Any(cell => cell.RowIndex == 0));
+        var thirdRowMatch = matches.First(m => m.Any(cell => cell.RowIndex == 2));
+
+        Assert.That(firstRowMatch.Count, Is.EqualTo(3));
+        Assert.That(thirdRowMatch.Count, Is.EqualTo(3));
+
+        var firstRowPositions = firstRowMatch.Select(cell => (cell.RowIndex, cell.ColumnIndex)).OrderBy(pos => pos.ColumnIndex);
+        var thirdRowPositions = thirdRowMatch.Select(cell => (cell.RowIndex, cell.ColumnIndex)).OrderBy(pos => pos.ColumnIndex);
+
+        var expectedFirstRowPositions = new[] { (0, 0), (0, 1), (0, 2) };
+        var expectedThirdRowPositions = new[] { (2, 2), (2, 3), (2, 4) };
+
+        Assert.That(firstRowPositions, Is.EqualTo(expectedFirstRowPositions));
+        Assert.That(thirdRowPositions, Is.EqualTo(expectedThirdRowPositions));
+    }
 }
