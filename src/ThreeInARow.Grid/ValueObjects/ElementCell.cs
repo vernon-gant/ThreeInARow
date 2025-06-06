@@ -1,15 +1,14 @@
 ﻿using OneOf;
-using ThreeInARow.Grid.ADT;
 
 namespace ThreeInARow.Grid.ValueObjects;
 
-public class ElementCell<TElement>(OneOf<TElement, EmptyCell> element, GridRow row, GridColumn column)
+public record ElementCell<TElement>(OneOf<TElement, EmptyCell> Element, GridRow Row, GridColumn Column)
 {
-    public bool IsOccupied() => element.IsT0;
+    public bool IsOccupied() => Element.IsT0;
 
-    public bool IsInColumn(int toCompare) => column.Index == toCompare;
+    public int ColumnIndex => Column.Index;
 
-    public bool IsInRow(int toCompare) => row.Index == toCompare;
+    public int RowIndex => Row.Index;
 }
 
 public struct EmptyCell;
