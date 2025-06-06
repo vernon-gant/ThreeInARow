@@ -196,4 +196,28 @@ public class HorizontalMatchingStrategyTests : ICellsFromGridConverter
         var expectedPositions = new[] { (0, 2), (0, 3), (0, 4) };
         Assert.That(matchPositions, Is.EqualTo(expectedPositions));
     }
+
+    [Test]
+    public void When_GridHasValidMatchBeforeEmptyCells_Then_ReturnsMatch()
+    {
+        // Given
+        var grid = new[,]
+        {
+            { "A", "A", "A", null, null, "B", "C", "D" }, // AAA match before empty cells at (0,0-2)
+            { "B", "C", "D", "E", "F", "G", "H", "I" },
+            { "C", "D", "E", "F", "G", "H", "I", "J" },
+        };
+        var cells = this.CreateCellsFromGrid(grid);
+
+        // When
+        var matches = _strategy.FindMatches(cells);
+
+        // Then
+        Assert.That(matches, Has.Count.EqualTo(1));
+        Assert.That(matches[0].Count, Is.EqualTo(3));
+
+        var matchPositions = matches[0].Select(cell => (cell.RowIndex, cell.ColumnIndex)).OrderBy(pos => pos.ColumnIndex);
+        var expectedPositions = new[] { (0, 0), (0, 1), (0, 2) };
+        Assert.That(matchPositions, Is.EqualTo(expectedPositions));
+    }
 }
