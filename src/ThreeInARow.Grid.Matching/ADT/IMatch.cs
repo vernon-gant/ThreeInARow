@@ -8,13 +8,13 @@ public interface IMatch<TElement> : IEnumerable<ElementCell<TElement>>
 {
     // Commands
 
-    OneOf<Success, MatchDoesNotIntersect> Merge(IMatch<TElement> other);
-
     TResult Accept<TResult>(IMatchVisitor<TResult, TElement> visitor);
 
     // Queries
 
     int Count { get; }
+
+    OneOf<HashSet<ElementCell<TElement>>, MatchDoesNotIntersect> Merge(IMatch<TElement> other);
 
     bool Intersects(IMatch<TElement> other);
 }

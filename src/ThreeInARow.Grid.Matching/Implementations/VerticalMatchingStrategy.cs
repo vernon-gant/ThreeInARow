@@ -22,12 +22,10 @@ public class VerticalMatchingStrategy<TElement>(int minMatchLength) : BaseMatchi
             .OrderBy(cell => cell.RowIndex)
             .Aggregate(seed: new List<List<ElementCell<TElement>>>(), func: GroupConsecutiveMatchingCells)
             .Where(group => group.Count >= _minMatchLength)
-            .Select(group => new VerticalMatch<TElement>(group));
+            .Select(group => new VerticalMatch<TElement>(group.ToHashSet()));
     }
 
-    private List<List<ElementCell<TElement>>> GroupConsecutiveMatchingCells(
-        List<List<ElementCell<TElement>>> groups,
-        ElementCell<TElement> currentCell)
+    private List<List<ElementCell<TElement>>> GroupConsecutiveMatchingCells(List<List<ElementCell<TElement>>> groups, ElementCell<TElement> currentCell)
     {
         var lastGroup = groups.LastOrDefault();
 

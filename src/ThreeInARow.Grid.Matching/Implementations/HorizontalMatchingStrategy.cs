@@ -22,7 +22,7 @@ public class HorizontalMatchingStrategy<TElement>(int minMatchLength) : BaseMatc
             .OrderBy(cell => cell.ColumnIndex)
             .Aggregate(seed: new List<List<ElementCell<TElement>>>(), func: GroupConsecutiveMatchingCells)
             .Where(group => group.Count >= _minMatchLength)
-            .Select(group => new HorizontalMatch<TElement>(group));
+            .Select(group => new HorizontalMatch<TElement>(group.ToHashSet()));
     }
 
     private List<List<ElementCell<TElement>>> GroupConsecutiveMatchingCells(List<List<ElementCell<TElement>>> groups, ElementCell<TElement> currentCell)

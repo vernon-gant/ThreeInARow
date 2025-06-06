@@ -7,4 +7,6 @@ public interface IMatchVisitor<TResult, TElement>
     TResult Visit(HorizontalMatch<TElement> match);
 
     TResult Visit(VerticalMatch<TElement> match);
+
+    TResult Visit(TMatch<TElement> match);
 }
