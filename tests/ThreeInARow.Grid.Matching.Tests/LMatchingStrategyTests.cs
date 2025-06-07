@@ -2,7 +2,7 @@
 
 namespace ThreeInARow.Grid.Matching.Tests;
 
-public class LMatchingStrategyTests : ICellsFromGridConverter
+public class LMatchingStrategyTests : MGridTestUtility
 {
     private readonly HorizontalMatchingStrategy<string> _horizontalStrategy = new(3);
     private readonly VerticalMatchingStrategy<string> _verticalStrategy = new(3);

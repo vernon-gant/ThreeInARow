@@ -1,0 +1,16 @@
+﻿using OneOf;
+using ThreeInARow.Grid.ADT;
+using ThreeInARow.Grid.ValueObjects;
+
+namespace ThreeInARow.Grid.Filling.ADT;
+
+public interface IGenerator<TElement> where TElement : IEquatable<TElement>
+{
+    void Generate(IReadableGrid<TElement> grid);
+
+    OneOf<Queue<TElement>, NotGeneratedYet> ForColumn(GridColumn column);
+
+    void Reset();
+}
+
+public struct NotGeneratedYet;

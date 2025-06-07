@@ -3,7 +3,7 @@ using ThreeInARow.Grid.ValueObjects;
 
 namespace ThreeInARow.Grid.Matching.Tests;
 
-public class VerticalMatchingStrategyTests : ICellsFromGridConverter
+public class VerticalMatchingStrategyTests : MGridTestUtility
 {
     private readonly VerticalMatchingStrategy<string> _strategy = new(minMatchLength: 3);
 

@@ -129,7 +129,7 @@ public abstract class FillableGridBehaviorTests<TGrid> where TGrid : IFillableGr
         var column = new GridColumn(1);
 
         // When shifting column 1 down
-        var result = _grid.ShiftDown(column);
+        var result = _grid.Drop(column);
 
         // Then operation succeeds
         Assert.That(result.IsT0, Is.True, "ShiftDown should return Success");
@@ -150,7 +150,7 @@ public abstract class FillableGridBehaviorTests<TGrid> where TGrid : IFillableGr
         var column = new GridColumn(0);
 
         // When attempting to shift down the full column
-        var result = _grid.ShiftDown(column);
+        var result = _grid.Drop(column);
 
         // Then operation fails with ColumnIsFull
         Assert.That(result.IsT1, Is.True, "ShiftDown should return ColumnIsFull");
@@ -166,7 +166,7 @@ public abstract class FillableGridBehaviorTests<TGrid> where TGrid : IFillableGr
         var column = new GridColumn(2);
 
         // When attempting to shift down the empty column
-        var result = _grid.ShiftDown(column);
+        var result = _grid.Drop(column);
 
         // Then operation succeeds (nothing to shift, but operation is valid)
         Assert.That(result.IsT0, Is.True, "ShiftDown should return Success for empty column");
@@ -187,7 +187,7 @@ public abstract class FillableGridBehaviorTests<TGrid> where TGrid : IFillableGr
         var column = new GridColumn(3);
 
         // When shifting column down
-        var result = _grid.ShiftDown(column);
+        var result = _grid.Drop(column);
 
         // Then operation succeeds
         Assert.That(result.IsT0, Is.True, "ShiftDown should return Success for column with multiple gaps");
@@ -208,7 +208,7 @@ public abstract class FillableGridBehaviorTests<TGrid> where TGrid : IFillableGr
         var column = new GridColumn(0);
 
         // When shifting column down
-        var result = _grid.ShiftDown(column);
+        var result = _grid.Drop(column);
 
         // Then operation succeeds (elements are already at bottom)
         Assert.That(result.IsT0, Is.True, "ShiftDown should return Success when elements are already at bottom");
@@ -229,7 +229,7 @@ public abstract class FillableGridBehaviorTests<TGrid> where TGrid : IFillableGr
         var column = new GridColumn(2);
 
         // When shifting column down
-        var result = _grid.ShiftDown(column);
+        var result = _grid.Drop(column);
 
         // Then operation succeeds
         Assert.That(result.IsT0, Is.True, "ShiftDown should return Success for single element");
@@ -291,6 +291,68 @@ public abstract class FillableGridBehaviorTests<TGrid> where TGrid : IFillableGr
 
         // Then operation succeeds and returns false
         Assert.That(result, Is.False, "Empty column should be reported as not full");
+    }
+
+    #endregion
+
+    #region FillableColumns Query Tests
+
+    [Test]
+    public void FillableColumns_GivenMixedGrid_WhenQuerying_ThenReturnsOnlyNonFullColumns()
+    {
+        // Given a grid where column 1 is full and others are not
+        var gridData = new Element?[,]
+        {
+            { null, new("A"), null, null },
+            { null, new("B"), null, null },
+            { new("X"), new("C"), null, null },
+            { null, new("D"), null, null }
+        };
+        _grid = CreateGrid(gridData);
+
+        // When querying fillable columns
+        var fillableColumns = _grid.FillableColumns;
+
+        // Then only non-full columns are returned
+        Assert.That(fillableColumns.Count, Is.EqualTo(3), "Should return 3 fillable columns");
+        Assert.That(fillableColumns.Any(col => col.Index == 1), Is.False, "Column 1 should not be fillable (it's full)");
+        Assert.That(fillableColumns.Any(col => col.Index == 0), Is.True, "Column 0 should be fillable");
+        Assert.That(fillableColumns.Any(col => col.Index == 2), Is.True, "Column 2 should be fillable");
+        Assert.That(fillableColumns.Any(col => col.Index == 3), Is.True, "Column 3 should be fillable");
+    }
+
+    [Test]
+    public void FillableColumns_GivenAllFullColumns_WhenQuerying_ThenReturnsEmptyList()
+    {
+        // Given a grid where all columns are full
+        var gridData = new Element?[,]
+        {
+            { new("A"), new("E"), new("I"), new("M") },
+            { new("B"), new("F"), new("J"), new("N") },
+            { new("C"), new("G"), new("K"), new("O") },
+            { new("D"), new("H"), new("L"), new("P") }
+        };
+        _grid = CreateGrid(gridData);
+
+        // When querying fillable columns
+        var fillableColumns = _grid.FillableColumns;
+
+        // Then empty list is returned
+        Assert.That(fillableColumns.Count, Is.EqualTo(0), "Should return no fillable columns when all are full");
+    }
+
+    [Test]
+    public void FillableColumns_GivenEmptyGrid_WhenQuerying_ThenReturnsAllColumns()
+    {
+        // Given a completely empty grid
+        var gridData = EmptyGrid(4, 4);
+        _grid = CreateGrid(gridData);
+
+        // When querying fillable columns
+        var fillableColumns = _grid.FillableColumns;
+
+        // Then all columns are returned
+        Assert.That(fillableColumns.Count, Is.EqualTo(4), "Should return all 4 columns when grid is empty");
     }
 
     #endregion

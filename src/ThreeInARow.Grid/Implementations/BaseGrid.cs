@@ -32,9 +32,11 @@ public abstract class BaseManageableGrid<TElement>(TElement?[,] grid) : IManagea
         return new Success();
     }
 
-    public OneOf<Success, ColumnIsFull> ShiftDown(GridColumn column)
+    public OneOf<Success, ColumnIsFull, CanNotDrop> Drop(GridColumn column)
     {
         if (IsColumnFull(column)) return new ColumnIsFull();
+
+        if (!CanDrop(column).AsT0) return new CanNotDrop();
 
         var lowestEmptyRow = -1;
 
@@ -69,6 +71,18 @@ public abstract class BaseManageableGrid<TElement>(TElement?[,] grid) : IManagea
         ? new ElementCell<TElement>(grid[row, column] is null ? new EmptyCell() : grid[row, column]!, new GridRow(row), new GridColumn(column))
         : new CellOutOfBounds();
 
+    public OneOf<bool, ColumnIsFull> CanDrop(GridColumn column)
+    {
+        if (IsColumnFull(column)) return new ColumnIsFull();
+
+        for (var row = 0; row < grid.GetLength(0) - 2; row++)
+        {
+            if (grid[row, column.Index] != null && grid[row + 1, column.Index] == null && grid[row + 2, column.Index] != null) return true;
+        }
+
+        return false;
+    }
+
     public List<GridColumn> FillableColumns
     {
         get
@@ -101,7 +115,7 @@ public abstract class BaseManageableGrid<TElement>(TElement?[,] grid) : IManagea
     {
         for (int row = 0; row < grid.GetLength(0); row++)
         {
-            for (int column = 0;  column < grid.GetLength(1); column++)
+            for (int column = 0; column < grid.GetLength(1); column++)
             {
                 yield return new ElementCell<TElement>(grid[row, column] is null ? new EmptyCell() : grid[row, column]!, new GridRow(row), new GridColumn(column));
             }
