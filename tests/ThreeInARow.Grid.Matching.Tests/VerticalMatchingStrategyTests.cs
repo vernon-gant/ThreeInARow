@@ -1,4 +1,4 @@
-﻿using ThreeInARow.Grid.Matching.Implementations;
+﻿using ThreeInARow.Grid.Matching.Implementations.MatchingStrategies;
 using ThreeInARow.Grid.ValueObjects;
 
 namespace ThreeInARow.Grid.Matching.Tests;

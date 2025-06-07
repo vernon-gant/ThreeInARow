@@ -1,7 +1,7 @@
 ﻿using ThreeInARow.Grid.Matching.ADT;
 using ThreeInARow.Grid.ValueObjects;
 
-namespace ThreeInARow.Grid.Matching.Implementations;
+namespace ThreeInARow.Grid.Matching.Implementations.Matches;
 
 public class VerticalMatch<TElement>(HashSet<ElementCell<TElement>> cells) : BaseMatch<TElement>(cells)
 {

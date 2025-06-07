@@ -1,10 +1,9 @@
 ﻿using System.Collections;
 using OneOf;
-using OneOf.Types;
 using ThreeInARow.Grid.Matching.ADT;
 using ThreeInARow.Grid.ValueObjects;
 
-namespace ThreeInARow.Grid.Matching.Implementations;
+namespace ThreeInARow.Grid.Matching.Implementations.Matches;
 
 public abstract class BaseMatch<TElement>(HashSet<ElementCell<TElement>> cells) : IMatch<TElement>
 {

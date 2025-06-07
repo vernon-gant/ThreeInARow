@@ -1,5 +1,4 @@
-﻿using ThreeInARow.Grid.Matching.Implementations;
-using ThreeInARow.Grid.Matching.Implementations.Matches;
+﻿using ThreeInARow.Grid.Matching.Implementations.Matches;
 
 namespace ThreeInARow.Grid.Matching.ADT;
 
@@ -12,4 +11,6 @@ public interface IMatchVisitor<TResult, TElement>
     TResult Visit(TMatch<TElement> match);
 
     TResult Visit(LMatch<TElement> match);
+
+    TResult Visit(CrossMatch<TElement> match);
 }

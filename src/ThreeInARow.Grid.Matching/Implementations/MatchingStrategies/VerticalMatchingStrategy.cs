@@ -1,7 +1,8 @@
 ﻿using ThreeInARow.Grid.Matching.ADT;
+using ThreeInARow.Grid.Matching.Implementations.Matches;
 using ThreeInARow.Grid.ValueObjects;
 
-namespace ThreeInARow.Grid.Matching.Implementations;
+namespace ThreeInARow.Grid.Matching.Implementations.MatchingStrategies;
 
 public class VerticalMatchingStrategy<TElement>(int minMatchLength) : BaseMatchingStrategy<TElement>(minMatchLength) where TElement : IEquatable<TElement>
 {
