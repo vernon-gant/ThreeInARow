@@ -23,6 +23,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\src\ThreeInARow.Grid.Matching\ThreeInARow.Grid.Matching.csproj" />
+      <ProjectReference Include="..\ThreeInARow.TestingUtilities\ThreeInARow.TestingUtilities.csproj" />
     </ItemGroup>
 
 </Project>

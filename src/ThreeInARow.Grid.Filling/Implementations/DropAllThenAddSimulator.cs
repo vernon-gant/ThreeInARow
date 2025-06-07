@@ -35,11 +35,11 @@ public class DropAllThenAddSimulator<TElement, TGrid>(IGenerator<TElement> gener
 
     private void FullDropColumn(GridColumn column)
     {
-        Debug.Assert(_grid!.CanDrop(column).AsT0, "Column should be droppable.");
+        Debug.Assert(_grid!.CanShiftDown(column).AsT0, "Column should be droppable.");
 
-        while (_grid.CanDrop(column).AsT0)
+        while (_grid.CanShiftDown(column).AsT0)
         {
-            _grid.Drop(column);
+            _grid.ShiftDown(column);
         }
     }
 }

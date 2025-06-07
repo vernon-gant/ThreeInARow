@@ -1,4 +1,5 @@
 ﻿using ThreeInARow.Grid.Matching.Implementations.MatchingStrategies;
+using ThreeInARow.TestingUtilities;
 
 namespace ThreeInARow.Grid.Matching.Tests;
 
@@ -13,364 +14,330 @@ public class LMatchingStrategyTests : MGridTestUtility
         _strategy = new LMatchingStrategy<string>(3, _horizontalStrategy, _verticalStrategy);
     }
 
-    #region Negative Cases
+    #region Scenarios Where No L-Shaped Patterns Are Found
 
     [Test]
-    public void When_NoMatches_Then_ReturnsNoLMatches()
+    public void GivenAGridWithNoMatchingElements_WhenPlayerLooksForLShapedPatterns_ThenNoLMatchesAreFound()
     {
-        // Given - No matches in grid
+        // Given a grid with alternating elements that create no matches
         var grid = new[,]
         {
             { "A", "B", "A", "B", "A", "B", "A", "B" },
             { "B", "A", "B", "A", "B", "A", "B", "A" },
             { "A", "B", "A", "B", "A", "B", "A", "B" },
             { "B", "A", "B", "A", "B", "A", "B", "A" },
-            { null, null, null, null, null, null, null, null },
-            { null, null, null, null, null, null, null, null },
-            { null, null, null, null, null, null, null, null },
-            { null, null, null, null, null, null, null, null }
         };
         var cells = this.CreateCellsFromGrid(grid);
 
-        // When
+        // When the player looks for L-shaped patterns
         var matches = _strategy.FindMatches(cells);
 
-        // Then
-        Assert.That(matches, Is.Empty);
+        // Then no L-shaped matches are found
+        Assert.That(matches, Is.Empty, "No L-shaped patterns should be detected in alternating grid");
     }
 
     [Test]
-    public void When_MatchesDoNotIntersect_Then_ReturnsNoLMatches()
+    public void GivenSeparateHorizontalAndVerticalMatches_WhenPlayerLooksForLShapedPatterns_ThenNoLMatchesAreFound()
     {
-        // Given - Separate matches that don't touch
+        // Given a grid with separate horizontal and vertical matches that don't form corner intersections
         var grid = new[,]
         {
-            { "A", "A", "A", "B", "C", "D", "E", "F" }, // Horizontal match
+            { "A", "A", "A", "B", "C", "D", "E", "F" }, // Horizontal match (separate)
             { "G", "H", "I", "B", "J", "K", "L", "M" },
             { "N", "O", "P", "B", "Q", "R", "S", "T" },
-            { "U", "V", "W", "B", "X", "Y", "Z", null }, // Vertical match
-            { null, null, null, null, null, null, null, null },
-            { null, null, null, null, null, null, null, null },
-            { null, null, null, null, null, null, null, null },
-            { null, null, null, null, null, null, null, null }
+            { "U", "V", "W", "B", "X", "Y", "Z", null }, // Vertical match (separate)
         };
         var cells = this.CreateCellsFromGrid(grid);
 
-        // When
+        // When the player looks for L-shaped patterns
         var matches = _strategy.FindMatches(cells);
 
-        // Then
-        Assert.That(matches, Is.Empty);
+        // Then no L-shaped matches are found because the matches don't form corner intersections
+        Assert.That(matches, Is.Empty, "Separate non-intersecting matches should not form L-shaped patterns");
     }
 
     [Test]
-    public void When_TShapeExists_Then_ReturnsNoLMatches()
+    public void GivenATShapedPattern_WhenPlayerLooksForLShapedPatterns_ThenNoLMatchesAreFound()
     {
-        // Given - T-shape (middle intersection, not corner)
+        // Given a grid with a T-shaped pattern (middle intersection, not corner)
         var grid = new[,]
         {
             { "A", "A", "A", "B", "C", "D", "E", "F" }, // Horizontal line
             { "G", "A", "H", "I", "J", "K", "L", "M" }, // Vertical stem (middle intersection)
             { "N", "A", "O", "P", "Q", "R", "S", "T" }, // Vertical continues
-            { null, null, null, null, null, null, null, null },
-            { null, null, null, null, null, null, null, null },
-            { null, null, null, null, null, null, null, null },
-            { null, null, null, null, null, null, null, null },
-            { null, null, null, null, null, null, null, null }
         };
         var cells = this.CreateCellsFromGrid(grid);
 
-        // When
+        // When the player looks for L-shaped patterns
         var matches = _strategy.FindMatches(cells);
 
-        // Then
-        Assert.That(matches, Is.Empty);
+        // Then no L-shaped matches are found because T-shapes have middle intersections, not corner intersections
+        Assert.That(matches, Is.Empty, "T-shaped patterns should not be recognized as L-shaped matches");
     }
 
     [Test]
-    public void When_CrossShapeExists_Then_ReturnsNoLMatches()
+    public void GivenACrossShapedPattern_WhenPlayerLooksForLShapedPatterns_ThenNoLMatchesAreFound()
     {
-        // Given - Cross shape (middle intersections)
+        // Given a grid with a cross-shaped pattern (middle intersections)
         var grid = new[,]
         {
-            { "G", "A", "H", "I", "J", "K", "L", "M" }, // Vertical above
+            { "G", "A", "H", "I", "J", "K", "L", "M" }, // Vertical above center
             { "A", "A", "A", "N", "O", "P", "Q", "R" }, // Horizontal through center
-            { "S", "A", "T", "U", "V", "W", "X", "Y" }, // Vertical below
-            { null, null, null, null, null, null, null, null },
-            { null, null, null, null, null, null, null, null },
-            { null, null, null, null, null, null, null, null },
-            { null, null, null, null, null, null, null, null },
-            { null, null, null, null, null, null, null, null }
+            { "S", "A", "T", "U", "V", "W", "X", "Y" }, // Vertical below center
         };
         var cells = this.CreateCellsFromGrid(grid);
 
-        // When
+        // When the player looks for L-shaped patterns
         var matches = _strategy.FindMatches(cells);
 
-        // Then
-        Assert.That(matches, Is.Empty);
+        // Then no L-shaped matches are found because cross shapes have middle intersections, not corner intersections
+        Assert.That(matches, Is.Empty, "Cross-shaped patterns should not be recognized as L-shaped matches");
     }
 
     [Test]
-    public void When_EmptyCellsBreakLShape_Then_ReturnsNoLMatches()
+    public void GivenAnLShapePatternBrokenByEmptySpaces_WhenPlayerLooksForLShapedPatterns_ThenNoLMatchesAreFound()
     {
-        // Given - L-shape broken by empty cells
+        // Given a grid where empty cells break what would be an L-shaped pattern
         var grid = new[,]
         {
-            { "A", "A", "A", "B", "C", "D", "E", "F" }, // Horizontal part
-            { null, "G", "H", "I", "J", "K", "L", "M" }, // Empty breaks vertical
+            { "A", "A", "A", "B", "C", "D", "E", "F" }, // Horizontal part of potential L
+            { null, "G", "H", "I", "J", "K", "L", "M" }, // Empty cell breaks vertical part
             { "A", "N", "O", "P", "Q", "R", "S", "T" },
-            { null, null, null, null, null, null, null, null },
-            { null, null, null, null, null, null, null, null },
-            { null, null, null, null, null, null, null, null },
-            { null, null, null, null, null, null, null, null },
-            { null, null, null, null, null, null, null, null }
         };
         var cells = this.CreateCellsFromGrid(grid);
 
-        // When
+        // When the player looks for L-shaped patterns
         var matches = _strategy.FindMatches(cells);
 
-        // Then
-        Assert.That(matches, Is.Empty);
+        // Then no L-shaped matches are found because empty spaces break the pattern
+        Assert.That(matches, Is.Empty, "L-shaped patterns broken by empty cells should not be detected");
     }
 
     [Test]
-    public void When_BothArmsTooShort_Then_ReturnsNoLMatches()
+    public void GivenAnLShapeWithArmsTooShort_WhenPlayerLooksForLShapedPatterns_ThenNoLMatchesAreFound()
     {
-        // Given - Both arms only 2 cells (below minimum)
+        // Given a grid where both arms of the potential L are shorter than the minimum required length
         var grid = new[,]
         {
-            { "A", "A", "B", "C", "D", "E", "F", "G" }, // Only 2 horizontally
-            { "A", "H", "I", "J", "K", "L", "M", "N" }, // Only 2 vertically
+            { "A", "A", "B", "C", "D", "E", "F", "G" }, // Only 2 elements horizontally (below minimum)
+            { "A", "H", "I", "J", "K", "L", "M", "N" }, // Only 2 elements vertically (below minimum)
             { "O", "P", "Q", "R", "S", "T", "U", "V" },
-            { null, null, null, null, null, null, null, null },
-            { null, null, null, null, null, null, null, null },
-            { null, null, null, null, null, null, null, null },
-            { null, null, null, null, null, null, null, null },
-            { null, null, null, null, null, null, null, null }
         };
         var cells = this.CreateCellsFromGrid(grid);
 
-        // When
+        // When the player looks for L-shaped patterns
         var matches = _strategy.FindMatches(cells);
 
-        // Then
-        Assert.That(matches, Is.Empty);
+        // Then no L-shaped matches are found because both arms are too short
+        Assert.That(matches, Is.Empty, "L-shaped patterns with arms shorter than minimum should not be detected");
     }
 
     #endregion
 
-    #region Positive Cases
+    #region Scenarios Where L-Shaped Patterns Are Successfully Found
 
     [Test]
-    public void When_LShapeTopLeft_Then_ReturnsOneLMatch()
+    public void GivenAnLShapeWithTopLeftCorner_WhenPlayerLooksForLShapedPatterns_ThenOneLMatchIsFound()
     {
-        // Given - L-shape with corner at top-left
+        // Given a grid with an L-shaped pattern where the corner is at the top-left
+        // A A A  (horizontal arm extending right)
+        // A      (vertical arm extending down)
+        // A
         var grid = new[,]
         {
-            { "A", "A", "A", "B", "C", "D", "E", "F" }, // Horizontal part
-            { "A", "G", "H", "I", "J", "K", "L", "M" }, // Vertical part down
+            { "A", "A", "A", "B", "C", "D", "E", "F" }, // Horizontal arm
+            { "A", "G", "H", "I", "J", "K", "L", "M" }, // Vertical arm down
             { "A", "N", "O", "P", "Q", "R", "S", "T" }, // Vertical continues
-            { null, null, null, null, null, null, null, null },
-            { null, null, null, null, null, null, null, null },
-            { null, null, null, null, null, null, null, null },
-            { null, null, null, null, null, null, null, null },
-            { null, null, null, null, null, null, null, null }
         };
         var cells = this.CreateCellsFromGrid(grid);
 
-        // When
+        // When the player looks for L-shaped patterns
         var matches = _strategy.FindMatches(cells);
 
-        // Then
-        Assert.That(matches, Has.Count.EqualTo(1));
-        Assert.That(matches[0].Count, Is.EqualTo(5)); // 3 + 3 - 1
+        // Then exactly one L-shaped match is found
+        Assert.That(matches, Has.Count.EqualTo(1), "Should find exactly one L-shaped pattern with top-left corner");
+        Assert.That(matches[0].Count, Is.EqualTo(5), "L-shape should contain 5 elements (3 horizontal + 3 vertical - 1 corner)");
     }
 
     [Test]
-    public void When_LShapeTopRight_Then_ReturnsOneLMatch()
+    public void GivenAnLShapeWithTopRightCorner_WhenPlayerLooksForLShapedPatterns_ThenOneLMatchIsFound()
     {
-        // Given - L-shape with corner at top-right
+        // Given a grid with an L-shaped pattern where the corner is at the top-right
+        //   A A A  (horizontal arm extending left)
+        //     A    (vertical arm extending down)
+        //     A
         var grid = new[,]
         {
-            { "B", "A", "A", "A", "C", "D", "E", "F" }, // Horizontal part
-            { "G", "H", "I", "A", "J", "K", "L", "M" }, // Vertical part down
+            { "B", "A", "A", "A", "C", "D", "E", "F" }, // Horizontal arm
+            { "G", "H", "I", "A", "J", "K", "L", "M" }, // Vertical arm down
             { "N", "O", "P", "A", "Q", "R", "S", "T" }, // Vertical continues
-            { null, null, null, null, null, null, null, null },
-            { null, null, null, null, null, null, null, null },
-            { null, null, null, null, null, null, null, null },
-            { null, null, null, null, null, null, null, null },
-            { null, null, null, null, null, null, null, null }
         };
         var cells = this.CreateCellsFromGrid(grid);
 
-        // When
+        // When the player looks for L-shaped patterns
         var matches = _strategy.FindMatches(cells);
 
-        // Then
-        Assert.That(matches, Has.Count.EqualTo(1));
-        Assert.That(matches[0].Count, Is.EqualTo(5)); // 3 + 3 - 1
+        // Then exactly one L-shaped match is found
+        Assert.That(matches, Has.Count.EqualTo(1), "Should find exactly one L-shaped pattern with top-right corner");
+        Assert.That(matches[0].Count, Is.EqualTo(5), "L-shape should contain 5 elements (3 horizontal + 3 vertical - 1 corner)");
     }
 
     [Test]
-    public void When_LShapeBottomLeft_Then_ReturnsOneLMatch()
+    public void GivenAnLShapeWithBottomLeftCorner_WhenPlayerLooksForLShapedPatterns_ThenOneLMatchIsFound()
     {
-        // Given - L-shape with corner at bottom-left
+        // Given a grid with an L-shaped pattern where the corner is at the bottom-left
+        // A      (vertical arm extending up)
+        // A
+        // A A A  (horizontal arm extending right)
         var grid = new[,]
         {
-            { "A", "G", "H", "I", "J", "K", "L", "M" }, // Vertical part up
+            { "A", "G", "H", "I", "J", "K", "L", "M" }, // Vertical arm up
             { "A", "N", "O", "P", "Q", "R", "S", "T" }, // Vertical continues
-            { "A", "A", "A", "B", "C", "D", "E", "F" }, // Horizontal part
-            { null, null, null, null, null, null, null, null },
-            { null, null, null, null, null, null, null, null },
-            { null, null, null, null, null, null, null, null },
-            { null, null, null, null, null, null, null, null },
-            { null, null, null, null, null, null, null, null }
+            { "A", "A", "A", "B", "C", "D", "E", "F" }, // Horizontal arm
         };
         var cells = this.CreateCellsFromGrid(grid);
 
-        // When
+        // When the player looks for L-shaped patterns
         var matches = _strategy.FindMatches(cells);
 
-        // Then
-        Assert.That(matches, Has.Count.EqualTo(1));
-        Assert.That(matches[0].Count, Is.EqualTo(5)); // 3 + 3 - 1
+        // Then exactly one L-shaped match is found
+        Assert.That(matches, Has.Count.EqualTo(1), "Should find exactly one L-shaped pattern with bottom-left corner");
+        Assert.That(matches[0].Count, Is.EqualTo(5), "L-shape should contain 5 elements (3 horizontal + 3 vertical - 1 corner)");
     }
 
     [Test]
-    public void When_LShapeBottomRight_Then_ReturnsOneLMatch()
+    public void GivenAnLShapeWithBottomRightCorner_WhenPlayerLooksForLShapedPatterns_ThenOneLMatchIsFound()
     {
-        // Given - L-shape with corner at bottom-right
+        // Given a grid with an L-shaped pattern where the corner is at the bottom-right
+        //     A    (vertical arm extending up)
+        //     A
+        // A A A    (horizontal arm extending left)
         var grid = new[,]
         {
-            { "G", "H", "I", "A", "J", "K", "L", "M" }, // Vertical part up
+            { "G", "H", "I", "A", "J", "K", "L", "M" }, // Vertical arm up
             { "N", "O", "P", "A", "Q", "R", "S", "T" }, // Vertical continues
-            { "B", "A", "A", "A", "C", "D", "E", "F" }, // Horizontal part
-            { null, null, null, null, null, null, null, null },
-            { null, null, null, null, null, null, null, null },
-            { null, null, null, null, null, null, null, null },
-            { null, null, null, null, null, null, null, null },
-            { null, null, null, null, null, null, null, null }
+            { "B", "A", "A", "A", "C", "D", "E", "F" }, // Horizontal arm
         };
         var cells = this.CreateCellsFromGrid(grid);
 
-        // When
+        // When the player looks for L-shaped patterns
         var matches = _strategy.FindMatches(cells);
 
-        // Then
-        Assert.That(matches, Has.Count.EqualTo(1));
-        Assert.That(matches[0].Count, Is.EqualTo(5)); // 3 + 3 - 1
+        // Then exactly one L-shaped match is found
+        Assert.That(matches, Has.Count.EqualTo(1), "Should find exactly one L-shaped pattern with bottom-right corner");
+        Assert.That(matches[0].Count, Is.EqualTo(5), "L-shape should contain 5 elements (3 horizontal + 3 vertical - 1 corner)");
     }
 
     [Test]
-    public void When_LargerLShapes_Then_ReturnsCorrectSizes()
+    public void GivenLShapesOfDifferentSizes_WhenPlayerLooksForLShapedPatterns_ThenAllLMatchesAreFoundWithCorrectSizes()
     {
-        // Given - Two L-shapes of different sizes
+        // Given a grid with two L-shaped patterns of different sizes
         var grid = new[,]
         {
-            { "A", "A", "A", "A", "B", "B", "B", "C" }, // 4-cell and 3-cell horizontal
-            { "A", "E", "F", "G", "H", "I", "B", "J" }, // Vertical arms down
+            { "A", "A", "A", "A", "B", "B", "B", "C" }, // 4-element and 3-element horizontal arms
+            { "A", "E", "F", "G", "H", "I", "B", "J" }, // Vertical arms extending down
             { "A", "K", "L", "M", "N", "O", "B", "P" }, // Vertical continues
-            { "A", "Q", "R", "S", "T", "U", "B", "V" }, // First L longer vertical
-            { null, null, null, null, null, null, null, null },
-            { null, null, null, null, null, null, null, null },
-            { null, null, null, null, null, null, null, null },
-            { null, null, null, null, null, null, null, null }
+            { "A", "Q", "R", "S", "T", "U", "B", "V" }, // First L has longer vertical arm
         };
         var cells = this.CreateCellsFromGrid(grid);
 
-        // When
+        // When the player looks for L-shaped patterns
         var matches = _strategy.FindMatches(cells);
 
-        // Then
-        Assert.That(matches, Has.Count.EqualTo(2));
+        // Then both L-shaped matches are found with their correct sizes
+        Assert.That(matches, Has.Count.EqualTo(2), "Should find both L-shaped patterns of different sizes");
 
         var firstMatch = matches.First(m => m.Any(cell => cell.ColumnIndex == 0));
         var secondMatch = matches.First(m => m.Any(cell => cell.ColumnIndex == 6));
 
-        Assert.That(firstMatch.Count, Is.EqualTo(7)); // 4 + 4 - 1
-        Assert.That(secondMatch.Count, Is.EqualTo(6)); // 3 + 4 - 1
+        Assert.That(firstMatch.Count, Is.EqualTo(7), "First L-shape should contain 7 elements (4 horizontal + 4 vertical - 1 corner)");
+        Assert.That(secondMatch.Count, Is.EqualTo(6), "Second L-shape should contain 6 elements (3 horizontal + 4 vertical - 1 corner)");
     }
 
     [Test]
-    public void When_MultipleLShapesSameSize_Then_ReturnsAllMatches()
+    public void GivenMultipleLShapesOfTheSameSize_WhenPlayerLooksForLShapedPatterns_ThenAllLMatchesAreFound()
     {
-        // Given - Three identical L-shapes
+        // Given a grid with multiple identical L-shaped patterns
         var grid = new[,]
         {
-            { "A", "A", "A", "B", "B", "B", "C", "C" }, // Three horizontal matches
+            { "A", "A", "A", "B", "B", "B", "C", "C" }, // Three horizontal arms
             { "A", "D", "E", "B", "F", "G", "C", "H" }, // Three vertical arms
-            { "A", "I", "J", "B", "K", "L", "C", "M" }, // All same size
-            { null, null, null, null, null, null, null, null },
-            { null, null, null, null, null, null, null, null },
-            { null, null, null, null, null, null, null, null },
-            { null, null, null, null, null, null, null, null },
-            { null, null, null, null, null, null, null, null }
+            { "A", "I", "J", "B", "K", "L", "C", "M" }, // All same size L-shapes
         };
         var cells = this.CreateCellsFromGrid(grid);
 
-        // When
+        // When the player looks for L-shaped patterns
         var matches = _strategy.FindMatches(cells);
 
-        // Then
-        Assert.That(matches, Has.Count.EqualTo(2));
-        Assert.That(matches.All(m => m.Count == 5), Is.True); // All 3 + 3 - 1
+        // Then all identical L-shaped matches are found
+        Assert.That(matches, Has.Count.EqualTo(2), "Should find multiple L-shaped patterns of the same size");
+        Assert.That(matches.All(m => m.Count == 5), Is.True, "All L-shapes should contain 5 elements (3 horizontal + 3 vertical - 1 corner)");
     }
 
     [Test]
-    public void When_LShapeWithMinimumSize_Then_ReturnsOneMatch()
+    public void GivenAMinimalLShapedPattern_WhenPlayerLooksForLShapedPatterns_ThenTheMinimalLMatchIsFound()
     {
-        // Given - Minimum valid L-shape (3x3)
+        // Given a grid with the smallest possible L-shaped pattern (3x3)
         var grid = new[,]
         {
-            { "A", "A", "A", "B", "C", "D", "E", "F" }, // Exactly 3 horizontal
-            { "A", "G", "H", "I", "J", "K", "L", "M" }, // Exactly 3 vertical
+            { "A", "A", "A", "B", "C", "D", "E", "F" }, // Exactly 3 elements horizontally
+            { "A", "G", "H", "I", "J", "K", "L", "M" }, // Exactly 3 elements vertically
             { "A", "N", "O", "P", "Q", "R", "S", "T" },
-            { null, null, null, null, null, null, null, null },
-            { null, null, null, null, null, null, null, null },
-            { null, null, null, null, null, null, null, null },
-            { null, null, null, null, null, null, null, null },
-            { null, null, null, null, null, null, null, null }
         };
         var cells = this.CreateCellsFromGrid(grid);
 
-        // When
+        // When the player looks for L-shaped patterns
         var matches = _strategy.FindMatches(cells);
 
-        // Then
-        Assert.That(matches, Has.Count.EqualTo(1));
-        Assert.That(matches[0].Count, Is.EqualTo(5));
+        // Then the minimal L-shaped match is found
+        Assert.That(matches, Has.Count.EqualTo(1), "Should find the minimal L-shaped pattern");
+        Assert.That(matches[0].Count, Is.EqualTo(5), "Minimal L-shape should contain exactly 5 elements");
     }
 
     [Test]
-    public void When_LShapeWithMixedOrientations_Then_ReturnsAllMatches()
+    public void GivenLShapesWithMixedOrientations_WhenPlayerLooksForLShapedPatterns_ThenAllDifferentOrientationsAreFound()
     {
-        // Given - Mixed L-shape orientations in same grid
+        // Given a grid with L-shaped patterns in different orientations
         var grid = new[,]
         {
-            { "A", "A", "A", "B", "C", "C", "C", "C" }, // Top-left L, Top-right L
-            { "A", "D", "E", "F", "G", "H", "I", "C" }, // Vertical arms
-            { "A", "J", "K", "L", "M", "N", "O", "C" }, // Vertical continues
+            { "A", "A", "A", "B", "C", "C", "C", "C" }, // Top-left L and top-right L
+            { "A", "D", "E", "F", "G", "H", "I", "C" }, // Vertical arms in different directions
+            { "A", "J", "K", "L", "M", "N", "O", "C" }, // Different arm lengths
             { "P", "Q", "R", "S", "T", "U", "V", "W" },
-            { null, null, null, null, null, null, null, null },
-            { null, null, null, null, null, null, null, null },
-            { null, null, null, null, null, null, null, null },
-            { null, null, null, null, null, null, null, null }
         };
         var cells = this.CreateCellsFromGrid(grid);
 
-        // When
+        // When the player looks for L-shaped patterns
         var matches = _strategy.FindMatches(cells);
 
-        // Then
-        Assert.That(matches, Has.Count.EqualTo(2));
+        // Then all L-shaped patterns with different orientations are found
+        Assert.That(matches, Has.Count.EqualTo(2), "Should find L-shaped patterns in different orientations");
 
         var leftL = matches.First(m => m.Any(cell => cell.ColumnIndex == 0));
         var rightL = matches.First(m => m.Any(cell => cell.ColumnIndex == 7));
 
-        Assert.That(leftL.Count, Is.EqualTo(5)); // 3 + 3 - 1
-        Assert.That(rightL.Count, Is.EqualTo(6)); // 4 + 3 - 1
+        Assert.That(leftL.Count, Is.EqualTo(5), "Left L-shape should contain 5 elements (3 horizontal + 3 vertical - 1 corner)");
+        Assert.That(rightL.Count, Is.EqualTo(6), "Right L-shape should contain 6 elements (4 horizontal + 3 vertical - 1 corner)");
+    }
+
+    [Test]
+    public void GivenAnLShapeAtGridEdge_WhenPlayerLooksForLShapedPatterns_ThenTheEdgeLMatchIsFound()
+    {
+        // Given a grid with an L-shaped pattern positioned at the edge
+        var grid = new[,]
+        {
+            { "A", "A", "A", "B", "C", "D", "E", "F" }, // L-shape at top edge
+            { "A", "G", "H", "I", "J", "K", "L", "M" },
+            { "A", "N", "O", "P", "Q", "R", "S", "T" },
+        };
+        var cells = this.CreateCellsFromGrid(grid);
+
+        // When the player looks for L-shaped patterns
+        var matches = _strategy.FindMatches(cells);
+
+        // Then the edge L-shaped match is found
+        Assert.That(matches, Has.Count.EqualTo(1), "Should find L-shaped pattern even when positioned at grid edge");
+        Assert.That(matches[0].Count, Is.EqualTo(5), "Edge L-shape should contain 5 elements like any minimal L-shape");
     }
 
     #endregion

@@ -1,9 +1,10 @@
-﻿using ThreeInARow.Grid.ADT;
+﻿using NUnit.Framework;
+using ThreeInARow.Grid.ADT;
 using ThreeInARow.Grid.ValueObjects;
 
-namespace ThreeInARow.Grid.Matching.Tests;
+namespace ThreeInARow.TestingUtilities;
 
-public static class CellsFromGridConverterExtensions
+public static class MGridTestUtilityExtensions
 {
     public static IEnumerable<ElementCell<TElement>> CreateCellsFromGrid<TElement>(this MGridTestUtility _, TElement?[,] grid)
     {

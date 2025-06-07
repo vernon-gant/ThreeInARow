@@ -14,7 +14,7 @@ public interface IFillableGrid<TElement>
 
     /// <remarks>Precondition: The column is not full.</remarks>
     /// <remarks>Postcondition: The elements in the column are shifted down by one row, and the topmost cell is empty.</remarks>
-    OneOf<Success, ColumnIsFull, CanNotDrop> Drop(GridColumn column);
+    OneOf<Success, ColumnIsFull, CanNotShiftDown> ShiftDown(GridColumn column);
 
     /// <remarks>Precondition: The column is not full.</remarks>
     /// <remarks>Postcondition: The element is added to the top of the column.</remarks>
@@ -25,9 +25,9 @@ public interface IFillableGrid<TElement>
 
     bool IsColumnFull(GridColumn column);
 
-    OneOf<bool, ColumnIsFull> CanDrop(GridColumn column);
+    OneOf<bool, ColumnIsFull> CanShiftDown(GridColumn column);
 
     List<GridColumn> FillableColumns { get; }
 }
 
-public struct CanNotDrop;
+public struct CanNotShiftDown;

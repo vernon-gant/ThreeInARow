@@ -1,5 +1,6 @@
 ﻿using ThreeInARow.Grid.Matching.Implementations.MatchingStrategies;
 using ThreeInARow.Grid.ValueObjects;
+using ThreeInARow.TestingUtilities;
 
 namespace ThreeInARow.Grid.Matching.Tests;
 
@@ -7,23 +8,25 @@ public class VerticalMatchingStrategyTests : MGridTestUtility
 {
     private readonly VerticalMatchingStrategy<string> _strategy = new(minMatchLength: 3);
 
+    #region Scenarios Where No Vertical Matches Are Found
+
     [Test]
-    public void When_GridIsEmpty_Then_ReturnsNoMatches()
+    public void GivenAnEmptyGrid_WhenPlayerLooksForVerticalMatches_ThenNoMatchesAreFound()
     {
-        // Given
+        // Given a completely empty grid with no elements
         var emptyCells = Enumerable.Empty<ElementCell<string>>();
 
-        // When
+        // When the player looks for vertical matches
         var matches = _strategy.FindMatches(emptyCells);
 
-        // Then
-        Assert.That(matches, Is.Empty);
+        // Then no matches are found
+        Assert.That(matches, Is.Empty, "Empty grid should contain no vertical matches");
     }
 
     [Test]
-    public void When_GridHasNoVerticalMatches_Then_ReturnsNoMatches()
+    public void GivenAGridWithNoConsecutiveVerticalElements_WhenPlayerLooksForVerticalMatches_ThenNoMatchesAreFound()
     {
-        // Given
+        // Given a grid where no three consecutive elements are the same vertically
         var grid = new[,]
         {
             { "A", "B", "C" },
@@ -32,46 +35,67 @@ public class VerticalMatchingStrategyTests : MGridTestUtility
         };
         var cells = this.CreateCellsFromGrid(grid);
 
-        // When
+        // When the player looks for vertical matches
         var matches = _strategy.FindMatches(cells);
 
-        // Then
-        Assert.That(matches, Is.Empty);
+        // Then no matches are found because no column has three consecutive identical elements
+        Assert.That(matches, Is.Empty, "Grid with no consecutive identical vertical elements should have no vertical matches");
     }
 
     [Test]
-    public void When_GridHasOneVerticalMatchOfMinimumLength_Then_ReturnsOneMatch()
+    public void GivenAGridWithEmptyCellsBreakingPotentialMatches_WhenPlayerLooksForVerticalMatches_ThenNoMatchesAreFound()
     {
-        // Given
+        // Given a grid where empty cells break what would otherwise be valid vertical matches
         var grid = new[,]
         {
             { "A", "B", "C", "D" },
-            { "A", "C", "D", "E" }, // AAA match at column 0, positions (0,0), (1,0), (2,0)
+            { "A", "C", "D", "E" }, // AA-AA broken by empty cell
+            { null, "D", "E", "F" }, // Empty cell breaks vertical continuity
+            { "A", "E", "F", "G" },
+            { "A", "F", "G", "H" }
+        };
+        var cells = this.CreateCellsFromGrid(grid);
+
+        // When the player looks for vertical matches
+        var matches = _strategy.FindMatches(cells);
+
+        // Then no matches are found because empty cells break the continuity
+        Assert.That(matches, Is.Empty, "Empty cells should break potential vertical matches");
+    }
+
+    #endregion
+
+    #region Scenarios Where Single Vertical Matches Are Found
+
+    [Test]
+    public void GivenAGridWithOneMinimalVerticalMatch_WhenPlayerLooksForVerticalMatches_ThenOneMatchIsFound()
+    {
+        // Given a grid with exactly three consecutive identical elements in one column
+        var grid = new[,]
+        {
+            { "A", "B", "C", "D" },
+            { "A", "C", "D", "E" }, // AAA vertical match in column 0
             { "A", "D", "E", "F" },
             { "B", "E", "F", "G" }
         };
         var cells = this.CreateCellsFromGrid(grid);
 
-        // When
+        // When the player looks for vertical matches
         var matches = _strategy.FindMatches(cells);
 
-        // Then
-        Assert.That(matches, Has.Count.EqualTo(1));
-        Assert.That(matches[0].Count, Is.EqualTo(3));
-
-        var matchPositions = matches[0].Select(cell => (cell.RowIndex, cell.ColumnIndex)).OrderBy(pos => pos.RowIndex);
-        var expectedPositions = new[] { (0, 0), (1, 0), (2, 0) };
-        Assert.That(matchPositions, Is.EqualTo(expectedPositions));
+        // Then exactly one match is found with the correct positions
+        Assert.That(matches, Has.Count.EqualTo(1), "Should find exactly one vertical match");
+        Assert.That(matches[0].Count, Is.EqualTo(3), "Minimal vertical match should contain exactly three elements");
     }
 
     [Test]
-    public void When_GridHasVerticalMatchLongerThanMinimum_Then_ReturnsOneMatchWithCorrectLength()
+    public void GivenAGridWithOneExtendedVerticalMatch_WhenPlayerLooksForVerticalMatches_ThenOneLongerMatchIsFound()
     {
-        // Given
+        // Given a grid with more than three consecutive identical elements in one column
         var grid = new[,]
         {
             { "A", "B", "C", "D" },
-            { "A", "C", "D", "E" }, // AAAAA match at column 0, positions (0,0) through (4,0)
+            { "A", "C", "D", "E" }, // AAAAA vertical match in column 0 (5 elements)
             { "A", "D", "E", "F" },
             { "A", "E", "F", "G" },
             { "A", "F", "G", "H" },
@@ -79,145 +103,43 @@ public class VerticalMatchingStrategyTests : MGridTestUtility
         };
         var cells = this.CreateCellsFromGrid(grid);
 
-        // When
+        // When the player looks for vertical matches
         var matches = _strategy.FindMatches(cells);
 
-        // Then
-        Assert.That(matches, Has.Count.EqualTo(1));
-        Assert.That(matches[0].Count, Is.EqualTo(5));
-
-        var matchPositions = matches[0].Select(cell => (cell.RowIndex, cell.ColumnIndex)).OrderBy(pos => pos.RowIndex);
-        var expectedPositions = new[] { (0, 0), (1, 0), (2, 0), (3, 0), (4, 0) };
-        Assert.That(matchPositions, Is.EqualTo(expectedPositions));
+        // Then exactly one extended match is found
+        Assert.That(matches, Has.Count.EqualTo(1), "Should find exactly one extended vertical match");
+        Assert.That(matches[0].Count, Is.EqualTo(5), "Extended match should include all five consecutive elements");
     }
 
     [Test]
-    public void When_GridHasMultipleVerticalMatchesInSameColumn_Then_ReturnsAllMatches()
+    public void GivenAGridWithAMatchAfterEmptySpaces_WhenPlayerLooksForVerticalMatches_ThenTheMatchIsFound()
     {
-        // Given
-        var grid = new[,]
-        {
-            { "A", "B", "C", "D" },
-            { "A", "C", "D", "E" }, // AAA match at (0-2, 0)
-            { "A", "D", "E", "F" },
-            { "B", "E", "F", "G" }, // Separator
-            { "C", "F", "G", "H" }, // CCC match at (4-6, 0)
-            { "C", "G", "H", "I" },
-            { "C", "H", "I", "J" }
-        };
-        var cells = this.CreateCellsFromGrid(grid);
-
-        // When
-        var matches = _strategy.FindMatches(cells);
-
-        // Then
-        Assert.That(matches, Has.Count.EqualTo(2));
-
-        var firstMatch = matches.First(m => m.Any(cell => cell.RowIndex == 0));
-        var secondMatch = matches.First(m => m.Any(cell => cell.RowIndex == 4));
-
-        Assert.That(firstMatch.Count, Is.EqualTo(3));
-        Assert.That(secondMatch.Count, Is.EqualTo(3));
-
-        var firstMatchPositions = firstMatch.Select(cell => (cell.RowIndex, cell.ColumnIndex)).OrderBy(pos => pos.RowIndex);
-        var secondMatchPositions = secondMatch.Select(cell => (cell.RowIndex, cell.ColumnIndex)).OrderBy(pos => pos.RowIndex);
-
-        var expectedFirstPositions = new[] { (0, 0), (1, 0), (2, 0) };
-        var expectedSecondPositions = new[] { (4, 0), (5, 0), (6, 0) };
-
-        Assert.That(firstMatchPositions, Is.EqualTo(expectedFirstPositions));
-        Assert.That(secondMatchPositions, Is.EqualTo(expectedSecondPositions));
-    }
-
-    [Test]
-    public void When_GridHasVerticalMatchesInDifferentColumns_Then_ReturnsAllMatches()
-    {
-        // Given
-        var grid = new[,]
-        {
-            { "A", "B", "C", "D" }, // AAA match at column 0, BBB match at column 1
-            { "A", "B", "D", "E" },
-            { "A", "B", "E", "F" },
-            { "B", "C", "F", "G" }
-        };
-        var cells = this.CreateCellsFromGrid(grid);
-
-        // When
-        var matches = _strategy.FindMatches(cells);
-
-        // Then
-        Assert.That(matches, Has.Count.EqualTo(2));
-
-        var firstColumnMatch = matches.First(m => m.Any(cell => cell.ColumnIndex == 0));
-        var secondColumnMatch = matches.First(m => m.Any(cell => cell.ColumnIndex == 1));
-
-        Assert.That(firstColumnMatch.Count, Is.EqualTo(3));
-        Assert.That(secondColumnMatch.Count, Is.EqualTo(3));
-
-        var firstColumnPositions = firstColumnMatch.Select(cell => (cell.RowIndex, cell.ColumnIndex)).OrderBy(pos => pos.RowIndex);
-        var secondColumnPositions = secondColumnMatch.Select(cell => (cell.RowIndex, cell.ColumnIndex)).OrderBy(pos => pos.RowIndex);
-
-        var expectedFirstColumnPositions = new[] { (0, 0), (1, 0), (2, 0) };
-        var expectedSecondColumnPositions = new[] { (0, 1), (1, 1), (2, 1) };
-
-        Assert.That(firstColumnPositions, Is.EqualTo(expectedFirstColumnPositions));
-        Assert.That(secondColumnPositions, Is.EqualTo(expectedSecondColumnPositions));
-    }
-
-    [Test]
-    public void When_GridHasEmptyCellsBreakingMatch_Then_ReturnsNoMatches()
-    {
-        // Given
-        var grid = new[,]
-        {
-            { "A", "B", "C", "D" },
-            { "A", "C", "D", "E" }, // AA-AA broken by empty cell
-            { null, "D", "E", "F" },
-            { "A", "E", "F", "G" },
-            { "A", "F", "G", "H" }
-        };
-        var cells = this.CreateCellsFromGrid(grid);
-
-        // When
-        var matches = _strategy.FindMatches(cells);
-
-        // Then
-        Assert.That(matches, Is.Empty);
-    }
-
-    [Test]
-    public void When_GridHasValidMatchAfterEmptyCells_Then_ReturnsMatch()
-    {
-        // Given
+        // Given a grid where a valid vertical match occurs after some empty cells
         var grid = new[,]
         {
             { null, "B", "C", "D" },
             { null, "C", "D", "E" },
-            { "A", "D", "E", "F" }, // AAA match at column 0, positions (2,0), (3,0), (4,0)
+            { "A", "D", "E", "F" }, // AAA vertical match after empty cells
             { "A", "E", "F", "G" },
             { "A", "F", "G", "H" }
         };
         var cells = this.CreateCellsFromGrid(grid);
 
-        // When
+        // When the player looks for vertical matches
         var matches = _strategy.FindMatches(cells);
 
-        // Then
-        Assert.That(matches, Has.Count.EqualTo(1));
-        Assert.That(matches[0].Count, Is.EqualTo(3));
-
-        var matchPositions = matches[0].Select(cell => (cell.RowIndex, cell.ColumnIndex)).OrderBy(pos => pos.RowIndex);
-        var expectedPositions = new[] { (2, 0), (3, 0), (4, 0) };
-        Assert.That(matchPositions, Is.EqualTo(expectedPositions));
+        // Then the match is found despite the preceding empty cells
+        Assert.That(matches, Has.Count.EqualTo(1), "Should find vertical match even after empty cells");
+        Assert.That(matches[0].Count, Is.EqualTo(3), "Match should include exactly three elements");
     }
 
     [Test]
-    public void When_GridHasValidMatchBeforeEmptyCells_Then_ReturnsMatch()
+    public void GivenAGridWithAMatchBeforeEmptySpaces_WhenPlayerLooksForVerticalMatches_ThenTheMatchIsFound()
     {
-        // Given
+        // Given a grid where a valid vertical match occurs before some empty cells
         var grid = new[,]
         {
-            { "A", "B", "C", "D" }, // AAA match at column 0, positions (0,0), (1,0), (2,0)
+            { "A", "B", "C", "D" }, // AAA vertical match before empty cells
             { "A", "C", "D", "E" },
             { "A", "D", "E", "F" },
             { null, "E", "F", "G" },
@@ -225,53 +147,149 @@ public class VerticalMatchingStrategyTests : MGridTestUtility
         };
         var cells = this.CreateCellsFromGrid(grid);
 
-        // When
+        // When the player looks for vertical matches
         var matches = _strategy.FindMatches(cells);
 
-        // Then
-        Assert.That(matches, Has.Count.EqualTo(1));
-        Assert.That(matches[0].Count, Is.EqualTo(3));
+        // Then the match is found despite the following empty cells
+        Assert.That(matches, Has.Count.EqualTo(1), "Should find vertical match even before empty cells");
+        Assert.That(matches[0].Count, Is.EqualTo(3), "Match should include exactly three elements");
+    }
 
-        var matchPositions = matches[0].Select(cell => (cell.RowIndex, cell.ColumnIndex)).OrderBy(pos => pos.RowIndex);
-        var expectedPositions = new[] { (0, 0), (1, 0), (2, 0) };
-        Assert.That(matchPositions, Is.EqualTo(expectedPositions));
+    #endregion
+
+    #region Scenarios Where Multiple Vertical Matches Are Found
+
+    [Test]
+    public void GivenAGridWithMultipleMatchesInTheSameColumn_WhenPlayerLooksForVerticalMatches_ThenAllMatchesAreFound()
+    {
+        // Given a grid with two separate vertical matches in the same column
+        var grid = new[,]
+        {
+            { "A", "B", "C", "D" },
+            { "A", "C", "D", "E" }, // AAA match at top of column 0
+            { "A", "D", "E", "F" },
+            { "B", "E", "F", "G" }, // Separator element
+            { "C", "F", "G", "H" }, // CCC match at bottom of column 0
+            { "C", "G", "H", "I" },
+            { "C", "H", "I", "J" }
+        };
+        var cells = this.CreateCellsFromGrid(grid);
+
+        // When the player looks for vertical matches
+        var matches = _strategy.FindMatches(cells);
+
+        // Then both matches are found
+        Assert.That(matches, Has.Count.EqualTo(2), "Should find both vertical matches in the same column");
     }
 
     [Test]
-    public void When_GridHasMatchesSeparatedByEmptyCells_Then_ReturnsBothMatches()
+    public void GivenAGridWithMatchesInDifferentColumns_WhenPlayerLooksForVerticalMatches_ThenAllMatchesAreFound()
     {
-        // Given
+        // Given a grid with vertical matches in different columns
         var grid = new[,]
         {
-            { "A", "B", "C", "D" }, // AAA at (0-2, 0) and AAA at (4-6, 0)
+            { "A", "B", "C", "D" }, // AAA match in column 0, BBB match in column 1
+            { "A", "B", "D", "E" },
+            { "A", "B", "E", "F" },
+            { "B", "C", "F", "G" }
+        };
+        var cells = this.CreateCellsFromGrid(grid);
+
+        // When the player looks for vertical matches
+        var matches = _strategy.FindMatches(cells);
+
+        // Then both matches are found across different columns
+        Assert.That(matches, Has.Count.EqualTo(2), "Should find vertical matches in different columns");
+    }
+
+    [Test]
+    public void GivenAGridWithMatchesSeparatedByEmptySpaces_WhenPlayerLooksForVerticalMatches_ThenBothMatchesAreFound()
+    {
+        // Given a grid with two vertical matches in the same column separated by empty cells
+        var grid = new[,]
+        {
+            { "A", "B", "C", "D" }, // AAA at top and AAA at bottom, separated by empty cell
             { "A", "C", "D", "E" },
             { "A", "D", "E", "F" },
-            { null, "E", "F", "G" },
+            { null, "E", "F", "G" }, // Empty cell separates the matches
             { "A", "F", "G", "H" },
             { "A", "G", "H", "I" },
             { "A", "H", "I", "J" }
         };
         var cells = this.CreateCellsFromGrid(grid);
 
-        // When
+        // When the player looks for vertical matches
         var matches = _strategy.FindMatches(cells);
 
-        // Then
-        Assert.That(matches, Has.Count.EqualTo(2));
-
-        var firstMatch = matches.First(m => m.Any(cell => cell.RowIndex == 0));
-        var secondMatch = matches.First(m => m.Any(cell => cell.RowIndex == 4));
-
-        Assert.That(firstMatch.Count, Is.EqualTo(3));
-        Assert.That(secondMatch.Count, Is.EqualTo(3));
-
-        var firstMatchPositions = firstMatch.Select(cell => (cell.RowIndex, cell.ColumnIndex)).OrderBy(pos => pos.RowIndex);
-        var secondMatchPositions = secondMatch.Select(cell => (cell.RowIndex, cell.ColumnIndex)).OrderBy(pos => pos.RowIndex);
-
-        var expectedFirstPositions = new[] { (0, 0), (1, 0), (2, 0) };
-        var expectedSecondPositions = new[] { (4, 0), (5, 0), (6, 0) };
-
-        Assert.That(firstMatchPositions, Is.EqualTo(expectedFirstPositions));
-        Assert.That(secondMatchPositions, Is.EqualTo(expectedSecondPositions));
+        // Then both matches are found despite the empty cell between them
+        Assert.That(matches, Has.Count.EqualTo(2), "Should find both matches separated by empty cells");
     }
+
+    [Test]
+    public void GivenAGridWithMultipleMatchesOfDifferentElements_WhenPlayerLooksForVerticalMatches_ThenAllDifferentMatchesAreFound()
+    {
+        // Given a grid with vertical matches of different element types
+        var grid = new[,]
+        {
+            { "A", "B", "C", "D", "E", "F" },
+            { "A", "B", "X", "D", "Y", "F" }, // AAA and BBB matches in columns 0 and 1
+            { "A", "B", "Y", "D", "Z", "F" },
+            { "X", "X", "Z", "D", "W", "Q" }, // DDD match in column 3
+            { "Y", "Y", "W", "D", "V", "R" },
+            { "Z", "Z", "V", "D", "U", "S" }
+        };
+        var cells = this.CreateCellsFromGrid(grid);
+
+        // When the player looks for vertical matches
+        var matches = _strategy.FindMatches(cells);
+
+        // Then all three different matches are found
+        Assert.That(matches, Has.Count.EqualTo(4), "Should find all vertical matches of different element types");
+    }
+
+    [Test]
+    public void GivenAGridWithAdjacentColumnsHavingMatches_WhenPlayerLooksForVerticalMatches_ThenAllAdjacentMatchesAreFound()
+    {
+        // Given a grid where adjacent columns have vertical matches
+        var grid = new[,]
+        {
+            { "A", "B", "C", "D" }, // AAA in column 0, BBB in column 1
+            { "A", "B", "E", "F" },
+            { "A", "B", "G", "H" },
+            { "X", "Y", "I", "J" }
+        };
+        var cells = this.CreateCellsFromGrid(grid);
+
+        // When the player looks for vertical matches
+        var matches = _strategy.FindMatches(cells);
+
+        // Then both adjacent matches are found as separate matches
+        Assert.That(matches, Has.Count.EqualTo(2), "Should find both adjacent vertical matches separately");
+    }
+
+    [Test]
+    public void GivenAGridWithVerticalMatchesAtGridEdges_WhenPlayerLooksForVerticalMatches_ThenEdgeMatchesAreFound()
+    {
+        // Given a grid with vertical matches at the top and bottom edges
+        var grid = new[,]
+        {
+            { "A", "B", "C", "D" }, // AAA match at top edge
+            { "A", "E", "F", "G" },
+            { "A", "H", "I", "J" },
+            { "X", "K", "L", "M" },
+            { "Y", "N", "O", "P" },
+            { "Z", "Q", "R", "Z" }, // ZZZ match at bottom edge
+            { "W", "S", "T", "Z" },
+            { "V", "U", "V", "Z" }
+        };
+        var cells = this.CreateCellsFromGrid(grid);
+
+        // When the player looks for vertical matches
+        var matches = _strategy.FindMatches(cells);
+
+        // Then both edge matches are found
+        Assert.That(matches, Has.Count.EqualTo(2), "Should find vertical matches at grid edges");
+    }
+
+    #endregion
 }

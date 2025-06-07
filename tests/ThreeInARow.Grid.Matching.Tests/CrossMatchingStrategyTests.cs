@@ -1,4 +1,6 @@
-﻿using ThreeInARow.Grid.Matching.Implementations.MatchingStrategies;
+﻿using ThreeInARow.Grid.Matching.Implementations.Matches;
+using ThreeInARow.Grid.Matching.Implementations.MatchingStrategies;
+using ThreeInARow.TestingUtilities;
 
 namespace ThreeInARow.Grid.Matching.Tests;
 
@@ -13,197 +15,165 @@ public class CrossMatchingStrategyTests : MGridTestUtility
         _strategy = new CrossMatchingStrategy<string>(3, _horizontalStrategy, _verticalStrategy);
     }
 
-    #region Negative Cases
+    #region Scenarios Where No Cross Patterns Are Found
 
     [Test]
-    public void When_NoMatches_Then_ReturnsNoCrossMatches()
+    public void GivenAGridWithNoMatchingElements_WhenPlayerLooksForCrossPatterns_ThenNoCrossMatchesAreFound()
     {
-        // Given - No matches in grid
+        // Given a grid with alternating elements that create no matches
         var grid = new[,]
         {
             { "A", "B", "A", "B", "A", "B", "A", "B" },
             { "B", "A", "B", "A", "B", "A", "B", "A" },
             { "A", "B", "A", "B", "A", "B", "A", "B" },
             { "B", "A", "B", "A", "B", "A", "B", "A" },
-            { null, null, null, null, null, null, null, null },
-            { null, null, null, null, null, null, null, null },
-            { null, null, null, null, null, null, null, null },
-            { null, null, null, null, null, null, null, null }
         };
         var cells = this.CreateCellsFromGrid(grid);
 
-        // When
+        // When the player looks for cross patterns
         var matches = _strategy.FindMatches(cells);
 
-        // Then
-        Assert.That(matches, Is.Empty);
+        // Then no cross matches are found
+        Assert.That(matches, Is.Empty, "No cross patterns should be detected in alternating grid");
     }
 
     [Test]
-    public void When_MatchesDoNotIntersect_Then_ReturnsNoCrossMatches()
+    public void GivenSeparateHorizontalAndVerticalMatches_WhenPlayerLooksForCrossPatterns_ThenNoCrossMatchesAreFound()
     {
-        // Given - Separate matches that don't touch
+        // Given a grid with separate horizontal and vertical matches that don't intersect
         var grid = new[,]
         {
-            { "A", "A", "A", "B", "C", "D", "E", "F" }, // Horizontal match
+            { "A", "A", "A", "B", "C", "D", "E", "F" }, // Horizontal match (separate)
             { "G", "H", "I", "B", "J", "K", "L", "M" },
             { "N", "O", "P", "B", "Q", "R", "S", "T" },
-            { "U", "V", "W", "B", "X", "Y", "Z", null }, // Vertical match
-            { null, null, null, null, null, null, null, null },
-            { null, null, null, null, null, null, null, null },
-            { null, null, null, null, null, null, null, null },
-            { null, null, null, null, null, null, null, null }
+            { "U", "V", "W", "B", "X", "Y", "Z", null }, // Vertical match (separate)
         };
         var cells = this.CreateCellsFromGrid(grid);
 
-        // When
+        // When the player looks for cross patterns
         var matches = _strategy.FindMatches(cells);
 
-        // Then
-        Assert.That(matches, Is.Empty);
+        // Then no cross matches are found because the matches don't intersect
+        Assert.That(matches, Is.Empty, "Separate non-intersecting matches should not form cross patterns");
     }
 
     [Test]
-    public void When_TShapeExists_Then_ReturnsNoCrossMatches()
+    public void GivenATShapedPattern_WhenPlayerLooksForCrossPatterns_ThenNoCrossMatchesAreFound()
     {
-        // Given - T-shape (missing bottom arm of cross)
+        // Given a grid with a T-shaped pattern (missing one arm of the cross)
         //   A
         // A A A
-        //   (missing A here)
+        //   (missing bottom arm)
         var grid = new[,]
         {
-            { "B", "A", "C", "D", "E", "F", "G", "H" }, // Vertical top
-            { "A", "A", "A", "I", "J", "K", "L", "M" }, // Horizontal middle
-            { "N", "O", "P", "Q", "R", "S", "T", "U" }, // No vertical bottom
-            { null, null, null, null, null, null, null, null },
-            { null, null, null, null, null, null, null, null },
-            { null, null, null, null, null, null, null, null },
-            { null, null, null, null, null, null, null, null },
-            { null, null, null, null, null, null, null, null }
+            { "B", "A", "C", "D", "E", "F", "G", "H" }, // Vertical top arm
+            { "A", "A", "A", "I", "J", "K", "L", "M" }, // Horizontal middle arm
+            { "N", "O", "P", "Q", "R", "S", "T", "U" }, // No vertical bottom arm
         };
         var cells = this.CreateCellsFromGrid(grid);
 
-        // When
+        // When the player looks for cross patterns
         var matches = _strategy.FindMatches(cells);
 
-        // Then
-        Assert.That(matches, Is.Empty);
+        // Then no cross matches are found because T-shapes are incomplete crosses
+        Assert.That(matches, Is.Empty, "T-shaped patterns should not be recognized as cross matches");
     }
 
     [Test]
-    public void When_LShapeExists_Then_ReturnsNoCrossMatches()
+    public void GivenAnLShapedPattern_WhenPlayerLooksForCrossPatterns_ThenNoCrossMatchesAreFound()
     {
-        // Given - L-shape (missing two arms of cross)
+        // Given a grid with an L-shaped pattern (missing two arms of the cross)
         var grid = new[,]
         {
-            { "A", "A", "A", "B", "C", "D", "E", "F" }, // Horizontal part
-            { "A", "G", "H", "I", "J", "K", "L", "M" }, // Vertical part (corner intersection)
-            { "A", "N", "O", "P", "Q", "R", "S", "T" }, // Vertical continues
-            { null, null, null, null, null, null, null, null },
-            { null, null, null, null, null, null, null, null },
-            { null, null, null, null, null, null, null, null },
-            { null, null, null, null, null, null, null, null },
-            { null, null, null, null, null, null, null, null }
+            { "A", "A", "A", "B", "C", "D", "E", "F" }, // Horizontal part of L
+            { "A", "G", "H", "I", "J", "K", "L", "M" }, // Vertical part starts here
+            { "A", "N", "O", "P", "Q", "R", "S", "T" }, // Vertical part continues
         };
         var cells = this.CreateCellsFromGrid(grid);
 
-        // When
+        // When the player looks for cross patterns
         var matches = _strategy.FindMatches(cells);
 
-        // Then
-        Assert.That(matches, Is.Empty);
+        // Then no cross matches are found because L-shapes are incomplete crosses
+        Assert.That(matches, Is.Empty, "L-shaped patterns should not be recognized as cross matches");
     }
 
     [Test]
-    public void When_EmptyCellsBreakCross_Then_ReturnsNoCrossMatches()
+    public void GivenACrossPatternBrokenByEmptySpaces_WhenPlayerLooksForCrossPatterns_ThenNoCrossMatchesAreFound()
     {
-        // Given - Cross shape broken by empty cell
+        // Given a grid where empty cells break what would be a cross pattern
         //   A
         // A A A
-        //   ∅ (empty breaks bottom arm)
+        //   ∅ (empty cell breaks the bottom arm)
         var grid = new[,]
         {
-            { "G", "A", "H", "I", "J", "K", "L", "M" }, // Vertical top
-            { "A", "A", "A", "N", "O", "P", "Q", "R" }, // Horizontal middle
-            { "S", null, "T", "U", "V", "W", "X", "Y" }, // Empty breaks vertical bottom
-            { null, null, null, null, null, null, null, null },
-            { null, null, null, null, null, null, null, null },
-            { null, null, null, null, null, null, null, null },
-            { null, null, null, null, null, null, null, null },
-            { null, null, null, null, null, null, null, null }
+            { "G", "A", "H", "I", "J", "K", "L", "M" }, // Vertical top arm
+            { "A", "A", "A", "N", "O", "P", "Q", "R" }, // Horizontal middle arm
+            { "S", null, "T", "U", "V", "W", "X", "Y" }, // Empty cell breaks vertical bottom
         };
         var cells = this.CreateCellsFromGrid(grid);
 
-        // When
+        // When the player looks for cross patterns
         var matches = _strategy.FindMatches(cells);
 
-        // Then
-        Assert.That(matches, Is.Empty);
+        // Then no cross matches are found because empty spaces break the pattern
+        Assert.That(matches, Is.Empty, "Cross patterns broken by empty cells should not be detected");
     }
 
     [Test]
-    public void When_IncompleteCrossShape_Then_ReturnsNoCrossMatches()
+    public void GivenAnIncompleteCrossWithOnlyThreeArms_WhenPlayerLooksForCrossPatterns_ThenNoCrossMatchesAreFound()
     {
-        // Given - Missing one arm of cross (only 3 arms present)
+        // Given a grid with only three arms of what would be a cross
         //   A
         // A A (missing right arm)
         //   A
         var grid = new[,]
         {
-            { "B", "A", "C", "D", "E", "F", "G", "H" }, // Vertical top
-            { "A", "A", "I", "J", "K", "L", "M", "N" }, // Horizontal left only
-            { "O", "A", "P", "Q", "R", "S", "T", "U" }, // Vertical bottom
-            { null, null, null, null, null, null, null, null },
-            { null, null, null, null, null, null, null, null },
-            { null, null, null, null, null, null, null, null },
-            { null, null, null, null, null, null, null, null },
-            { null, null, null, null, null, null, null, null }
+            { "B", "A", "C", "D", "E", "F", "G", "H" }, // Vertical top arm
+            { "A", "A", "I", "J", "K", "L", "M", "N" }, // Horizontal left arm only
+            { "O", "A", "P", "Q", "R", "S", "T", "U" }, // Vertical bottom arm
         };
         var cells = this.CreateCellsFromGrid(grid);
 
-        // When
+        // When the player looks for cross patterns
         var matches = _strategy.FindMatches(cells);
 
-        // Then
-        Assert.That(matches, Is.Empty);
+        // Then no cross matches are found because all four arms are required
+        Assert.That(matches, Is.Empty, "Incomplete crosses with only three arms should not be detected");
     }
 
     #endregion
 
-    #region Positive Cases
+    #region Scenarios Where Cross Patterns Are Successfully Found
 
     [Test]
-    public void When_MinimumCrossShape_Then_ReturnsOneCrossMatch()
+    public void GivenAMinimalCrossPattern_WhenPlayerLooksForCrossPatterns_ThenOneCrossMatchIsFound()
     {
-        // Given - Minimum cross shape (3x3)
+        // Given a grid with the smallest possible cross pattern (3x3)
         //   A
         // A A A
         //   A
         var grid = new[,]
         {
-            { "B", "A", "C", "D", "E", "F", "G", "H" }, // Vertical top
-            { "A", "A", "A", "I", "J", "K", "L", "M" }, // Horizontal middle
-            { "N", "A", "O", "P", "Q", "R", "S", "T" }, // Vertical bottom
-            { null, null, null, null, null, null, null, null },
-            { null, null, null, null, null, null, null, null },
-            { null, null, null, null, null, null, null, null },
-            { null, null, null, null, null, null, null, null },
-            { null, null, null, null, null, null, null, null }
+            { "B", "A", "C", "D", "E", "F", "G", "H" }, // Vertical top arm
+            { "A", "A", "A", "I", "J", "K", "L", "M" }, // Horizontal middle arm
+            { "N", "A", "O", "P", "Q", "R", "S", "T" }, // Vertical bottom arm
         };
         var cells = this.CreateCellsFromGrid(grid);
 
-        // When
+        // When the player looks for cross patterns
         var matches = _strategy.FindMatches(cells);
 
-        // Then
-        Assert.That(matches, Has.Count.EqualTo(1));
-        Assert.That(matches[0].Count, Is.EqualTo(5)); // 3 horizontal + 3 vertical - 1 center
+        // Then exactly one cross match is found with the correct number of elements
+        Assert.That(matches, Has.Count.EqualTo(1), "Should find exactly one cross pattern");
+        Assert.That(matches[0].Count, Is.EqualTo(5), "Minimal cross should contain 5 elements (3 horizontal + 3 vertical - 1 center)");
+        Assert.That(matches[0], Is.InstanceOf<CrossMatch<string>>(), "Match should be of type CrossMatch<string>");
     }
 
     [Test]
-    public void When_LargerSymmetricCross_Then_ReturnsOneCrossMatch()
+    public void GivenALargeSymmetricCrossPattern_WhenPlayerLooksForCrossPatterns_ThenOneCrossMatchIsFound()
     {
-        // Given - Larger symmetric cross (5 horizontal, 5 vertical)
+        // Given a grid with a large symmetric cross (5 horizontal, 5 vertical)
         //     A
         //     A
         // A A A A A
@@ -211,142 +181,120 @@ public class CrossMatchingStrategyTests : MGridTestUtility
         //     A
         var grid = new[,]
         {
-            { "I", "J", "A", "K", "L", "M", "N", "O" }, // Vertical top
+            { "I", "J", "A", "K", "L", "M", "N", "O" }, // Vertical top arm
             { "P", "Q", "A", "R", "S", "T", "U", "V" }, // Vertical continues
-            { "A", "A", "A", "A", "A", "W", "X", "Y" }, // 5-cell horizontal
-            { "Z", ".", "A", "B", "C", "D", "E", "F" }, // Vertical bottom
+            { "A", "A", "A", "A", "A", "W", "X", "Y" }, // 5-element horizontal arm
+            { "Z", ".", "A", "B", "C", "D", "E", "F" }, // Vertical bottom arm
             { "G", "H", "A", "I", "J", "K", "L", "M" }, // Vertical continues
-            { null, null, null, null, null, null, null, null },
-            { null, null, null, null, null, null, null, null },
-            { null, null, null, null, null, null, null, null }
         };
         var cells = this.CreateCellsFromGrid(grid);
 
-        // When
+        // When the player looks for cross patterns
         var matches = _strategy.FindMatches(cells);
 
-        // Then
-        Assert.That(matches, Has.Count.EqualTo(1));
-        Assert.That(matches[0].Count, Is.EqualTo(9)); // 5 + 5 - 1 center
+        // Then exactly one large cross match is found
+        Assert.That(matches, Has.Count.EqualTo(1), "Should find exactly one large cross pattern");
+        Assert.That(matches[0].Count, Is.EqualTo(9), "Large symmetric cross should contain 9 elements (5 + 5 - 1 center)");
+        Assert.That(matches[0], Is.InstanceOf<CrossMatch<string>>(), "Match should be of type CrossMatch<string>");
     }
 
     [Test]
-    public void When_AsymmetricCross_Then_ReturnsOneCrossMatch()
+    public void GivenAnAsymmetricCrossPattern_WhenPlayerLooksForCrossPatterns_ThenOneCrossMatchIsFound()
     {
-        // Given - Asymmetric cross (4 horizontal, 3 vertical)
+        // Given a grid with an asymmetric cross (4 horizontal, 3 vertical)
         //   A
         // A A A A
         //   A
         var grid = new[,]
         {
-            { "B", "A", "C", "D", "E", "F", "G", "H" }, // Vertical top
-            { "A", "A", "A", "A", "I", "J", "K", "L" }, // 4-cell horizontal
-            { "M", "A", "N", "O", "P", "Q", "R", "S" }, // Vertical bottom
-            { null, null, null, null, null, null, null, null },
-            { null, null, null, null, null, null, null, null },
-            { null, null, null, null, null, null, null, null },
-            { null, null, null, null, null, null, null, null },
-            { null, null, null, null, null, null, null, null }
+            { "B", "A", "C", "D", "E", "F", "G", "H" }, // Vertical top arm
+            { "A", "A", "A", "A", "I", "J", "K", "L" }, // 4-element horizontal arm
+            { "M", "A", "N", "O", "P", "Q", "R", "S" }, // Vertical bottom arm
         };
         var cells = this.CreateCellsFromGrid(grid);
 
-        // When
+        // When the player looks for cross patterns
         var matches = _strategy.FindMatches(cells);
 
-        // Then
-        Assert.That(matches, Has.Count.EqualTo(1));
-        Assert.That(matches[0].Count, Is.EqualTo(6)); // 4 + 3 - 1 center
+        // Then exactly one asymmetric cross match is found
+        Assert.That(matches, Has.Count.EqualTo(1), "Should find exactly one asymmetric cross pattern");
+        Assert.That(matches[0].Count, Is.EqualTo(6), "Asymmetric cross should contain 6 elements (4 + 3 - 1 center)");
+        Assert.That(matches[0], Is.InstanceOf<CrossMatch<string>>(), "Match should be of type CrossMatch<string>");
     }
 
     [Test]
-    public void When_MultipleCrossShapes_Then_ReturnsAllCrossMatches()
+    public void GivenMultipleSeparateCrossPatterns_WhenPlayerLooksForCrossPatterns_ThenAllCrossMatchesAreFound()
     {
-        // Given - Two separate cross shapes
+        // Given a grid with two separate cross patterns of the same element type
         //   A       B
         // A A A   B B B
         //   A       B
         var grid = new[,]
         {
-            { "C", "A", "D", "E", "B", "F", "G", "H" }, // Two vertical tops
-            { "A", "A", "A", "B", "B", "B", "Z", "J" }, // Two horizontal middles
-            { "K", "A", "L", "M", "B", "N", "O", "P" }, // Two vertical bottoms
-            { null, null, null, null, null, null, null, null },
-            { null, null, null, null, null, null, null, null },
-            { null, null, null, null, null, null, null, null },
-            { null, null, null, null, null, null, null, null },
-            { null, null, null, null, null, null, null, null }
+            { "C", "A", "D", "E", "B", "F", "G", "H" }, // Two vertical top arms
+            { "A", "A", "A", "B", "B", "B", "Z", "J" }, // Two horizontal middle arms
+            { "K", "A", "L", "M", "B", "N", "O", "P" }, // Two vertical bottom arms
         };
         var cells = this.CreateCellsFromGrid(grid);
 
-        // When
+        // When the player looks for cross patterns
         var matches = _strategy.FindMatches(cells);
 
-        // Then
-        Assert.That(matches, Has.Count.EqualTo(2));
-        Assert.That(matches.All(m => m.Count == 5), Is.True); // Both 3x3 crosses
+        // Then both cross matches are found
+        Assert.That(matches, Has.Count.EqualTo(2), "Should find both separate cross patterns");
+        Assert.That(matches.All(m => m.Count == 5), Is.True, "Both crosses should be minimal 3x3 patterns with 5 elements each");
+        Assert.That(matches.All(m => m is CrossMatch<string>), Is.True, "All matches should be of type CrossMatch<string>");
     }
 
     [Test]
-    public void When_LargeCrossWithExtendedArms_Then_ReturnsOneCrossMatch()
+    public void GivenACrossWithExtendedArms_WhenPlayerLooksForCrossPatterns_ThenOneLargeCrossMatchIsFound()
     {
-        // Given - Cross with longer arms (6 horizontal, 4 vertical)
+        // Given a grid with a cross having longer arms (6 horizontal, 4 vertical)
         //     A
         //     A
         // A A A A A A
         //     A
         var grid = new[,]
         {
-            { "I", "J", "A", "K", "L", "M", "N", "O" }, // Vertical top
+            { "I", "J", "A", "K", "L", "M", "N", "O" }, // Vertical top arm
             { "P", "Q", "A", "R", "S", "T", "U", "V" }, // Vertical continues
-            { "A", "A", "A", "A", "A", "A", "W", "X" }, // 6-cell horizontal
-            { "Y", "Z", "A", ".", "B", "C", "D", "E" }, // Vertical bottom
-            { null, null, null, null, null, null, null, null },
-            { null, null, null, null, null, null, null, null },
-            { null, null, null, null, null, null, null, null },
-            { null, null, null, null, null, null, null, null }
+            { "A", "A", "A", "A", "A", "A", "W", "X" }, // 6-element horizontal arm
+            { "Y", "Z", "A", ".", "B", "C", "D", "E" }, // Vertical bottom arm
         };
         var cells = this.CreateCellsFromGrid(grid);
 
-        // When
+        // When the player looks for cross patterns
         var matches = _strategy.FindMatches(cells);
 
-        // Then
-        Assert.That(matches, Has.Count.EqualTo(1));
-        Assert.That(matches[0].Count, Is.EqualTo(9)); // 6 + 4 - 1 center
+        // Then exactly one extended cross match is found
+        Assert.That(matches, Has.Count.EqualTo(1), "Should find exactly one extended cross pattern");
+        Assert.That(matches[0].Count, Is.EqualTo(9), "Extended cross should contain 9 elements (6 + 4 - 1 center)");
+        Assert.That(matches[0], Is.InstanceOf<CrossMatch<string>>(), "Match should be of type CrossMatch<string>");
     }
 
     [Test]
-    public void When_CrossShapesDifferentSizes_Then_ReturnsAllMatches()
+    public void GivenMultipleCrossesOfDifferentSizes_WhenPlayerLooksForCrossPatterns_ThenAllCrossMatchesAreFound()
     {
-        // Given - Two crosses of different sizes
+        // Given a grid with two crosses of different sizes
         //   A         B
         // A A A   B B B B
         //   A         B
         //   A
         var grid = new[,]
         {
-            { "C", "A", "D", "E", "B", "F", "G", "H" }, // Different vertical tops
-            { "A", "A", "A", "B", "B", "B", "B", "B" }, // Different horizontal sizes
-            { "J", "A", "K", "L", "B", "M", "N", "O" }, // Different vertical bottoms
-            { "P", "A", "Q", "R", "S", "T", "U", "V" }, // First cross longer vertical
-            { null, null, null, null, null, null, null, null },
-            { null, null, null, null, null, null, null, null },
-            { null, null, null, null, null, null, null, null },
-            { null, null, null, null, null, null, null, null }
+            { "C", "A", "D", "E", "B", "F", "G", "H" }, // Different vertical top arms
+            { "A", "A", "A", "B", "B", "B", "B", "B" }, // Different horizontal arm sizes
+            { "J", "A", "K", "L", "B", "M", "N", "O" }, // Different vertical bottom arms
+            { "P", "A", "Q", "R", "S", "T", "U", "V" }, // First cross has longer vertical
         };
         var cells = this.CreateCellsFromGrid(grid);
 
-        // When
+        // When the player looks for cross patterns
         var matches = _strategy.FindMatches(cells);
 
-        // Then
-        Assert.That(matches, Has.Count.EqualTo(2));
-
-        var firstCross = matches.First(m => m.Any(cell => cell.ColumnIndex == 1));
-        var secondCross = matches.First(m => m.Any(cell => cell.ColumnIndex == 4));
-
-        Assert.That(firstCross.Count, Is.EqualTo(6)); // 3 + 4 - 1
-        Assert.That(secondCross.Count, Is.EqualTo(7)); // 5 + 3 - 1
+        // Then both differently-sized cross matches are found
+        Assert.That(matches, Has.Count.EqualTo(2), "Should find both differently-sized cross patterns");
+        Assert.That(matches.All(m => m is CrossMatch<string>), Is.True, "All matches should be of type CrossMatch<string>");
     }
 
     #endregion

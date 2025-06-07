@@ -1,4 +1,8 @@
-﻿namespace ThreeInARow.Grid.Matching.Implementations.MatchingStrategies;
+﻿using ThreeInARow.Grid.Matching.ADT;
+using ThreeInARow.Grid.Matching.Implementations.Matches;
+using ThreeInARow.Grid.ValueObjects;
+
+namespace ThreeInARow.Grid.Matching.Implementations.MatchingStrategies;
 
 public class TMatchingStrategy<TElement>(int minMatchLength, HorizontalMatchingStrategy<TElement> horizontalStrategy, VerticalMatchingStrategy<TElement> verticalStrategy)
     : CombinedFiguresMatchingStrategy<TElement>(minMatchLength, horizontalStrategy, verticalStrategy) where TElement : IEquatable<TElement>
@@ -6,4 +10,5 @@ public class TMatchingStrategy<TElement>(int minMatchLength, HorizontalMatchingS
     private const int IntersectionPointCount = 4;
 
     protected override int FigureIntersectionPointCount() => IntersectionPointCount;
+    protected override IMatch<TElement> CreateMatch(IEnumerable<ElementCell<TElement>> cells) => new TMatch<TElement>(cells.ToHashSet());
 }

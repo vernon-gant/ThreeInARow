@@ -1,42 +1,41 @@
-﻿using ThreeInARow.Grid.ADT;
-using ThreeInARow.Grid.Implementations;
+﻿using ThreeInARow.Grid.Implementations;
 using ThreeInARow.Grid.ValueObjects;
 
 namespace ThreeInARow.Grid.Tests;
 
 [TestFixture]
-public class HorizontalVerticalSwapGridReadableTests : ReadableGridBehaviorTests<HorizontalVerticalSwapGrid<Element>>
+public class HorizontalVerticalSwapGridReadableTests : ReadableGridBehaviorTests<HorizontalVerticalSwapGrid<string>>
 {
-    protected override HorizontalVerticalSwapGrid<Element> CreateGrid(Element?[,] gridData) => new(gridData);
+    protected override HorizontalVerticalSwapGrid<string> CreateGrid(string?[,] gridData) => new(gridData);
 }
 
 [TestFixture]
-public class HorizontalVerticalSwapGridManageableTests : ManageableGridBehaviorTests<HorizontalVerticalSwapGrid<Element>>
+public class HorizontalVerticalSwapGridManageableTests : ManageableGridBehaviorTests<HorizontalVerticalSwapGrid<string>>
 {
-    protected override HorizontalVerticalSwapGrid<Element> CreateGrid(Element?[,] gridData) => new(gridData);
+    protected override HorizontalVerticalSwapGrid<string> CreateGrid(string?[,] gridData) => new(gridData);
 }
 
 [TestFixture]
-public class HorizontalVerticalSwapGridFillableTests : FillableGridBehaviorTests<HorizontalVerticalSwapGrid<Element>>
+public class HorizontalVerticalSwapGridFillableTests : FillableGridBehaviorTests<HorizontalVerticalSwapGrid<string>>
 {
-    protected override HorizontalVerticalSwapGrid<Element> CreateGrid(Element?[,] gridData) => new(gridData);
+    protected override HorizontalVerticalSwapGrid<string> CreateGrid(string?[,] gridData) => new(gridData);
 }
 
 [TestFixture]
 public class HorizontalVerticalSwapGridTests
 {
-     [Test]
-    public void Swap_GivenTwoHorizontallyAdjacentCellsWithElements_WhenSwapping_ThenReturnsSuccessAndElementsAreSwapped()
+    [Test]
+    public void GivenTwoElementsSideBySide_WhenPlayerSwapsThemHorizontally_ThenTheElementsExchangePositions()
     {
         // Given a grid with two horizontally adjacent cells containing different elements
-        var gridData = new Element?[,]
+        var gridData = new[,]
         {
-            { new("X"), new("Y"), null, null },
+            { "X", "Y", null, null },
             { null, null, null, null },
             { null, null, null, null },
             { null, null, null, null }
         };
-        var _grid = new HorizontalVerticalSwapGrid<Element>(gridData);
+        var _grid = new HorizontalVerticalSwapGrid<string>(gridData);
 
         var firstRow = new GridRow(0);
         var firstColumn = new GridColumn(0);
@@ -51,17 +50,17 @@ public class HorizontalVerticalSwapGridTests
     }
 
     [Test]
-    public void Swap_GivenTwoVerticallyAdjacentCellsWithElements_WhenSwapping_ThenReturnsSuccessAndElementsAreSwapped()
+    public void GivenTwoElementsOneAboveTheOther_WhenPlayerSwapsThemVertically_ThenTheElementsExchangePositions()
     {
         // Given a grid with two vertically adjacent cells containing different elements
-        var gridData = new Element?[,]
+        var gridData = new[,]
         {
-            { null, new("A"), null, null },
-            { null, new("B"), null, null },
+            { null, "A", null, null },
+            { null, "B", null, null },
             { null, null, null, null },
             { null, null, null, null }
         };
-        var _grid = new HorizontalVerticalSwapGrid<Element>(gridData);
+        var _grid = new HorizontalVerticalSwapGrid<string>(gridData);
 
         var firstRow = new GridRow(0);
         var firstColumn = new GridColumn(1);
@@ -73,23 +72,20 @@ public class HorizontalVerticalSwapGridTests
 
         // Then operation succeeds and elements are swapped
         Assert.That(result.IsT0, Is.True, "Swap should return Success for vertically adjacent cells");
-
-        // Verify swap occurred
-
     }
 
     [Test]
-    public void Swap_GivenTwoDiagonallyAdjacentCells_WhenSwapping_ThenReturnsInvalidSwap()
+    public void GivenTwoElementsPositionedDiagonally_WhenPlayerTriesToSwapThem_ThenTheSwapIsRejected()
     {
         // Given a grid with two diagonally adjacent cells
-        var gridData = new Element?[,]
+        var gridData = new[,]
         {
             { null, null, null, null },
-            { null, new("Center"), null, null },
-            { null, null, new("Diagonal"), null },
+            { null, "X", null, null },
+            { null, null, "Y", null },
             { null, null, null, null }
         };
-        var _grid = new HorizontalVerticalSwapGrid<Element>(gridData);
+        var _grid = new HorizontalVerticalSwapGrid<string>(gridData);
 
         var firstRow = new GridRow(1);
         var firstColumn = new GridColumn(1);
@@ -101,21 +97,20 @@ public class HorizontalVerticalSwapGridTests
 
         // Then operation fails with InvalidSwap
         Assert.That(result.IsT1, Is.True, "Swap should return InvalidSwap for diagonally adjacent cells");
-        Assert.That(result.AsT1, Is.TypeOf<InvalidSwap>(), "Should return InvalidSwap error");
     }
 
     [Test]
-    public void Swap_GivenTwoNonAdjacentCells_WhenSwapping_ThenReturnsInvalidSwap()
+    public void GivenTwoElementsFarApartOnTheGrid_WhenPlayerTriesToSwapThem_ThenTheSwapIsRejected()
     {
         // Given a grid with two non-adjacent cells
-        var gridData = new Element?[,]
+        var gridData = new string?[,]
         {
             { new("TopLeft"), null, null, null },
             { null, null, null, null },
             { null, null, null, null },
             { null, null, null, new("BottomRight") }
         };
-        var _grid = new HorizontalVerticalSwapGrid<Element>(gridData);
+        var _grid = new HorizontalVerticalSwapGrid<string>(gridData);
 
         var firstRow = new GridRow(0);
         var firstColumn = new GridColumn(0);
@@ -127,21 +122,20 @@ public class HorizontalVerticalSwapGridTests
 
         // Then operation fails with InvalidSwap
         Assert.That(result.IsT1, Is.True, "Swap should return InvalidSwap for non-adjacent cells");
-        Assert.That(result.AsT1, Is.TypeOf<InvalidSwap>(), "Should return InvalidSwap error");
     }
 
     [Test]
-    public void Swap_GivenTwoCellsWithTwoRowsDifference_WhenSwapping_ThenReturnsInvalidSwap()
+    public void GivenTwoElementsSeparatedByOneRowGap_WhenPlayerTriesToSwapThem_ThenTheSwapIsRejected()
     {
         // Given a grid with two cells in the same column but with 2 rows difference
-        var gridData = new Element?[,]
+        var gridData = new string?[,]
         {
             { null, null, new("Top"), null },
             { null, null, null, null },
             { null, null, new("Bottom"), null },
             { null, null, null, null }
         };
-        var _grid = new HorizontalVerticalSwapGrid<Element>(gridData);
+        var _grid = new HorizontalVerticalSwapGrid<string>(gridData);
 
         var firstRow = new GridRow(0);
         var firstColumn = new GridColumn(2);
@@ -153,21 +147,20 @@ public class HorizontalVerticalSwapGridTests
 
         // Then operation fails with InvalidSwap
         Assert.That(result.IsT1, Is.True, "Swap should return InvalidSwap for cells 2 rows apart");
-        Assert.That(result.AsT1, Is.TypeOf<InvalidSwap>(), "Should return InvalidSwap error");
     }
 
     [Test]
-    public void Swap_GivenTwoCellsWithTwoColumnsDifference_WhenSwapping_ThenReturnsInvalidSwap()
+    public void GivenTwoElementsSeparatedByOneColumnGap_WhenPlayerTriesToSwapThem_ThenTheSwapIsRejected()
     {
         // Given a grid with two cells in the same row but with 2 columns difference
-        var gridData = new Element?[,]
+        var gridData = new string?[,]
         {
             { null, null, null, null },
             { new("Left"), null, new("Right"), null },
             { null, null, null, null },
             { null, null, null, null }
         };
-        var _grid = new HorizontalVerticalSwapGrid<Element>(gridData);
+        var _grid = new HorizontalVerticalSwapGrid<string>(gridData);
 
         var firstRow = new GridRow(1);
         var firstColumn = new GridColumn(0);
@@ -179,21 +172,20 @@ public class HorizontalVerticalSwapGridTests
 
         // Then operation fails with InvalidSwap
         Assert.That(result.IsT1, Is.True, "Swap should return InvalidSwap for cells 2 columns apart");
-        Assert.That(result.AsT1, Is.TypeOf<InvalidSwap>(), "Should return InvalidSwap error");
     }
 
     [Test]
-    public void Swap_GivenOneEmptyAndOneOccupiedAdjacentCells_WhenSwapping_ThenReturnsSuccessAndSwapsContent()
+    public void GivenAnElementNextToAnEmptySpace_WhenPlayerSwapsThem_ThenTheElementMovesToTheEmptySpace()
     {
         // Given a grid with one occupied and one empty adjacent cell
-        var gridData = new Element?[,]
+        var gridData = new[,]
         {
-            { null, new("Z"), null, null },
+            { null, "X", null, null },
             { null, null, null, null },
             { null, null, null, null },
             { null, null, null, null }
         };
-        var _grid = new HorizontalVerticalSwapGrid<Element>(gridData);
+        var _grid = new HorizontalVerticalSwapGrid<string>(gridData);
 
         var occupiedRow = new GridRow(0);
         var occupiedColumn = new GridColumn(1);
@@ -208,17 +200,17 @@ public class HorizontalVerticalSwapGridTests
     }
 
     [Test]
-    public void Swap_GivenTwoEmptyAdjacentCells_WhenSwapping_ThenReturnsSuccessAndCellsRemainEmpty()
+    public void GivenTwoAdjacentEmptySpaces_WhenPlayerSwapsThem_ThenBothSpacesRemainEmpty()
     {
         // Given a grid with two empty adjacent cells
-        var gridData = new Element?[,]
+        var gridData = new string?[,]
         {
             { null, null, null, null },
             { null, null, null, null },
             { null, null, null, null },
             { null, null, null, null }
         };
-        var _grid = new HorizontalVerticalSwapGrid<Element>(gridData);
+        var _grid = new HorizontalVerticalSwapGrid<string>(gridData);
 
         var firstRow = new GridRow(2);
         var firstColumn = new GridColumn(1);
@@ -239,17 +231,17 @@ public class HorizontalVerticalSwapGridTests
     }
 
     [Test]
-    public void Swap_GivenHorizontallyAdjacentCellsAtRightEdge_WhenSwapping_ThenReturnsSuccessAndElementsAreSwapped()
+    public void GivenTwoElementsAtTheRightEdgeOfTheGrid_WhenPlayerSwapsThemHorizontally_ThenTheElementsExchangePositions()
     {
         // Given a grid with horizontally adjacent cells at the right edge
-        var gridData = new Element?[,]
+        var gridData = new[,]
         {
             { null, null, null, null },
-            { null, null, new("Edge1"), new("Edge2") },
+            { null, null, "X", "Y" },
             { null, null, null, null },
             { null, null, null, null }
         };
-        var _grid = new HorizontalVerticalSwapGrid<Element>(gridData);
+        var _grid = new HorizontalVerticalSwapGrid<string>(gridData);
 
         var firstRow = new GridRow(1);
         var firstColumn = new GridColumn(2);
@@ -264,17 +256,17 @@ public class HorizontalVerticalSwapGridTests
     }
 
     [Test]
-    public void Swap_GivenVerticallyAdjacentCellsAtBottomEdge_WhenSwapping_ThenReturnsSuccessAndElementsAreSwapped()
+    public void GivenTwoElementsAtTheBottomEdgeOfTheGrid_WhenPlayerSwapsThemVertically_ThenTheElementsExchangePositions()
     {
         // Given a grid with vertically adjacent cells at the bottom edge
-        var gridData = new Element?[,]
+        var gridData = new[,]
         {
             { null, null, null, null },
             { null, null, null, null },
-            { null, new("Bottom1"), null, null },
-            { null, new("Bottom2"), null, null }
+            { null, "X", null, null },
+            { null, "Y", null, null }
         };
-        var _grid = new HorizontalVerticalSwapGrid<Element>(gridData);
+        var _grid = new HorizontalVerticalSwapGrid<string>(gridData);
 
         var firstRow = new GridRow(2);
         var firstColumn = new GridColumn(1);

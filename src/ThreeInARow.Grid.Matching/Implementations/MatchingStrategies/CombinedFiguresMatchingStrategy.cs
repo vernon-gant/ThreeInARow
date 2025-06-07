@@ -30,7 +30,7 @@ public abstract class CombinedFiguresMatchingStrategy<TElement>(int minMatchLeng
                 if (!horizontalMatch.Intersects(verticalMatch) || !IntersectionPointIsNotEnd(horizontalMatch, verticalMatch)) continue;
 
                 var mergedMatchResult = horizontalMatch.Merge(verticalMatch);
-                tMatches.Add(new TMatch<TElement>(mergedMatchResult.AsT0));
+                tMatches.Add(CreateMatch(mergedMatchResult.AsT0));
             }
         }
 
@@ -62,4 +62,6 @@ public abstract class CombinedFiguresMatchingStrategy<TElement>(int minMatchLeng
     }
 
     protected abstract int FigureIntersectionPointCount();
+
+    protected abstract IMatch<TElement> CreateMatch(IEnumerable<ElementCell<TElement>> cells);
 }
