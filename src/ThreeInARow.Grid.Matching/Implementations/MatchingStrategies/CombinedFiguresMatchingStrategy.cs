@@ -65,6 +65,4 @@ public abstract class CombinedFiguresMatchingStrategy<TElement>(int minMatchLeng
     }
 
     protected abstract int FigureIntersectionPointCount();
-
-    protected abstract IMatch<TElement> CreateMatch(IEnumerable<ElementCell<TElement>> cells);
 }

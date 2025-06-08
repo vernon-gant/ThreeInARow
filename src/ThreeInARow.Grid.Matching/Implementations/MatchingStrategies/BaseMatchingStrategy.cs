@@ -12,4 +12,6 @@ public abstract class BaseMatchingStrategy<TElement>(int minMatchLength) : IMatc
     public abstract List<IMatch<TElement>> FindMatches(IEnumerable<ElementCell<TElement>> cells);
 
     public abstract OneOf<bool, GridHasEmptyCells, GridHasMatches> HasPotentialMatches(IReadableGrid<TElement> grid);
+
+    protected abstract IMatch<TElement> CreateMatch(IEnumerable<ElementCell<TElement>> cells);
 }

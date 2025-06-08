@@ -10,5 +10,6 @@ public class TMatchingStrategy<TElement>(int minMatchLength, HorizontalMatchingS
     private const int IntersectionPointCount = 4;
 
     protected override int FigureIntersectionPointCount() => IntersectionPointCount;
+
     protected override IMatch<TElement> CreateMatch(IEnumerable<ElementCell<TElement>> cells) => new TMatch<TElement>(cells.ToHashSet());
 }
