@@ -1,6 +1,7 @@
-﻿using System.Diagnostics;
+﻿using OneOf;
+using System.Diagnostics;
+using ThreeInARow.Grid.ADT;
 using ThreeInARow.Grid.Matching.ADT;
-using ThreeInARow.Grid.Matching.Implementations.Matches;
 using ThreeInARow.Grid.ValueObjects;
 
 namespace ThreeInARow.Grid.Matching.Implementations.MatchingStrategies;
@@ -18,6 +19,8 @@ public abstract class CombinedFiguresMatchingStrategy<TElement>(int minMatchLeng
 
         return tMatches;
     }
+
+    public override OneOf<bool, GridHasEmptyCells, GridHasMatches> HasPotentialMatches(IReadableGrid<TElement> grid) => false;
 
     private List<IMatch<TElement>> FindTMatches(List<IMatch<TElement>> horizontalMatches, List<IMatch<TElement>> verticalMatches)
     {

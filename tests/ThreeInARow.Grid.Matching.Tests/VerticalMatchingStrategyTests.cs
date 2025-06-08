@@ -1,4 +1,5 @@
-﻿using ThreeInARow.Grid.Matching.Implementations.MatchingStrategies;
+﻿using ThreeInARow.Grid.Implementations;
+using ThreeInARow.Grid.Matching.Implementations.MatchingStrategies;
 using ThreeInARow.Grid.ValueObjects;
 using ThreeInARow.TestingUtilities;
 
@@ -7,6 +8,8 @@ namespace ThreeInARow.Grid.Matching.Tests;
 public class VerticalMatchingStrategyTests : MGridTestUtility
 {
     private readonly VerticalMatchingStrategy<string> _strategy = new(minMatchLength: 3);
+
+    #region Find Matches Tests
 
     #region Scenarios Where No Vertical Matches Are Found
 
@@ -289,6 +292,169 @@ public class VerticalMatchingStrategyTests : MGridTestUtility
 
         // Then both edge matches are found
         Assert.That(matches, Has.Count.EqualTo(2), "Should find vertical matches at grid edges");
+    }
+
+    #endregion
+
+    #endregion
+
+    #region Find Potential Matches Tests
+
+    [Test]
+    public void GivenAnEmptyGrid_WhenCheckingForPotentialVerticalMatches_ThenReturnsGridHasEmptyCells()
+    {
+        // Given a completely empty grid with no elements
+        var grid = new HorizontalVerticalSwapGrid<string>(new string?[2,2]);
+
+        // When checking for potential vertical matches
+        var result = _strategy.HasPotentialMatches(grid);
+
+        // Then it returns that the grid has empty cells
+        Assert.That(result.IsT1, Is.True, "Empty grid should not be considered to have potential vertical matches");
+    }
+
+    [Test]
+    public void GivenAGridWithNoPotentialVerticalMatches_WhenCheckingForPotentialMatches_ThenReturnsFalse()
+    {
+        // Given a grid where no three consecutive elements are the same vertically
+        var gridData = new[,]
+        {
+            { "A", "B", "C" },
+            { "B", "D", "B" },
+            { "A", "E", "A" }
+        };
+        var grid = new HorizontalVerticalSwapGrid<string>(gridData);
+
+        // When checking for potential vertical matches
+        var result = _strategy.HasPotentialMatches(grid);
+
+        // Then the result is false
+        Assert.That(result.IsT0, Is.True, "When passing correct grid the result must be boolean");
+        Assert.That(result.AsT0, Is.False, "Grid with no consecutive identical vertical elements should not have potential matches");
+    }
+
+    [Test]
+    public void GivenAGridWithNoPotentialVerticalMatchesWithTwoConsecutiveElements_WhenCheckingForPotentialMatches_ThenReturnsFalse()
+    {
+        // Given a grid where two columns have two consecutive identical elements but do not form a potential match
+        var gridData = new[,]
+        {
+            { "A", "B", "C" },
+            { "A", "B", "B" },
+            { "D", "E", "A" }
+        };
+        var grid = new HorizontalVerticalSwapGrid<string>(gridData);
+
+        // When checking for potential vertical matches
+        var result = _strategy.HasPotentialMatches(grid);
+
+        // Then it returns false
+        Assert.That(result.IsT0, Is.True, "When passing correct grid the result must be boolean");
+        Assert.That(result.AsT0, Is.False, "Grid with no consecutive identical vertical elements should not have potential matches");
+    }
+
+    [Test]
+    public void GivenAGridWithPotentialVerticalMatchEqualToMinMatchLength_WhenCheckingForPotentialMatches_ThenReturnsTrue()
+    {
+        // Given a grid with potential vertical matches
+        var gridData = new[,]
+        {
+            { "A", "B", "C" },
+            { "A", "B", "D" }, // Potential match in column 0,1
+            { "B", "A", "F" }
+        };
+        var grid = new HorizontalVerticalSwapGrid<string>(gridData);
+
+        // When checking for potential vertical matches
+        var result = _strategy.HasPotentialMatches(grid);
+
+        // Then it returns true
+        Assert.That(result.IsT0, Is.True, "When passing correct grid the result must be boolean");
+        Assert.That(result.AsT0, Is.True, "Grid with potential vertical matches should return true");
+    }
+
+    [Test]
+    public void GivenAGridWithPotentialMultipleMatches_WhenCheckingForPotentialMatches_ThenReturnsTrue()
+    {
+        // Given a grid with potential vertical matches
+        var gridData = new[,]
+        {
+            { "A", "B", "C", "D", "E", "F"},
+            { "A", "Z", "D", "E", "O", "F" }, // Potential match in column 0,1
+            { "B", "A", "F", "H", "F", "J" },
+            { "C", "Z", "G", "K", "L", "M" }
+        };
+        var grid = new HorizontalVerticalSwapGrid<string>(gridData);
+
+        // When checking for potential vertical matches
+        var result = _strategy.HasPotentialMatches(grid);
+
+        // Then it returns true
+        Assert.That(result.IsT0, Is.True, "When passing correct grid the result must be boolean");
+        Assert.That(result.AsT0, Is.True, "Grid with potential vertical matches should return true");
+    }
+
+    [Test]
+    public void GivenAGridWithPotentialVerticalMatchesGreaterThanMinMatchLength_WhenCheckingForPotentialMatches_ThenReturnsTrue()
+    {
+        // Given a grid with potential vertical matches greater than the minimum match length
+        var gridData = new[,]
+        {
+            { "E", "A", "C" },
+            { "D", "A", "D" }, // Potential match in column 1
+            { "C", "B", "A" },
+            { "F", "A", "H" }
+        };
+        var grid = new HorizontalVerticalSwapGrid<string>(gridData);
+
+        // When checking for potential vertical matches
+        var result = _strategy.HasPotentialMatches(grid);
+
+        // Then it returns true
+        Assert.That(result.IsT0, Is.True, "When passing correct grid the result must be boolean");
+        Assert.That(result.AsT0, Is.True, "Grid with potential vertical matches greater than min length should return true");
+    }
+
+    [Test]
+    public void GivenAGridWithPotentialVerticalMatchForTShape_WhenCheckingForPotentialMatches_ThenReturnsTrue()
+    {
+        // Given a grid with a potential vertical match that could form a T-shape
+        var gridData = new[,]
+        {
+            { "Y", "A", "C" },
+            { "B", "A", "D" }, // Potential match in column 1
+            { "A", "E", "A" },
+            { "G", "A", "I" }
+        };
+        var grid = new HorizontalVerticalSwapGrid<string>(gridData);
+
+        // When checking for potential vertical matches
+        var result = _strategy.HasPotentialMatches(grid);
+
+        // Then it returns true
+        Assert.That(result.IsT0, Is.True, "When passing correct grid the result must be boolean");
+        Assert.That(result.AsT0, Is.True, "Grid with potential vertical matches for T-shape should return true");
+    }
+
+    [Test]
+    public void GivenAGridWithPotentialVerticalMatchForLShape_WhenCheckingForPotentialMatches_ThenReturnsTrue()
+    {
+        // Given a grid with a potential vertical match that could form an L-shape
+        var gridData = new[,]
+        {
+            { "Y", "C", "C" },
+            { "C", "A", "C" }, // Potential match in column 1
+            { "A", "E", "Z" },
+            { "G", "A", "I" }
+        };
+        var grid = new HorizontalVerticalSwapGrid<string>(gridData);
+
+        // When checking for potential vertical matches
+        var result = _strategy.HasPotentialMatches(grid);
+
+        // Then it returns true
+        Assert.That(result.IsT0, Is.True, "When passing correct grid the result must be boolean");
+        Assert.That(result.AsT0, Is.True, "Grid with potential vertical matches for T-shape should return true");
     }
 
     #endregion

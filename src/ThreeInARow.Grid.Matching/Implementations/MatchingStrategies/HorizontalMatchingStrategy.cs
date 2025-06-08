@@ -1,4 +1,6 @@
-﻿using ThreeInARow.Grid.Matching.ADT;
+﻿using OneOf;
+using ThreeInARow.Grid.ADT;
+using ThreeInARow.Grid.Matching.ADT;
 using ThreeInARow.Grid.Matching.Implementations.Matches;
 using ThreeInARow.Grid.ValueObjects;
 
@@ -6,8 +8,6 @@ namespace ThreeInARow.Grid.Matching.Implementations.MatchingStrategies;
 
 public class HorizontalMatchingStrategy<TElement>(int minMatchLength) : BaseMatchingStrategy<TElement>(minMatchLength) where TElement : IEquatable<TElement>
 {
-    private readonly int _minMatchLength = minMatchLength;
-
     public override List<IMatch<TElement>> FindMatches(IEnumerable<ElementCell<TElement>> cells)
     {
         return cells
@@ -15,6 +15,11 @@ public class HorizontalMatchingStrategy<TElement>(int minMatchLength) : BaseMatc
             .GroupBy(cell => cell.RowIndex)
             .SelectMany(FindHorizontalMatchesInRow)
             .ToList();
+    }
+
+    public override OneOf<bool, GridHasEmptyCells, GridHasMatches> HasPotentialMatches(IReadableGrid<TElement> grid)
+    {
+        throw new NotImplementedException();
     }
 
     private IEnumerable<IMatch<TElement>> FindHorizontalMatchesInRow(IGrouping<int, ElementCell<TElement>> rowGroup)
