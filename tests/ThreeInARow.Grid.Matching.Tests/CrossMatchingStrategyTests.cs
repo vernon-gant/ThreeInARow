@@ -28,7 +28,7 @@ public class CrossMatchingStrategyTests : MGridTestUtility
             { "A", "B", "A", "B", "A", "B", "A", "B" },
             { "B", "A", "B", "A", "B", "A", "B", "A" },
         };
-        var cells = this.CreateCellsFromGrid(grid);
+        var cells = this.CreateTestReadableGrid(grid);
 
         // When the player looks for cross patterns
         var matches = _strategy.FindMatches(cells);
@@ -48,7 +48,7 @@ public class CrossMatchingStrategyTests : MGridTestUtility
             { "N", "O", "P", "B", "Q", "R", "S", "T" },
             { "U", "V", "W", "B", "X", "Y", "Z", null }, // Vertical match (separate)
         };
-        var cells = this.CreateCellsFromGrid(grid);
+        var cells = this.CreateTestReadableGrid(grid);
 
         // When the player looks for cross patterns
         var matches = _strategy.FindMatches(cells);
@@ -70,7 +70,7 @@ public class CrossMatchingStrategyTests : MGridTestUtility
             { "A", "A", "A", "I", "J", "K", "L", "M" }, // Horizontal middle arm
             { "N", "O", "P", "Q", "R", "S", "T", "U" }, // No vertical bottom arm
         };
-        var cells = this.CreateCellsFromGrid(grid);
+        var cells = this.CreateTestReadableGrid(grid);
 
         // When the player looks for cross patterns
         var matches = _strategy.FindMatches(cells);
@@ -89,7 +89,7 @@ public class CrossMatchingStrategyTests : MGridTestUtility
             { "A", "G", "H", "I", "J", "K", "L", "M" }, // Vertical part starts here
             { "A", "N", "O", "P", "Q", "R", "S", "T" }, // Vertical part continues
         };
-        var cells = this.CreateCellsFromGrid(grid);
+        var cells = this.CreateTestReadableGrid(grid);
 
         // When the player looks for cross patterns
         var matches = _strategy.FindMatches(cells);
@@ -111,7 +111,7 @@ public class CrossMatchingStrategyTests : MGridTestUtility
             { "A", "A", "A", "N", "O", "P", "Q", "R" }, // Horizontal middle arm
             { "S", null, "T", "U", "V", "W", "X", "Y" }, // Empty cell breaks vertical bottom
         };
-        var cells = this.CreateCellsFromGrid(grid);
+        var cells = this.CreateTestReadableGrid(grid);
 
         // When the player looks for cross patterns
         var matches = _strategy.FindMatches(cells);
@@ -133,7 +133,7 @@ public class CrossMatchingStrategyTests : MGridTestUtility
             { "A", "A", "I", "J", "K", "L", "M", "N" }, // Horizontal left arm only
             { "O", "A", "P", "Q", "R", "S", "T", "U" }, // Vertical bottom arm
         };
-        var cells = this.CreateCellsFromGrid(grid);
+        var cells = this.CreateTestReadableGrid(grid);
 
         // When the player looks for cross patterns
         var matches = _strategy.FindMatches(cells);
@@ -159,7 +159,7 @@ public class CrossMatchingStrategyTests : MGridTestUtility
             { "A", "A", "A", "I", "J", "K", "L", "M" }, // Horizontal middle arm
             { "N", "A", "O", "P", "Q", "R", "S", "T" }, // Vertical bottom arm
         };
-        var cells = this.CreateCellsFromGrid(grid);
+        var cells = this.CreateTestReadableGrid(grid);
 
         // When the player looks for cross patterns
         var matches = _strategy.FindMatches(cells);
@@ -187,7 +187,7 @@ public class CrossMatchingStrategyTests : MGridTestUtility
             { "Z", ".", "A", "B", "C", "D", "E", "F" }, // Vertical bottom arm
             { "G", "H", "A", "I", "J", "K", "L", "M" }, // Vertical continues
         };
-        var cells = this.CreateCellsFromGrid(grid);
+        var cells = this.CreateTestReadableGrid(grid);
 
         // When the player looks for cross patterns
         var matches = _strategy.FindMatches(cells);
@@ -211,7 +211,7 @@ public class CrossMatchingStrategyTests : MGridTestUtility
             { "A", "A", "A", "A", "I", "J", "K", "L" }, // 4-element horizontal arm
             { "M", "A", "N", "O", "P", "Q", "R", "S" }, // Vertical bottom arm
         };
-        var cells = this.CreateCellsFromGrid(grid);
+        var cells = this.CreateTestReadableGrid(grid);
 
         // When the player looks for cross patterns
         var matches = _strategy.FindMatches(cells);
@@ -235,7 +235,7 @@ public class CrossMatchingStrategyTests : MGridTestUtility
             { "A", "A", "A", "B", "B", "B", "Z", "J" }, // Two horizontal middle arms
             { "K", "A", "L", "M", "B", "N", "O", "P" }, // Two vertical bottom arms
         };
-        var cells = this.CreateCellsFromGrid(grid);
+        var cells = this.CreateTestReadableGrid(grid);
 
         // When the player looks for cross patterns
         var matches = _strategy.FindMatches(cells);
@@ -261,7 +261,7 @@ public class CrossMatchingStrategyTests : MGridTestUtility
             { "A", "A", "A", "A", "A", "A", "W", "X" }, // 6-element horizontal arm
             { "Y", "Z", "A", ".", "B", "C", "D", "E" }, // Vertical bottom arm
         };
-        var cells = this.CreateCellsFromGrid(grid);
+        var cells = this.CreateTestReadableGrid(grid);
 
         // When the player looks for cross patterns
         var matches = _strategy.FindMatches(cells);
@@ -287,7 +287,7 @@ public class CrossMatchingStrategyTests : MGridTestUtility
             { "J", "A", "K", "L", "B", "M", "N", "O" }, // Different vertical bottom arms
             { "P", "A", "Q", "R", "S", "T", "U", "V" }, // First cross has longer vertical
         };
-        var cells = this.CreateCellsFromGrid(grid);
+        var cells = this.CreateTestReadableGrid(grid);
 
         // When the player looks for cross patterns
         var matches = _strategy.FindMatches(cells);

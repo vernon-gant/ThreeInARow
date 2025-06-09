@@ -3,7 +3,6 @@ using OneOf;
 using OneOf.Types;
 using ThreeInARow.Grid.ADT;
 using ThreeInARow.Grid.Filling.ADT;
-using ThreeInARow.Grid.ValueObjects;
 
 namespace ThreeInARow.Grid.Filling.Implementations;
 
@@ -33,13 +32,13 @@ public class DropAllThenAddSimulator<TElement, TGrid>(IGenerator<TElement> gener
         return new Success();
     }
 
-    private void FullDropColumn(GridColumn column)
+    private void FullDropColumn(int columnIndex)
     {
-        Debug.Assert(_grid!.CanShiftDown(column).AsT0, "Column should be droppable.");
+        Debug.Assert(_grid!.CanShiftDown(columnIndex).AsT0, "Column should be droppable.");
 
-        while (_grid.CanShiftDown(column).AsT0)
+        while (_grid.CanShiftDown(columnIndex).AsT0)
         {
-            _grid.ShiftDown(column);
+            _grid.ShiftDown(columnIndex);
         }
     }
 }

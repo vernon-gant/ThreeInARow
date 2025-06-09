@@ -5,20 +5,20 @@ using ThreeInARow.Grid.ValueObjects;
 
 namespace ThreeInARow.Grid.Matching.Implementations.Matches;
 
-public abstract class BaseMatch<TElement>(HashSet<ElementCell<TElement>> cells) : IMatch<TElement>
+public abstract class BaseMatch<TElement>(HashSet<Cell<TElement>> cells) : IMatch<TElement>
 {
-    protected HashSet<ElementCell<TElement>> _cells = cells;
+    protected HashSet<Cell<TElement>> _cells = cells;
 
     public int Count => _cells.Count;
 
-    public OneOf<HashSet<ElementCell<TElement>>, MatchDoesNotIntersect> Merge(IMatch<TElement> other)
+    public OneOf<HashSet<Cell<TElement>>, MatchDoesNotIntersect> Merge(IMatch<TElement> other)
     {
         var intersection = _cells.Intersect(other).ToList();
 
         if (intersection.Count == 0)
             return new MatchDoesNotIntersect();
 
-        var mergedCells = new HashSet<ElementCell<TElement>>(_cells);
+        var mergedCells = new HashSet<Cell<TElement>>(_cells);
         foreach (var cell in other)
         {
             mergedCells.Add(cell);
@@ -29,7 +29,7 @@ public abstract class BaseMatch<TElement>(HashSet<ElementCell<TElement>> cells) 
 
     public bool Intersects(IMatch<TElement> other) => _cells.Intersect(other).Any();
 
-    public IEnumerator<ElementCell<TElement>> GetEnumerator() => _cells.GetEnumerator();
+    public IEnumerator<Cell<TElement>> GetEnumerator() => _cells.GetEnumerator();
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 

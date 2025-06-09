@@ -8,7 +8,7 @@ public interface IGenerator<TElement> where TElement : IEquatable<TElement>
 {
     void Generate(IReadableGrid<TElement> grid);
 
-    OneOf<Queue<TElement>, NotGeneratedYet> ForColumn(GridColumn column);
+    OneOf<Queue<TElement>, ColumnIndexOutOfBounds, NotGeneratedYet> ForColumn(int columnIndex);
 
     void Reset();
 }

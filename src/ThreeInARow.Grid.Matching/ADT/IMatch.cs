@@ -3,7 +3,7 @@ using ThreeInARow.Grid.ValueObjects;
 
 namespace ThreeInARow.Grid.Matching.ADT;
 
-public interface IMatch<TElement> : IEnumerable<ElementCell<TElement>>
+public interface IMatch<TElement> : IEnumerable<Cell<TElement>>
 {
     // Commands
 
@@ -13,7 +13,7 @@ public interface IMatch<TElement> : IEnumerable<ElementCell<TElement>>
 
     int Count { get; }
 
-    OneOf<HashSet<ElementCell<TElement>>, MatchDoesNotIntersect> Merge(IMatch<TElement> other);
+    OneOf<HashSet<Cell<TElement>>, MatchDoesNotIntersect> Merge(IMatch<TElement> other);
 
     bool Intersects(IMatch<TElement> other);
 }

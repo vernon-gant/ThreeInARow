@@ -3,13 +3,12 @@ using OneOf;
 using OneOf.Types;
 using ThreeInARow.Grid.ADT;
 using ThreeInARow.Grid.Filling.ADT;
-using ThreeInARow.Grid.ValueObjects;
 
 namespace ThreeInARow.Grid.Filling.Implementations;
 
 public abstract class BaseGenerativeSimulator<TElement, TGrid>(IGenerator<TElement> generator) : IGravitySimulator<TElement, TGrid> where TElement : IEquatable<TElement> where TGrid : IFillableGrid<TElement>, IReadableGrid<TElement>
 {
-    protected Dictionary<GridColumn, Queue<TElement>> _generatedElements = new();
+    protected Dictionary<int, Queue<TElement>> _generatedElements = new();
     protected TGrid? _grid;
 
     public void Start(TGrid grid)

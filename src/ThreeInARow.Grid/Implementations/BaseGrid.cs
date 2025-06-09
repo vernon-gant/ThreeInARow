@@ -6,43 +6,51 @@ using ThreeInARow.Grid.ValueObjects;
 
 namespace ThreeInARow.Grid.Implementations;
 
-public abstract class BaseManageableGrid<TElement>(TElement?[,] grid) : IManageableGrid<TElement>, IFillableGrid<TElement>, IReadableGrid<TElement> where TElement : IEquatable<TElement>
+public abstract class BaseManageableGrid<TElement> : IManageableGrid<TElement>, IFillableGrid<TElement>, IReadableGrid<TElement> where TElement : IEquatable<TElement>
 {
-    protected BaseManageableGrid(int rows, int columns) : this(new TElement?[rows, columns])
+    private readonly CellContent<TElement>[,] _grid;
+
+    protected BaseManageableGrid(TElement?[,] gridData)
     {
-        if (rows <= 0 || columns <= 0)
-            throw new ArgumentException("Grid dimensions must be greater than zero.");
+        _grid = new CellContent<TElement>[gridData.GetLength(0), gridData.GetLength(1)];
+        for (int row = 0; row < gridData.GetLength(0); row++)
+        {
+            for (int column = 0; column < gridData.GetLength(1); column++)
+            {
+                _grid[row, column] = gridData[row, column] is null ? new EmptyCell() : gridData[row, column]!;
+            }
+        }
     }
 
-    public OneOf<Success, InvalidSwap> Swap(GridRow firstRow, GridColumn firstColumn, GridRow secondRow, GridColumn secondColumn)
+    public OneOf<Success, InvalidSwap> Swap(Cell<TElement> firstCell, Cell<TElement> secondCell)
     {
-        if (!CanSwap(firstRow, firstColumn, secondRow, secondColumn)) return new InvalidSwap();
+        if (!CanSwap(firstCell, secondCell)) return new InvalidSwap();
 
-        (grid[firstRow.Index, firstColumn.Index], grid[secondRow.Index, secondColumn.Index]) = (grid[secondRow.Index, secondColumn.Index], grid[firstRow.Index, firstColumn.Index]);
+        (_grid[firstCell.RowIndex, firstCell.ColumnIndex], _grid[secondCell.RowIndex, secondCell.ColumnIndex]) = (_grid[secondCell.RowIndex, secondCell.ColumnIndex], _grid[firstCell.RowIndex, firstCell.ColumnIndex]);
 
         return new Success();
     }
 
-    public OneOf<Success, CellAlreadyDeleted> Delete(GridRow row, GridColumn column)
+    public OneOf<Success, CellAlreadyDeleted> Delete(Cell<TElement> cell)
     {
-        if (grid[row.Index, column.Index] == null) return new CellAlreadyDeleted();
+        if (_grid[cell.RowIndex, cell.ColumnIndex].IsEmpty) return new CellAlreadyDeleted();
 
-        grid[row.Index, column.Index] = default;
+        _grid[cell.RowIndex, cell.ColumnIndex] = new EmptyCell();
 
         return new Success();
     }
 
-    public OneOf<Success, ColumnIsFull, CanNotShiftDown> ShiftDown(GridColumn column)
+    public OneOf<Success, ColumnIndexOutOfBounds, CanNotShiftDown> ShiftDown(int columnIndex)
     {
-        if (IsColumnFull(column)) return new ColumnIsFull();
+        if (!IsValidColumnIndex(columnIndex)) return new ColumnIndexOutOfBounds();
 
-        if (!CanShiftDown(column).AsT0) return new CanNotShiftDown();
+        if (IsColumnFull(columnIndex).AsT0 || !CanShiftDown(columnIndex).AsT0) return new CanNotShiftDown();
 
         var lowestEmptyRow = -1;
 
-        for (int row = grid.GetLength(0) - 1; row >= 0; row--)
+        for (int row = _grid.GetLength(0) - 1; row >= 0; row--)
         {
-            if (grid[row, column.Index] != null) continue;
+            if (_grid[row, columnIndex].IsOccupied) continue;
 
             lowestEmptyRow = row;
             break;
@@ -50,45 +58,45 @@ public abstract class BaseManageableGrid<TElement>(TElement?[,] grid) : IManagea
 
         for (int row = lowestEmptyRow; row > 0; row--)
         {
-            grid[row, column.Index] = grid[row - 1, column.Index];
+            _grid[row, columnIndex] = _grid[row - 1, columnIndex];
         }
 
-        grid[0, column.Index] = default;
+        _grid[0, columnIndex] = new EmptyCell();
 
         return new Success();
     }
 
-    public OneOf<Success, ColumnIsFull> AddTop(GridColumn column, TElement element)
+    public OneOf<Success, ColumnIndexOutOfBounds, CanNotAddTop> AddTop(int columnIndex, TElement element)
     {
-        if (IsColumnFull(column) || grid[0, column.Index] != null) return new ColumnIsFull();
+        if (!IsValidColumnIndex(columnIndex)) return new ColumnIndexOutOfBounds();
 
-        grid[0, column.Index] = element;
+        if (IsColumnFull(columnIndex).AsT0 || _grid[0, columnIndex].IsOccupied) return new CanNotAddTop();
+
+        _grid[0, columnIndex] = element;
 
         return new Success();
     }
 
-    public OneOf<ElementCell<TElement>, CellOutOfBounds> TryGetCell(int row, int column) => IsValidRow(row) && IsValidColumn(column)
-        ? new ElementCell<TElement>(grid[row, column] is null ? new EmptyCell() : grid[row, column]!, new GridRow(row), new GridColumn(column))
-        : new CellOutOfBounds();
-
-    public OneOf<bool, ColumnIsFull> CanShiftDown(GridColumn column)
+    public OneOf<bool, ColumnIndexOutOfBounds> CanShiftDown(int columnIndex)
     {
-        if (IsColumnFull(column)) return new ColumnIsFull();
+        if (!IsValidColumnIndex(columnIndex)) return new ColumnIndexOutOfBounds();
 
-        return Enumerable.Range(0, grid.GetLength(0) - 1).Any(row => grid[row, column.Index] != null && grid[row + 1, column.Index] == null);
+        if (IsColumnFull(columnIndex).AsT0) return false;
+
+        return Enumerable.Range(0, _grid.GetLength(0) - 1).Any(row => _grid[row, columnIndex].IsOccupied && _grid[row + 1, columnIndex].IsEmpty);
     }
 
-    public List<GridColumn> FillableColumns
+    public List<int> FillableColumns
     {
         get
         {
-            var fillableColumns = new List<GridColumn>();
+            var fillableColumns = new List<int>();
 
-            for (int column = 0; column < grid.GetLength(1); column++)
+            for (int column = 0; column < _grid.GetLength(1); column++)
             {
-                if (!IsColumnFull(new GridColumn(column)))
+                if (!IsColumnFull(column).AsT0)
                 {
-                    fillableColumns.Add(new GridColumn(column));
+                    fillableColumns.Add(column);
                 }
             }
 
@@ -96,32 +104,43 @@ public abstract class BaseManageableGrid<TElement>(TElement?[,] grid) : IManagea
         }
     }
 
-    public bool IsColumnFull(GridColumn column)
+    private bool IsValidColumnIndex(int columnIndex) => columnIndex >= 0 && columnIndex < _grid.GetLength(1);
+
+    public OneOf<bool, ColumnIndexOutOfBounds> IsColumnFull(int columnIndex)
     {
-        for (int row = 0; row < grid.GetLength(0); row++)
+        if (!IsValidColumnIndex(columnIndex)) return new ColumnIndexOutOfBounds();
+
+        for (int row = 0; row < _grid.GetLength(0); row++)
         {
-            if (grid[row, column.Index] == null) return false;
+            if (_grid[row, columnIndex].IsEmpty) return false;
         }
 
         return true;
     }
 
-    public IEnumerator<ElementCell<TElement>> GetEnumerator()
+    public IEnumerator<Cell<TElement>> GetEnumerator()
     {
-        for (int row = 0; row < grid.GetLength(0); row++)
+        for (int row = 0; row < _grid.GetLength(0); row++)
         {
-            for (int column = 0; column < grid.GetLength(1); column++)
+            for (int column = 0; column < _grid.GetLength(1); column++)
             {
-                yield return new ElementCell<TElement>(grid[row, column] is null ? new EmptyCell() : grid[row, column]!, new GridRow(row), new GridColumn(column));
+                yield return Cell<TElement>.FromGrid(this, row, column).AsT0;
             }
         }
     }
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-    private bool IsValidColumn(int column) => column >= 0 && column < grid.GetLength(1);
+    protected abstract bool CanSwap(Cell<TElement> firstCell, Cell<TElement> secondCell);
 
-    private bool IsValidRow(int row) => row >= 0 && row < grid.GetLength(0);
+    public int RowCount => _grid.GetLength(0);
 
-    protected abstract bool CanSwap(GridRow firstRow, GridColumn firstColumn, GridRow secondRow, GridColumn secondColumn);
+    public int ColumnCount => _grid.GetLength(1);
+    public OneOf<CellContent<TElement>, CellOutOfBounds> ContentAt(int row, int column)
+    {
+        if (row < 0 || row >= RowCount || column < 0 || column >= ColumnCount)
+            return new CellOutOfBounds();
+
+        return _grid[row, column];
+    }
 }

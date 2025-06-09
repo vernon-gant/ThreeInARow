@@ -3,7 +3,6 @@ using ThreeInARow.Grid.ADT;
 using ThreeInARow.Grid.Filling.ADT;
 using ThreeInARow.Grid.Filling.Implementations;
 using ThreeInARow.Grid.Implementations;
-using ThreeInARow.Grid.ValueObjects;
 using ThreeInARow.TestingUtilities;
 
 namespace ThreeInARow.Grid.Filling.Tests;
@@ -144,7 +143,7 @@ public class DropAllThenAddSimulatorTests : MGridTestUtility
         foreach (var kvp in columnElements)
         {
             var queue = new Queue<string>(kvp.Value);
-            generator.ForColumn(new GridColumn(kvp.Key)).Returns(queue);
+            generator.ForColumn(kvp.Key).Returns(queue);
         }
     }
 

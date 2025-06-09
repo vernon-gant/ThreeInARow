@@ -27,7 +27,7 @@ public class TMatchingStrategyTests : MGridTestUtility
             { "A", "B", "A", "B", "A", "B", "A", "B" },
             { "B", "A", "B", "A", "B", "A", "B", "A" },
         };
-        var cells = this.CreateCellsFromGrid(grid);
+        var cells = this.CreateTestReadableGrid(grid);
 
         // When the player looks for T-shaped patterns
         var matches = _strategy.FindMatches(cells);
@@ -47,7 +47,7 @@ public class TMatchingStrategyTests : MGridTestUtility
             { "N", "O", "P", "B", "Q", "R", "S", "T" },
             { "U", "V", "W", "B", "X", "Y", "Z", null }, // Vertical match (separate)
         };
-        var cells = this.CreateCellsFromGrid(grid);
+        var cells = this.CreateTestReadableGrid(grid);
 
         // When the player looks for T-shaped patterns
         var matches = _strategy.FindMatches(cells);
@@ -70,7 +70,7 @@ public class TMatchingStrategyTests : MGridTestUtility
             { "A", "N", "O", "P", "Q", "R", "S", "T" }, // Vertical continues
             { "U", "V", "W", "X", "Y", "Z", null, null },
         };
-        var cells = this.CreateCellsFromGrid(grid);
+        var cells = this.CreateTestReadableGrid(grid);
 
         // When the player looks for T-shaped patterns
         var matches = _strategy.FindMatches(cells);
@@ -93,7 +93,7 @@ public class TMatchingStrategyTests : MGridTestUtility
             { "S", "A", "T", "U", "V", "W", "X", "Y" }, // Vertical part below center
             { "Z", null, null, null, null, null, null, null },
         };
-        var cells = this.CreateCellsFromGrid(grid);
+        var cells = this.CreateTestReadableGrid(grid);
 
         // When the player looks for T-shaped patterns
         var matches = _strategy.FindMatches(cells);
@@ -113,7 +113,7 @@ public class TMatchingStrategyTests : MGridTestUtility
             { "N", "A", "O", "P", "Q", "R", "S", "T" },
             { "U", "V", "W", "X", "Y", "Z", null, null },
         };
-        var cells = this.CreateCellsFromGrid(grid);
+        var cells = this.CreateTestReadableGrid(grid);
 
         // When the player looks for T-shaped patterns
         var matches = _strategy.FindMatches(cells);
@@ -132,7 +132,7 @@ public class TMatchingStrategyTests : MGridTestUtility
             { "H", "A", "I", "J", "K", "L", "M", "N" }, // Only 2 elements in stem (below minimum)
             { "O", "P", "Q", "R", "S", "T", "U", "V" },
         };
-        var cells = this.CreateCellsFromGrid(grid);
+        var cells = this.CreateTestReadableGrid(grid);
 
         // When the player looks for T-shaped patterns
         var matches = _strategy.FindMatches(cells);
@@ -159,7 +159,7 @@ public class TMatchingStrategyTests : MGridTestUtility
             { "N", "A", "O", "P", "Q", "R", "S", "T" }, // Vertical continues
             { "U", "V", "W", "X", "Y", "Z", null, null },
         };
-        var cells = this.CreateCellsFromGrid(grid);
+        var cells = this.CreateTestReadableGrid(grid);
 
         // When the player looks for T-shaped patterns
         var matches = _strategy.FindMatches(cells);
@@ -183,7 +183,7 @@ public class TMatchingStrategyTests : MGridTestUtility
             { "A", "A", "A", "B", "C", "D", "E", "F" }, // Horizontal bottom arm
             { "U", "V", "W", "X", "Y", "Z", null, null },
         };
-        var cells = this.CreateCellsFromGrid(grid);
+        var cells = this.CreateTestReadableGrid(grid);
 
         // When the player looks for T-shaped patterns
         var matches = _strategy.FindMatches(cells);
@@ -206,7 +206,7 @@ public class TMatchingStrategyTests : MGridTestUtility
             { "A", "A", "A", "N", "O", "P", "Q", "R" }, // Horizontal stem right
             { "A", "S", "T", "U", "V", "W", "X", "Y" }, // Vertical continues
         };
-        var cells = this.CreateCellsFromGrid(grid);
+        var cells = this.CreateTestReadableGrid(grid);
 
         // When the player looks for T-shaped patterns
         var matches = _strategy.FindMatches(cells);
@@ -229,7 +229,7 @@ public class TMatchingStrategyTests : MGridTestUtility
             { "N", "A", "A", "A", "O", "P", "Q", "R" }, // Horizontal stem left
             { "S", "T", "U", "A", "V", "W", "X", "Y" }, // Vertical continues
         };
-        var cells = this.CreateCellsFromGrid(grid);
+        var cells = this.CreateTestReadableGrid(grid);
 
         // When the player looks for T-shaped patterns
         var matches = _strategy.FindMatches(cells);
@@ -254,7 +254,7 @@ public class TMatchingStrategyTests : MGridTestUtility
             { "N", "O", "Z", "A", "Q", "R", "S", "T" }, // Vertical continues
             { "U", "V", "B", "A", "Y", "Z", null, null }, // Vertical continues
         };
-        var cells = this.CreateCellsFromGrid(grid);
+        var cells = this.CreateTestReadableGrid(grid);
 
         // When the player looks for T-shaped patterns
         var matches = _strategy.FindMatches(cells);
@@ -277,7 +277,7 @@ public class TMatchingStrategyTests : MGridTestUtility
             { "E", "A", "F", "G", "H", "C", "I", "J" }, // Two vertical stems
             { "K", "A", "M", "N", "O", "C", "Q", "R" },
         };
-        var cells = this.CreateCellsFromGrid(grid);
+        var cells = this.CreateTestReadableGrid(grid);
 
         // When the player looks for T-shaped patterns
         var matches = _strategy.FindMatches(cells);
@@ -302,7 +302,7 @@ public class TMatchingStrategyTests : MGridTestUtility
             { "-", "Y", "+", "=", "[", "]", "{", "}" }, // Upward T continues
             { null, null, null, null, null, null, null, null }
         };
-        var cells = this.CreateCellsFromGrid(grid);
+        var cells = this.CreateTestReadableGrid(grid);
 
         // When the player looks for T-shaped patterns
         var matches = _strategy.FindMatches(cells);
@@ -322,7 +322,7 @@ public class TMatchingStrategyTests : MGridTestUtility
             { "G", "A", "H", "I", "J", "K", "L", "M" }, // Exactly 3 elements vertically
             { "N", "A", "O", "P", "Q", "R", "S", "T" },
         };
-        var cells = this.CreateCellsFromGrid(grid);
+        var cells = this.CreateTestReadableGrid(grid);
 
         // When the player looks for T-shaped patterns
         var matches = _strategy.FindMatches(cells);
@@ -342,7 +342,7 @@ public class TMatchingStrategyTests : MGridTestUtility
             { "G", "A", "H", "I", "J", "K", "L", "M" }, // Vertical stem down
             { "N", "A", "O", "P", "Q", "R", "S", "T" }, // Vertical continues
         };
-        var cells = this.CreateCellsFromGrid(grid);
+        var cells = this.CreateTestReadableGrid(grid);
 
         // When the player looks for T-shaped patterns
         var matches = _strategy.FindMatches(cells);

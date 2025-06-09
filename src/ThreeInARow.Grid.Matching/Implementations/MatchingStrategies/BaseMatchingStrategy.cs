@@ -9,9 +9,9 @@ public abstract class BaseMatchingStrategy<TElement>(int minMatchLength) : IMatc
 {
     protected readonly int _minMatchLength = minMatchLength;
 
-    public abstract List<IMatch<TElement>> FindMatches(IEnumerable<ElementCell<TElement>> cells);
+    public abstract List<IMatch<TElement>> FindMatches(IReadableGrid<TElement> grid);
 
     public abstract OneOf<bool, GridHasEmptyCells, GridHasMatches> HasPotentialMatches(IReadableGrid<TElement> grid);
 
-    protected abstract IMatch<TElement> CreateMatch(IEnumerable<ElementCell<TElement>> cells);
+    protected abstract IMatch<TElement> CreateMatch(IEnumerable<Cell<TElement>> cells);
 }

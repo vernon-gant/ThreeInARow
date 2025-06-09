@@ -3,7 +3,7 @@ using ThreeInARow.Grid.ValueObjects;
 
 namespace ThreeInARow.Grid.Matching.Implementations.Matches;
 
-public class HorizontalMatch<TElement>(HashSet<ElementCell<TElement>> cells) : BaseMatch<TElement>(cells)
+public class HorizontalMatch<TElement>(HashSet<Cell<TElement>> cells) : BaseMatch<TElement>(cells)
 {
     public override TResult Accept<TResult>(IMatchVisitor<TResult, TElement> visitor) => visitor.Visit(this);
 }

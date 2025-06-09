@@ -9,20 +9,19 @@ namespace ThreeInARow.Grid.Matching.Implementations.MatchingStrategies;
 public abstract class CombinedFiguresMatchingStrategy<TElement>(int minMatchLength, HorizontalMatchingStrategy<TElement> horizontalStrategy, VerticalMatchingStrategy<TElement> verticalStrategy)
     : BaseMatchingStrategy<TElement>(minMatchLength) where TElement : IEquatable<TElement>
 {
-    public override List<IMatch<TElement>> FindMatches(IEnumerable<ElementCell<TElement>> cells)
+    public override List<IMatch<TElement>> FindMatches(IReadableGrid<TElement> grid)
     {
-        var cellsList = cells.ToList();
-        var horizontalMatches = horizontalStrategy.FindMatches(cellsList);
-        var verticalMatches = verticalStrategy.FindMatches(cellsList);
+        var horizontalMatches = horizontalStrategy.FindMatches(grid);
+        var verticalMatches = verticalStrategy.FindMatches(grid);
 
-        var tMatches = FindTMatches(horizontalMatches, verticalMatches);
+        var tMatches = FindTMatches(horizontalMatches, verticalMatches, grid);
 
         return tMatches;
     }
 
     public override OneOf<bool, GridHasEmptyCells, GridHasMatches> HasPotentialMatches(IReadableGrid<TElement> grid) => false;
 
-    private List<IMatch<TElement>> FindTMatches(List<IMatch<TElement>> horizontalMatches, List<IMatch<TElement>> verticalMatches)
+    private List<IMatch<TElement>> FindTMatches(List<IMatch<TElement>> horizontalMatches, List<IMatch<TElement>> verticalMatches, IReadableGrid<TElement> grid)
     {
         var tMatches = new List<IMatch<TElement>>();
 
@@ -30,7 +29,8 @@ public abstract class CombinedFiguresMatchingStrategy<TElement>(int minMatchLeng
         {
             foreach (var verticalMatch in verticalMatches)
             {
-                if (!horizontalMatch.Intersects(verticalMatch) || !IntersectionPointIsNotEnd(horizontalMatch, verticalMatch)) continue;
+                if (!horizontalMatch.Intersects(verticalMatch) || !IntersectionPointIsNotEnd(horizontalMatch, verticalMatch, grid))
+                    continue;
 
                 var mergedMatchResult = horizontalMatch.Merge(verticalMatch);
                 tMatches.Add(CreateMatch(mergedMatchResult.AsT0));
@@ -40,19 +40,19 @@ public abstract class CombinedFiguresMatchingStrategy<TElement>(int minMatchLeng
         return tMatches;
     }
 
-    private bool IntersectionPointIsNotEnd(IMatch<TElement> horizontalMatch, IMatch<TElement> verticalMatch)
+    private bool IntersectionPointIsNotEnd(IMatch<TElement> horizontalMatch, IMatch<TElement> verticalMatch, IReadableGrid<TElement> grid)
     {
         var orderedHorizontalCells = horizontalMatch.OrderBy(cell => cell.RowIndex).ThenBy(cell => cell.ColumnIndex).ToList();
         var orderedVerticalCells = verticalMatch.OrderBy(cell => cell.RowIndex).ThenBy(cell => cell.ColumnIndex).ToList();
-        var intersectionCell = orderedHorizontalCells.First(cell => orderedVerticalCells.Any(vCell => vCell.Row == cell.Row && vCell.Column == cell.Column));
-        var surroundingIntersection = new List<ElementCell<TElement>>
+        var intersectionCell = orderedHorizontalCells.First(cell => orderedVerticalCells.Any(vCell => vCell.HasSameCoordinatesAs(cell)));
+        var surroundingIntersection = new List<OneOf<Cell<TElement>, CellOutOfBounds>>
         {
             intersectionCell,
-            intersectionCell with { Row = intersectionCell.Row - 1 },
-            intersectionCell with { Row = intersectionCell.Row + 1 },
-            intersectionCell with { Column = intersectionCell.Column - 1 },
-            intersectionCell with { Column = intersectionCell.Column + 1 }
-        };
+            intersectionCell.Top(grid),
+            intersectionCell.Bottom(grid),
+            intersectionCell.Left(grid),
+            intersectionCell.Right(grid)
+        }.Where(cell => cell.IsT0).Select(cell => cell.AsT0).ToList();
         var mergedMatchResult = horizontalMatch.Merge(verticalMatch);
 
         Debug.Assert(mergedMatchResult.IsT0);

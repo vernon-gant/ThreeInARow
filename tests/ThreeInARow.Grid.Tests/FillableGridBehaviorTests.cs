@@ -1,5 +1,4 @@
 ﻿using ThreeInARow.Grid.ADT;
-using ThreeInARow.Grid.ValueObjects;
 using ThreeInARow.TestingUtilities;
 
 namespace ThreeInARow.Grid.Tests;
@@ -22,7 +21,7 @@ public abstract class FillableGridBehaviorTests<TGrid> : GridTestsBase<IFillable
         };
         _grid = CreateGrid(gridData);
         var element = "A";
-        var column = new GridColumn(1);
+        var column = 1;
 
         // When adding an element to the top of the column
         var result = _grid.AddTop(column, element);
@@ -44,14 +43,13 @@ public abstract class FillableGridBehaviorTests<TGrid> : GridTestsBase<IFillable
         };
         _grid = CreateGrid(gridData);
         var element = "E";
-        var column = new GridColumn(2);
+        var column = 2;
 
         // When attempting to add another element
         var result = _grid.AddTop(column, element);
 
         // Then the operation is rejected because the column is full
-        Assert.That(result.IsT1, Is.True, "Operation should be rejected when column is full");
-        Assert.That(result.AsT1, Is.TypeOf<ColumnIsFull>(), "Should return ColumnIsFull error");
+        Assert.That(result.IsT2, Is.True, "Operation should be rejected when column is full");
     }
 
     [Test]
@@ -67,13 +65,13 @@ public abstract class FillableGridBehaviorTests<TGrid> : GridTestsBase<IFillable
         };
         _grid = CreateGrid(gridData);
         var element = "New";
-        var column = new GridColumn(3);
+        var column = 3;
 
         // When attempting to add another element to the top
         var result = _grid.AddTop(column, element);
 
         // Then the operation is rejected because there's no space at the top
-        Assert.That(result.IsT1, Is.True, "Operation should be rejected when top position is occupied");
+        Assert.That(result.IsT2, Is.True, "Operation should be rejected when top position is occupied");
     }
 
     [Test]
@@ -83,7 +81,7 @@ public abstract class FillableGridBehaviorTests<TGrid> : GridTestsBase<IFillable
         var gridData = EmptyGrid(4, 4);
         _grid = CreateGrid(gridData);
         var element = "First";
-        var column = new GridColumn(0);
+        var column = 0;
 
         // When adding the first element to the empty column
         var result = _grid.AddTop(column, element);
@@ -108,7 +106,7 @@ public abstract class FillableGridBehaviorTests<TGrid> : GridTestsBase<IFillable
             { null, null, null, null }
         };
         _grid = CreateGrid(gridData);
-        var column = new GridColumn(1);
+        var column = 1;
 
         // When shifting elements down in the column
         var result = _grid.ShiftDown(column);
@@ -118,7 +116,7 @@ public abstract class FillableGridBehaviorTests<TGrid> : GridTestsBase<IFillable
     }
 
     [Test]
-    public void GivenAFullColumnWithNoGaps_WhenAttemptingToShiftDown_ThenNoShiftingOccurs()
+    public void GivenAFullColumnWithNoGaps_WhenAttemptingToShiftDown_ThenCannotShiftDown()
     {
         // Given a grid where column 0 is completely full with no gaps
         var gridData = new[,]
@@ -129,22 +127,22 @@ public abstract class FillableGridBehaviorTests<TGrid> : GridTestsBase<IFillable
             { ".", null, null, null }
         };
         _grid = CreateGrid(gridData);
-        var column = new GridColumn(0);
+        var column = 0;
 
         // When attempting to shift elements down
         var result = _grid.ShiftDown(column);
 
         // Then no shifting occurs because the column is already full
-        Assert.That(result.IsT1, Is.True, "No shifting should occur in a full column");
+        Assert.That(result.IsT2, Is.True, "No shifting should occur in a full column");
     }
 
     [Test]
-    public void GivenAnEmptyColumn_WhenAttemptingToShiftDown_ThenNoShiftingIsPossible()
+    public void GivenAnEmptyColumn_WhenAttemptingToShiftDown_ThenCannotShiftDown()
     {
         // Given a grid where column 2 is completely empty
         var gridData = EmptyGrid(4, 4);
         _grid = CreateGrid(gridData);
-        var column = new GridColumn(2);
+        var column = 2;
 
         // When attempting to shift elements down
         var result = _grid.ShiftDown(column);
@@ -165,7 +163,7 @@ public abstract class FillableGridBehaviorTests<TGrid> : GridTestsBase<IFillable
             { null, null, null, null }
         };
         _grid = CreateGrid(gridData);
-        var column = new GridColumn(3);
+        var column = 3;
 
         // When shifting elements down
         var result = _grid.ShiftDown(column);
@@ -175,7 +173,7 @@ public abstract class FillableGridBehaviorTests<TGrid> : GridTestsBase<IFillable
     }
 
     [Test]
-    public void GivenAColumnWithElementsAlreadyAtBottom_WhenAttemptingToShiftDown_ThenNoShiftingIsNeeded()
+    public void GivenAColumnWithElementsAlreadyAtBottom_WhenAttemptingToShiftDown_ThenCannotShiftDown()
     {
         // Given a grid where column has elements only at the bottom positions
         var gridData = new[,]
@@ -186,7 +184,7 @@ public abstract class FillableGridBehaviorTests<TGrid> : GridTestsBase<IFillable
             { ".", null, null, null }
         };
         _grid = CreateGrid(gridData);
-        var column = new GridColumn(0);
+        var column = 0;
 
         // When attempting to shift elements down
         var result = _grid.ShiftDown(column);
@@ -207,7 +205,7 @@ public abstract class FillableGridBehaviorTests<TGrid> : GridTestsBase<IFillable
             { null, null, null, null }
         };
         _grid = CreateGrid(gridData);
-        var column = new GridColumn(2);
+        var column = 2;
 
         // When shifting elements down
         var result = _grid.ShiftDown(column);
@@ -234,10 +232,10 @@ public abstract class FillableGridBehaviorTests<TGrid> : GridTestsBase<IFillable
         _grid = CreateGrid(gridData);
 
         // When checking if the column is full
-        var result = _grid.IsColumnFull(new GridColumn(1));
+        var result = _grid.IsColumnFull(1);
 
         // Then it returns true
-        Assert.That(result, Is.True, "A completely full column should be reported as full");
+        Assert.That(result.AsT0, Is.True, "A completely full column should be reported as full");
     }
 
     [Test]
@@ -254,10 +252,10 @@ public abstract class FillableGridBehaviorTests<TGrid> : GridTestsBase<IFillable
         _grid = CreateGrid(gridData);
 
         // When checking if the column is full
-        var result = _grid.IsColumnFull(new GridColumn(2));
+        var result = _grid.IsColumnFull(2);
 
         // Then it returns false
-        Assert.That(result, Is.False, "A partially filled column should not be reported as full");
+        Assert.That(result.AsT0, Is.False, "A partially filled column should not be reported as full");
     }
 
     [Test]
@@ -268,10 +266,10 @@ public abstract class FillableGridBehaviorTests<TGrid> : GridTestsBase<IFillable
         _grid = CreateGrid(gridData);
 
         // When checking if the column is full
-        var result = _grid.IsColumnFull(new GridColumn(3));
+        var result = _grid.IsColumnFull(3);
 
         // Then it returns false
-        Assert.That(result, Is.False, "An empty column should not be reported as full");
+        Assert.That(result.AsT0, Is.False, "An empty column should not be reported as full");
     }
 
     #endregion
@@ -296,10 +294,10 @@ public abstract class FillableGridBehaviorTests<TGrid> : GridTestsBase<IFillable
 
         // Then only columns with available space are returned
         Assert.That(fillableColumns.Count, Is.EqualTo(3), "Should return 3 fillable columns");
-        Assert.That(fillableColumns.Any(col => col.Index == 1), Is.False, "Full column should not be included");
-        Assert.That(fillableColumns.Any(col => col.Index == 0), Is.True, "Column 0 should be fillable");
-        Assert.That(fillableColumns.Any(col => col.Index == 2), Is.True, "Column 2 should be fillable");
-        Assert.That(fillableColumns.Any(col => col.Index == 3), Is.True, "Column 3 should be fillable");
+        Assert.That(fillableColumns.Any(col => col == 1), Is.False, "Full column should not be included");
+        Assert.That(fillableColumns.Any(col => col == 0), Is.True, "Column 0 should be fillable");
+        Assert.That(fillableColumns.Any(col => col == 2), Is.True, "Column 2 should be fillable");
+        Assert.That(fillableColumns.Any(col => col == 3), Is.True, "Column 3 should be fillable");
     }
 
     [Test]
@@ -341,7 +339,7 @@ public abstract class FillableGridBehaviorTests<TGrid> : GridTestsBase<IFillable
     #region Checking Shift Possibility
 
     [Test]
-    public void GivenAFullColumnWithNoGaps_WhenCheckingIfShiftDownIsPossible_ThenItReturnsFalseWithColumnFullError()
+    public void GivenAFullColumnWithNoGaps_WhenCheckingIfShiftDownIsPossible_ThenItReturnsFalse()
     {
         // Given a grid where column 0 is completely full with no gaps
         var gridData = new[,]
@@ -352,13 +350,13 @@ public abstract class FillableGridBehaviorTests<TGrid> : GridTestsBase<IFillable
             { ".", null, null, null }
         };
         _grid = CreateGrid(gridData);
-        var column = new GridColumn(0);
+        var column = 0;
 
         // When checking if shifting down is possible
         var result = _grid.CanShiftDown(column);
 
         // Then it returns false with a column full error
-        Assert.That(result.IsT1, Is.True, "Should indicate column is full and cannot shift");
+        Assert.That(result.AsT0, Is.False, "Should indicate column is full and cannot shift");
     }
 
     [Test]
@@ -373,7 +371,7 @@ public abstract class FillableGridBehaviorTests<TGrid> : GridTestsBase<IFillable
             { ".", null, null, null }
         };
         _grid = CreateGrid(gridData);
-        var column = new GridColumn(0);
+        var column = 0;
 
         // When checking if shifting down is possible
         var result = _grid.CanShiftDown(column);
@@ -388,7 +386,7 @@ public abstract class FillableGridBehaviorTests<TGrid> : GridTestsBase<IFillable
         // Given a grid where column 2 has no elements
         var gridData = EmptyGrid(4, 4);
         _grid = CreateGrid(gridData);
-        var column = new GridColumn(2);
+        var column = 2;
 
         // When checking if shifting down is possible
         var result = _grid.CanShiftDown(column);
@@ -409,7 +407,7 @@ public abstract class FillableGridBehaviorTests<TGrid> : GridTestsBase<IFillable
             { null, null, null, null }
         };
         _grid = CreateGrid(gridData);
-        var column = new GridColumn(3);
+        var column = 3;
 
         // When checking if shifting down is possible
         var result = _grid.CanShiftDown(column);
@@ -430,7 +428,7 @@ public abstract class FillableGridBehaviorTests<TGrid> : GridTestsBase<IFillable
             { null, null, null, "." }
         };
         _grid = CreateGrid(gridData);
-        var column = new GridColumn(3);
+        var column = 3;
 
         // When checking if shifting down is possible
         var result = _grid.CanShiftDown(column);
@@ -451,7 +449,7 @@ public abstract class FillableGridBehaviorTests<TGrid> : GridTestsBase<IFillable
             { null, null, null, null }
         };
         _grid = CreateGrid(gridData);
-        var column = new GridColumn(2);
+        var column = 2;
 
         // When checking if shifting down is possible
         var result = _grid.CanShiftDown(column);

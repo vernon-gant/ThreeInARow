@@ -1,5 +1,4 @@
 ﻿using ThreeInARow.Grid.Matching.Implementations.MatchingStrategies;
-using ThreeInARow.Grid.ValueObjects;
 using ThreeInARow.TestingUtilities;
 
 namespace ThreeInARow.Grid.Matching.Tests;
@@ -14,10 +13,10 @@ public class HorizontalMatchingStrategyTests : MGridTestUtility
     public void GivenAnEmptyGrid_WhenPlayerLooksForHorizontalMatches_ThenNoMatchesAreFound()
     {
         // Given a completely empty grid with no elements
-        var emptyCells = Enumerable.Empty<ElementCell<string>>();
+        var readableGrid = this.CreateTestReadableGrid(new string[0, 0]);
 
         // When the player looks for horizontal matches
-        var matches = _strategy.FindMatches(emptyCells);
+        var matches = _strategy.FindMatches(readableGrid);
 
         // Then no matches are found
         Assert.That(matches, Is.Empty, "Empty grid should contain no horizontal matches");
@@ -33,7 +32,7 @@ public class HorizontalMatchingStrategyTests : MGridTestUtility
             { "B", "A", "B", "A", "B", "C", "A", "B" },
             { "C", "C", "A", "B", "A", "B", "C", "A" },
         };
-        var cells = this.CreateCellsFromGrid(grid);
+        var cells = this.CreateTestReadableGrid(grid);
 
         // When the player looks for horizontal matches
         var matches = _strategy.FindMatches(cells);
@@ -52,7 +51,7 @@ public class HorizontalMatchingStrategyTests : MGridTestUtility
             { "B", "C", "C", null, "C", "C", "D", "E" }, // CC-CC broken by empty cell
             { "C", "D", "E", "F", "G", "H", "I", "J" },
         };
-        var cells = this.CreateCellsFromGrid(grid);
+        var cells = this.CreateTestReadableGrid(grid);
 
         // When the player looks for horizontal matches
         var matches = _strategy.FindMatches(cells);
@@ -75,7 +74,7 @@ public class HorizontalMatchingStrategyTests : MGridTestUtility
             { "B", "A", "A", "A", "B", "C", "D", "E" }, // AAA horizontal match
             { "C", "D", "E", "F", "G", "H", "A", "B" },
         };
-        var cells = this.CreateCellsFromGrid(grid);
+        var cells = this.CreateTestReadableGrid(grid);
 
         // When the player looks for horizontal matches
         var matches = _strategy.FindMatches(cells);
@@ -94,7 +93,7 @@ public class HorizontalMatchingStrategyTests : MGridTestUtility
             { "B", "A", "A", "A", "A", "A", "D", "E" }, // AAAAA horizontal match (5 elements)
             { "C", "D", "E", "F", "G", "H", "A", "B" },
         };
-        var cells = this.CreateCellsFromGrid(grid);
+        var cells = this.CreateTestReadableGrid(grid);
 
         // When the player looks for horizontal matches
         var matches = _strategy.FindMatches(cells);
@@ -114,7 +113,7 @@ public class HorizontalMatchingStrategyTests : MGridTestUtility
             { "B", "C", "D", "E", "F", "G", "H", "I" },
             { "C", "D", "E", "F", "G", "H", "I", "J" },
         };
-        var cells = this.CreateCellsFromGrid(grid);
+        var cells = this.CreateTestReadableGrid(grid);
 
         // When the player looks for horizontal matches
         var matches = _strategy.FindMatches(cells);
@@ -134,7 +133,7 @@ public class HorizontalMatchingStrategyTests : MGridTestUtility
             { "B", "C", "D", "E", "F", "G", "H", "I" },
             { "C", "D", "E", "F", "G", "H", "I", "J" },
         };
-        var cells = this.CreateCellsFromGrid(grid);
+        var cells = this.CreateTestReadableGrid(grid);
 
         // When the player looks for horizontal matches
         var matches = _strategy.FindMatches(cells);
@@ -158,7 +157,7 @@ public class HorizontalMatchingStrategyTests : MGridTestUtility
             { "A", "A", "A", "B", "C", "C", "C", "E" }, // AAA match and CCC match in same row
             { "C", "D", "E", "F", "G", "H", "A", "B" },
         };
-        var cells = this.CreateCellsFromGrid(grid);
+        var cells = this.CreateTestReadableGrid(grid);
 
         // When the player looks for horizontal matches
         var matches = _strategy.FindMatches(cells);
@@ -183,7 +182,7 @@ public class HorizontalMatchingStrategyTests : MGridTestUtility
             { "B", "C", "D", "E", "F", "G", "H", "I" },
             { "C", "D", "B", "B", "B", "E", "F", "G" }, // BBB match in third row
         };
-        var cells = this.CreateCellsFromGrid(grid);
+        var cells = this.CreateTestReadableGrid(grid);
 
         // When the player looks for horizontal matches
         var matches = _strategy.FindMatches(cells);
@@ -208,7 +207,7 @@ public class HorizontalMatchingStrategyTests : MGridTestUtility
             { "B", "C", "D", "E", "F", "G", "H", "I" },
             { "C", "D", "E", "F", "G", "H", "I", "J" },
         };
-        var cells = this.CreateCellsFromGrid(grid);
+        var cells = this.CreateTestReadableGrid(grid);
 
         // When the player looks for horizontal matches
         var matches = _strategy.FindMatches(cells);
@@ -233,7 +232,7 @@ public class HorizontalMatchingStrategyTests : MGridTestUtility
             { "E", "F", "G", "H", "I", "J", "K", "L" },
             { "C", "C", "C", "M", "N", "D", "D", "D" }, // CCC and DDD matches in same row
         };
-        var cells = this.CreateCellsFromGrid(grid);
+        var cells = this.CreateTestReadableGrid(grid);
 
         // When the player looks for horizontal matches
         var matches = _strategy.FindMatches(cells);
@@ -253,7 +252,7 @@ public class HorizontalMatchingStrategyTests : MGridTestUtility
             { "A", "A", "A", "B", "B", "B", "R", "Q" }, // AAA immediately followed by BBB
             { "P", "O", "N", "M", "L", "K", "J", "I" },
         };
-        var cells = this.CreateCellsFromGrid(grid);
+        var cells = this.CreateTestReadableGrid(grid);
 
         // When the player looks for horizontal matches
         var matches = _strategy.FindMatches(cells);

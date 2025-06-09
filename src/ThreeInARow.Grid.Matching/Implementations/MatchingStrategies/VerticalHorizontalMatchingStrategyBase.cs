@@ -9,12 +9,12 @@ namespace ThreeInARow.Grid.Matching.Implementations.MatchingStrategies;
 
 public abstract class VerticalHorizontalMatchingStrategyBase<TElement>(int minMatchLength) : BaseMatchingStrategy<TElement>(minMatchLength) where TElement : IEquatable<TElement>
 {
-    public override List<IMatch<TElement>> FindMatches(IEnumerable<ElementCell<TElement>> cells) => cells.Where(cell => cell.IsOccupied()).GroupBy(GroupingKey()).SelectMany(FindMatches).ToList();
+    public override List<IMatch<TElement>> FindMatches(IReadableGrid<TElement> grid) => grid.Where(cell => cell.IsOccupied).GroupBy(GroupingKey()).SelectMany(FindMatches).ToList();
 
-    private IEnumerable<IMatch<TElement>> FindMatches(IGrouping<int, ElementCell<TElement>> rowGroup) =>
-        rowGroup.OrderBy(OrderByKey()).Aggregate(seed: new List<List<ElementCell<TElement>>>(), func: GroupConsecutiveMatchingCells).Where(group => group.Count >= _minMatchLength).Select(CreateMatch);
+    private IEnumerable<IMatch<TElement>> FindMatches(IGrouping<int, Cell<TElement>> rowGroup) =>
+        rowGroup.OrderBy(OrderByKey()).Aggregate(seed: new List<List<Cell<TElement>>>(), func: GroupConsecutiveMatchingCells).Where(group => group.Count >= _minMatchLength).Select(CreateMatch);
 
-    private List<List<ElementCell<TElement>>> GroupConsecutiveMatchingCells(List<List<ElementCell<TElement>>> groups, ElementCell<TElement> currentCell)
+    private List<List<Cell<TElement>>> GroupConsecutiveMatchingCells(List<List<Cell<TElement>>> groups, Cell<TElement> currentCell)
     {
         var lastGroup = groups.LastOrDefault();
 
@@ -37,39 +37,35 @@ public abstract class VerticalHorizontalMatchingStrategyBase<TElement>(int minMa
         return grid.ToColumnDictionary().SelectMany(column => column.Value.ToNLengthSequences(_minMatchLength)).Where(SequenceHasMinLengthMinusOneSameElements).Any(sequence => FormsPotentialMatch(sequence, grid));
     }
 
-    private bool SequenceHasMinLengthMinusOneSameElements(IEnumerable<ElementCell<TElement>> sequence) => sequence.CountBy(cell => cell.Element).Count(pair => pair.Value == _minMatchLength - 1) == 1;
+    private bool SequenceHasMinLengthMinusOneSameElements(IEnumerable<Cell<TElement>> sequence) => sequence.CountBy(cell => cell.Content).Count(pair => pair.Value == _minMatchLength - 1) == 1;
 
-    private bool FormsPotentialMatch(IEnumerable<ElementCell<TElement>> sequence, IReadableGrid<TElement> grid)
+    private bool FormsPotentialMatch(IEnumerable<Cell<TElement>> sequence, IReadableGrid<TElement> grid)
     {
-        var elementCells = sequence.ToList();
-        var groupedByCount = elementCells.GroupBy(cell => elementCells.Count(c => c.Element.Equals(cell.Element))).ToDictionary(group => group.First(), group => group.Count());
+        var cells = sequence.ToList();
+        var groupedByCount = cells.CountBy(cell => cell.Content).ToDictionary();
 
-        var distinctCell = groupedByCount.Where(pair => pair.Value == 1).Select(pair => pair.Key).First();
-        Debug.Assert(distinctCell.Element.IsT0, "Distinct cell must not be empty");
+        Debug.Assert(groupedByCount.Count == 2, "There should be exactly two distinct contents in the sequence");
 
-        var sameElement = groupedByCount.Where(pair => !pair.Key.Equals(distinctCell)).Select(pair => pair.Key).First().Element;
-        Debug.Assert(sameElement.IsT0, "All cells with same element must not be empty");
-
-        var neighborCells = GetNeighborCells(distinctCell);
-        var firstNeighbor = grid.TryGetCell(neighborCells.First.Row, neighborCells.First.Column);
-        var secondNeighbor = grid.TryGetCell(neighborCells.Second.Row, neighborCells.Second.Column);
+        var distinctCell = cells.First(cell => groupedByCount[cell.Content] == 1);
+        var (firstNeighbor, secondNeighbor) = GetNeighborCells(distinctCell, grid);
 
         var bothAreOutOfBounds = firstNeighbor.IsT1 && secondNeighbor.IsT1;
         if (bothAreOutOfBounds)
             return false;
 
+        var sameCellsContent = groupedByCount.Where(pair => pair.Value != 1).Select(pair => pair.Key).FirstOrDefault();
         var bothAreOk = firstNeighbor.IsT0 && secondNeighbor.IsT0;
         if (bothAreOk)
-            return firstNeighbor.AsT0.Element.Equals(sameElement) || secondNeighbor.AsT0.Element.Equals(sameElement);
+            return firstNeighbor.AsT0.Content.Equals(sameCellsContent) || secondNeighbor.AsT0.Content.Equals(sameCellsContent);
 
-        return firstNeighbor.IsT0 ? firstNeighbor.AsT0.Element.Equals(sameElement) : secondNeighbor.IsT0 && secondNeighbor.AsT0.Element.Equals(sameElement);
+        return firstNeighbor.IsT0 ? firstNeighbor.AsT0.Content.Equals(sameCellsContent) : secondNeighbor.IsT0 && secondNeighbor.AsT0.Content.Equals(sameCellsContent);
     }
 
-    protected abstract (ElementCell<TElement> First, ElementCell<TElement> Second) GetNeighborCells(ElementCell<TElement> cell);
+    protected abstract (OneOf<Cell<TElement>, CellOutOfBounds> First, OneOf<Cell<TElement>, CellOutOfBounds> Second) GetNeighborCells(Cell<TElement> cell, IReadableGrid<TElement> grid);
 
-    protected abstract bool CanExtendGroup(List<ElementCell<TElement>> group, ElementCell<TElement> cell);
+    protected abstract bool CanExtendGroup(List<Cell<TElement>> group, Cell<TElement> cell);
 
-    protected abstract Func<ElementCell<TElement>, int> GroupingKey();
+    protected abstract Func<Cell<TElement>, int> GroupingKey();
 
-    protected abstract Func<ElementCell<TElement>, int> OrderByKey();
+    protected abstract Func<Cell<TElement>, int> OrderByKey();
 }

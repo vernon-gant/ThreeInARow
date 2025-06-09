@@ -5,12 +5,14 @@ namespace ThreeInARow.Grid.Implementations;
 /// <summary>
 /// Default implementation of a grid that allows swapping elements horizontally or vertically.
 /// </summary>
-public class HorizontalVerticalSwapGrid<TElement>(TElement?[,] grid) : BaseManageableGrid<TElement>(grid) where TElement : IEquatable<TElement>
+public class HorizontalVerticalSwapGrid<TElement> : BaseManageableGrid<TElement> where TElement : IEquatable<TElement>
 {
-    protected override bool CanSwap(GridRow firstRow, GridColumn firstColumn, GridRow secondRow, GridColumn secondColumn)
+    public HorizontalVerticalSwapGrid(TElement?[,] gridData) : base(gridData) { }
+
+    protected override bool CanSwap(Cell<TElement> firstCell, Cell<TElement> secondCell)
     {
-        var isHorizontal = firstRow.Index == secondRow.Index && Math.Abs(firstColumn.Index - secondColumn.Index) == 1;
-        var isVertical = firstColumn.Index == secondColumn.Index && Math.Abs(firstRow.Index - secondRow.Index) == 1;
+        var isHorizontal = firstCell.RowIndex == secondCell.RowIndex && Math.Abs(firstCell.ColumnIndex - secondCell.ColumnIndex) == 1;
+        var isVertical = firstCell.ColumnIndex == secondCell.ColumnIndex && Math.Abs(firstCell.RowIndex - secondCell.RowIndex) == 1;
 
         return isHorizontal || isVertical;
     }

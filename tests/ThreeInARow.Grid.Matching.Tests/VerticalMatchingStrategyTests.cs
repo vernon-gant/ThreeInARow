@@ -1,6 +1,5 @@
 ﻿using ThreeInARow.Grid.Implementations;
 using ThreeInARow.Grid.Matching.Implementations.MatchingStrategies;
-using ThreeInARow.Grid.ValueObjects;
 using ThreeInARow.TestingUtilities;
 
 namespace ThreeInARow.Grid.Matching.Tests;
@@ -17,10 +16,10 @@ public class VerticalMatchingStrategyTests : MGridTestUtility
     public void GivenAnEmptyGrid_WhenPlayerLooksForVerticalMatches_ThenNoMatchesAreFound()
     {
         // Given a completely empty grid with no elements
-        var emptyCells = Enumerable.Empty<ElementCell<string>>();
+        var grid = this.CreateTestReadableGrid(new string?[2, 2]);
 
         // When the player looks for vertical matches
-        var matches = _strategy.FindMatches(emptyCells);
+        var matches = _strategy.FindMatches(grid);
 
         // Then no matches are found
         Assert.That(matches, Is.Empty, "Empty grid should contain no vertical matches");
@@ -36,7 +35,7 @@ public class VerticalMatchingStrategyTests : MGridTestUtility
             { "B", "A", "B" },
             { "A", "B", "A" }
         };
-        var cells = this.CreateCellsFromGrid(grid);
+        var cells = this.CreateTestReadableGrid(grid);
 
         // When the player looks for vertical matches
         var matches = _strategy.FindMatches(cells);
@@ -57,7 +56,7 @@ public class VerticalMatchingStrategyTests : MGridTestUtility
             { "A", "E", "F", "G" },
             { "A", "F", "G", "H" }
         };
-        var cells = this.CreateCellsFromGrid(grid);
+        var cells = this.CreateTestReadableGrid(grid);
 
         // When the player looks for vertical matches
         var matches = _strategy.FindMatches(cells);
@@ -81,7 +80,7 @@ public class VerticalMatchingStrategyTests : MGridTestUtility
             { "A", "D", "E", "F" },
             { "B", "E", "F", "G" }
         };
-        var cells = this.CreateCellsFromGrid(grid);
+        var cells = this.CreateTestReadableGrid(grid);
 
         // When the player looks for vertical matches
         var matches = _strategy.FindMatches(cells);
@@ -104,7 +103,7 @@ public class VerticalMatchingStrategyTests : MGridTestUtility
             { "A", "F", "G", "H" },
             { "B", "G", "H", "I" }
         };
-        var cells = this.CreateCellsFromGrid(grid);
+        var cells = this.CreateTestReadableGrid(grid);
 
         // When the player looks for vertical matches
         var matches = _strategy.FindMatches(cells);
@@ -126,7 +125,7 @@ public class VerticalMatchingStrategyTests : MGridTestUtility
             { "A", "E", "F", "G" },
             { "A", "F", "G", "H" }
         };
-        var cells = this.CreateCellsFromGrid(grid);
+        var cells = this.CreateTestReadableGrid(grid);
 
         // When the player looks for vertical matches
         var matches = _strategy.FindMatches(cells);
@@ -148,7 +147,7 @@ public class VerticalMatchingStrategyTests : MGridTestUtility
             { null, "E", "F", "G" },
             { null, "F", "G", "H" }
         };
-        var cells = this.CreateCellsFromGrid(grid);
+        var cells = this.CreateTestReadableGrid(grid);
 
         // When the player looks for vertical matches
         var matches = _strategy.FindMatches(cells);
@@ -176,7 +175,7 @@ public class VerticalMatchingStrategyTests : MGridTestUtility
             { "C", "G", "H", "I" },
             { "C", "H", "I", "J" }
         };
-        var cells = this.CreateCellsFromGrid(grid);
+        var cells = this.CreateTestReadableGrid(grid);
 
         // When the player looks for vertical matches
         var matches = _strategy.FindMatches(cells);
@@ -196,7 +195,7 @@ public class VerticalMatchingStrategyTests : MGridTestUtility
             { "A", "B", "E", "F" },
             { "B", "C", "F", "G" }
         };
-        var cells = this.CreateCellsFromGrid(grid);
+        var cells = this.CreateTestReadableGrid(grid);
 
         // When the player looks for vertical matches
         var matches = _strategy.FindMatches(cells);
@@ -219,7 +218,7 @@ public class VerticalMatchingStrategyTests : MGridTestUtility
             { "A", "G", "H", "I" },
             { "A", "H", "I", "J" }
         };
-        var cells = this.CreateCellsFromGrid(grid);
+        var cells = this.CreateTestReadableGrid(grid);
 
         // When the player looks for vertical matches
         var matches = _strategy.FindMatches(cells);
@@ -241,7 +240,7 @@ public class VerticalMatchingStrategyTests : MGridTestUtility
             { "Y", "Y", "W", "D", "V", "R" },
             { "Z", "Z", "V", "D", "U", "S" }
         };
-        var cells = this.CreateCellsFromGrid(grid);
+        var cells = this.CreateTestReadableGrid(grid);
 
         // When the player looks for vertical matches
         var matches = _strategy.FindMatches(cells);
@@ -261,7 +260,7 @@ public class VerticalMatchingStrategyTests : MGridTestUtility
             { "A", "B", "G", "H" },
             { "X", "Y", "I", "J" }
         };
-        var cells = this.CreateCellsFromGrid(grid);
+        var cells = this.CreateTestReadableGrid(grid);
 
         // When the player looks for vertical matches
         var matches = _strategy.FindMatches(cells);
@@ -285,7 +284,7 @@ public class VerticalMatchingStrategyTests : MGridTestUtility
             { "W", "S", "T", "Z" },
             { "V", "U", "V", "Z" }
         };
-        var cells = this.CreateCellsFromGrid(grid);
+        var cells = this.CreateTestReadableGrid(grid);
 
         // When the player looks for vertical matches
         var matches = _strategy.FindMatches(cells);

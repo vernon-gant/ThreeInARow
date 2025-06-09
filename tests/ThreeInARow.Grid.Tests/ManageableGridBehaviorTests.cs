@@ -1,10 +1,11 @@
 ﻿using ThreeInARow.Grid.ADT;
 using ThreeInARow.Grid.ValueObjects;
+using ThreeInARow.TestingUtilities;
 
 namespace ThreeInARow.Grid.Tests;
 
 [TestFixture]
-public abstract class ManageableGridBehaviorTests<TGrid> : GridTestsBase<IManageableGrid<string>>
+public abstract class ManageableGridBehaviorTests<TGrid> : GridTestsBase<IManageableGrid<string>>, MGridTestUtility
 {
     #region Removing Elements from Grid
 
@@ -19,12 +20,12 @@ public abstract class ManageableGridBehaviorTests<TGrid> : GridTestsBase<IManage
             { null, null, null, null },
             { null, null, null, null }
         };
+        var readableGrid = this.CreateTestReadableGrid(gridData);
         _grid = CreateGrid(gridData);
-        var gridRow = new GridRow(1);
-        var gridColumn = new GridColumn(1);
+        var cell = Cell<string>.FromGrid(readableGrid, 1, 1).AsT0;
 
         // When the player deletes the element
-        var result = _grid.Delete(gridRow, gridColumn);
+        var result = _grid.Delete(cell);
 
         // Then the operation succeeds and the cell becomes empty
         Assert.That(result.IsT0, Is.True, "Element should be successfully deleted");
@@ -36,11 +37,11 @@ public abstract class ManageableGridBehaviorTests<TGrid> : GridTestsBase<IManage
         // Given a grid where position (1,1) is already empty
         var gridData = EmptyGrid(4, 4);
         _grid = CreateGrid(gridData);
-        var gridRow = new GridRow(1);
-        var gridColumn = new GridColumn(1);
+        var readableGrid = this.CreateTestReadableGrid(gridData);
+        var cell = Cell<string>.FromGrid(readableGrid, 1, 1).AsT0;
 
         // When the player attempts to delete from the empty cell
-        var result = _grid.Delete(gridRow, gridColumn);
+        var result = _grid.Delete(cell);
 
         // Then the operation is rejected because there's nothing to delete
         Assert.That(result.IsT1, Is.True, "Deletion should be rejected for empty cells");
@@ -58,13 +59,13 @@ public abstract class ManageableGridBehaviorTests<TGrid> : GridTestsBase<IManage
             { null, null, null, null }
         };
         _grid = CreateGrid(gridData);
-        var gridRow = new GridRow(2);
-        var gridColumn = new GridColumn(2);
+        var readableGrid = this.CreateTestReadableGrid(gridData);
+        var cell = Cell<string>.FromGrid(readableGrid, 2, 2).AsT0;
 
-        _grid.Delete(gridRow, gridColumn); // First deletion successful
+        _grid.Delete(cell); // First deletion
 
         // When the player attempts to delete from the same cell again
-        var result = _grid.Delete(gridRow, gridColumn);
+        var result = _grid.Delete(cell);
 
         // Then the operation is rejected because the cell is already empty
         Assert.That(result.IsT1, Is.True, "Second deletion should be rejected");

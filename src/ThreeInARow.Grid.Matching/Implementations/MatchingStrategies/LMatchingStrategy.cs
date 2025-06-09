@@ -11,5 +11,5 @@ public class LMatchingStrategy<TElement>(int minMatchLength, HorizontalMatchingS
 
     protected override int FigureIntersectionPointCount() => IntersectionPointCount;
 
-    protected override IMatch<TElement> CreateMatch(IEnumerable<ElementCell<TElement>> cells) => new LMatch<TElement>(cells.ToHashSet());
+    protected override IMatch<TElement> CreateMatch(IEnumerable<Cell<TElement>> cells) => new LMatch<TElement>(cells.ToHashSet());
 }

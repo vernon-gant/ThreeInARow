@@ -27,7 +27,7 @@ public class LMatchingStrategyTests : MGridTestUtility
             { "A", "B", "A", "B", "A", "B", "A", "B" },
             { "B", "A", "B", "A", "B", "A", "B", "A" },
         };
-        var cells = this.CreateCellsFromGrid(grid);
+        var cells = this.CreateTestReadableGrid(grid);
 
         // When the player looks for L-shaped patterns
         var matches = _strategy.FindMatches(cells);
@@ -47,7 +47,7 @@ public class LMatchingStrategyTests : MGridTestUtility
             { "N", "O", "P", "B", "Q", "R", "S", "T" },
             { "U", "V", "W", "B", "X", "Y", "Z", null }, // Vertical match (separate)
         };
-        var cells = this.CreateCellsFromGrid(grid);
+        var cells = this.CreateTestReadableGrid(grid);
 
         // When the player looks for L-shaped patterns
         var matches = _strategy.FindMatches(cells);
@@ -66,7 +66,7 @@ public class LMatchingStrategyTests : MGridTestUtility
             { "G", "A", "H", "I", "J", "K", "L", "M" }, // Vertical stem (middle intersection)
             { "N", "A", "O", "P", "Q", "R", "S", "T" }, // Vertical continues
         };
-        var cells = this.CreateCellsFromGrid(grid);
+        var cells = this.CreateTestReadableGrid(grid);
 
         // When the player looks for L-shaped patterns
         var matches = _strategy.FindMatches(cells);
@@ -85,7 +85,7 @@ public class LMatchingStrategyTests : MGridTestUtility
             { "A", "A", "A", "N", "O", "P", "Q", "R" }, // Horizontal through center
             { "S", "A", "T", "U", "V", "W", "X", "Y" }, // Vertical below center
         };
-        var cells = this.CreateCellsFromGrid(grid);
+        var cells = this.CreateTestReadableGrid(grid);
 
         // When the player looks for L-shaped patterns
         var matches = _strategy.FindMatches(cells);
@@ -104,7 +104,7 @@ public class LMatchingStrategyTests : MGridTestUtility
             { null, "G", "H", "I", "J", "K", "L", "M" }, // Empty cell breaks vertical part
             { "A", "N", "O", "P", "Q", "R", "S", "T" },
         };
-        var cells = this.CreateCellsFromGrid(grid);
+        var cells = this.CreateTestReadableGrid(grid);
 
         // When the player looks for L-shaped patterns
         var matches = _strategy.FindMatches(cells);
@@ -123,7 +123,7 @@ public class LMatchingStrategyTests : MGridTestUtility
             { "A", "H", "I", "J", "K", "L", "M", "N" }, // Only 2 elements vertically (below minimum)
             { "O", "P", "Q", "R", "S", "T", "U", "V" },
         };
-        var cells = this.CreateCellsFromGrid(grid);
+        var cells = this.CreateTestReadableGrid(grid);
 
         // When the player looks for L-shaped patterns
         var matches = _strategy.FindMatches(cells);
@@ -149,7 +149,7 @@ public class LMatchingStrategyTests : MGridTestUtility
             { "A", "G", "H", "I", "J", "K", "L", "M" }, // Vertical arm down
             { "A", "N", "O", "P", "Q", "R", "S", "T" }, // Vertical continues
         };
-        var cells = this.CreateCellsFromGrid(grid);
+        var cells = this.CreateTestReadableGrid(grid);
 
         // When the player looks for L-shaped patterns
         var matches = _strategy.FindMatches(cells);
@@ -172,7 +172,7 @@ public class LMatchingStrategyTests : MGridTestUtility
             { "G", "H", "I", "A", "J", "K", "L", "M" }, // Vertical arm down
             { "N", "O", "P", "A", "Q", "R", "S", "T" }, // Vertical continues
         };
-        var cells = this.CreateCellsFromGrid(grid);
+        var cells = this.CreateTestReadableGrid(grid);
 
         // When the player looks for L-shaped patterns
         var matches = _strategy.FindMatches(cells);
@@ -195,7 +195,7 @@ public class LMatchingStrategyTests : MGridTestUtility
             { "A", "N", "O", "P", "Q", "R", "S", "T" }, // Vertical continues
             { "A", "A", "A", "B", "C", "D", "E", "F" }, // Horizontal arm
         };
-        var cells = this.CreateCellsFromGrid(grid);
+        var cells = this.CreateTestReadableGrid(grid);
 
         // When the player looks for L-shaped patterns
         var matches = _strategy.FindMatches(cells);
@@ -218,7 +218,7 @@ public class LMatchingStrategyTests : MGridTestUtility
             { "N", "O", "P", "A", "Q", "R", "S", "T" }, // Vertical continues
             { "B", "A", "A", "A", "C", "D", "E", "F" }, // Horizontal arm
         };
-        var cells = this.CreateCellsFromGrid(grid);
+        var cells = this.CreateTestReadableGrid(grid);
 
         // When the player looks for L-shaped patterns
         var matches = _strategy.FindMatches(cells);
@@ -239,7 +239,7 @@ public class LMatchingStrategyTests : MGridTestUtility
             { "A", "K", "L", "M", "N", "O", "B", "P" }, // Vertical continues
             { "A", "Q", "R", "S", "T", "U", "B", "V" }, // First L has longer vertical arm
         };
-        var cells = this.CreateCellsFromGrid(grid);
+        var cells = this.CreateTestReadableGrid(grid);
 
         // When the player looks for L-shaped patterns
         var matches = _strategy.FindMatches(cells);
@@ -264,7 +264,7 @@ public class LMatchingStrategyTests : MGridTestUtility
             { "A", "D", "E", "B", "F", "G", "C", "H" }, // Three vertical arms
             { "A", "I", "J", "B", "K", "L", "C", "M" }, // All same size L-shapes
         };
-        var cells = this.CreateCellsFromGrid(grid);
+        var cells = this.CreateTestReadableGrid(grid);
 
         // When the player looks for L-shaped patterns
         var matches = _strategy.FindMatches(cells);
@@ -284,7 +284,7 @@ public class LMatchingStrategyTests : MGridTestUtility
             { "A", "G", "H", "I", "J", "K", "L", "M" }, // Exactly 3 elements vertically
             { "A", "N", "O", "P", "Q", "R", "S", "T" },
         };
-        var cells = this.CreateCellsFromGrid(grid);
+        var cells = this.CreateTestReadableGrid(grid);
 
         // When the player looks for L-shaped patterns
         var matches = _strategy.FindMatches(cells);
@@ -305,7 +305,7 @@ public class LMatchingStrategyTests : MGridTestUtility
             { "A", "J", "K", "L", "M", "N", "O", "C" }, // Different arm lengths
             { "P", "Q", "R", "S", "T", "U", "V", "W" },
         };
-        var cells = this.CreateCellsFromGrid(grid);
+        var cells = this.CreateTestReadableGrid(grid);
 
         // When the player looks for L-shaped patterns
         var matches = _strategy.FindMatches(cells);
@@ -330,7 +330,7 @@ public class LMatchingStrategyTests : MGridTestUtility
             { "A", "G", "H", "I", "J", "K", "L", "M" },
             { "A", "N", "O", "P", "Q", "R", "S", "T" },
         };
-        var cells = this.CreateCellsFromGrid(grid);
+        var cells = this.CreateTestReadableGrid(grid);
 
         // When the player looks for L-shaped patterns
         var matches = _strategy.FindMatches(cells);

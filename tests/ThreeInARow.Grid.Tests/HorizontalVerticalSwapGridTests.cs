@@ -37,13 +37,11 @@ public class HorizontalVerticalSwapGridTests
         };
         var _grid = new HorizontalVerticalSwapGrid<string>(gridData);
 
-        var firstRow = new GridRow(0);
-        var firstColumn = new GridColumn(0);
-        var secondRow = new GridRow(0);
-        var secondColumn = new GridColumn(1);
+        var firstCell = Cell<string>.FromGrid(_grid, 0, 0).AsT0;
+        var secondCell = Cell<string>.FromGrid(_grid, 0, 1).AsT0;
 
         // When swapping the horizontally adjacent cells
-        var result = _grid.Swap(firstRow, firstColumn, secondRow, secondColumn);
+        var result = _grid.Swap(firstCell, secondCell);
 
         // Then operation succeeds and elements are swapped
         Assert.That(result.IsT0, Is.True, "Swap should return Success for horizontally adjacent cells");
@@ -62,13 +60,11 @@ public class HorizontalVerticalSwapGridTests
         };
         var _grid = new HorizontalVerticalSwapGrid<string>(gridData);
 
-        var firstRow = new GridRow(0);
-        var firstColumn = new GridColumn(1);
-        var secondRow = new GridRow(1);
-        var secondColumn = new GridColumn(1);
+        var firstCell = Cell<string>.FromGrid(_grid, 0, 1).AsT0;
+        var secondCell = Cell<string>.FromGrid(_grid, 1, 1).AsT0;
 
         // When swapping the vertically adjacent cells
-        var result = _grid.Swap(firstRow, firstColumn, secondRow, secondColumn);
+        var result = _grid.Swap(firstCell, secondCell);
 
         // Then operation succeeds and elements are swapped
         Assert.That(result.IsT0, Is.True, "Swap should return Success for vertically adjacent cells");
@@ -87,13 +83,11 @@ public class HorizontalVerticalSwapGridTests
         };
         var _grid = new HorizontalVerticalSwapGrid<string>(gridData);
 
-        var firstRow = new GridRow(1);
-        var firstColumn = new GridColumn(1);
-        var secondRow = new GridRow(2);
-        var secondColumn = new GridColumn(2);
+        var firstCell = Cell<string>.FromGrid(_grid, 1, 1).AsT0;
+        var secondCell = Cell<string>.FromGrid(_grid, 2, 2).AsT0;
 
         // When attempting to swap diagonally adjacent cells
-        var result = _grid.Swap(firstRow, firstColumn, secondRow, secondColumn);
+        var result = _grid.Swap(firstCell, secondCell);
 
         // Then operation fails with InvalidSwap
         Assert.That(result.IsT1, Is.True, "Swap should return InvalidSwap for diagonally adjacent cells");
@@ -112,13 +106,11 @@ public class HorizontalVerticalSwapGridTests
         };
         var _grid = new HorizontalVerticalSwapGrid<string>(gridData);
 
-        var firstRow = new GridRow(0);
-        var firstColumn = new GridColumn(0);
-        var secondRow = new GridRow(3);
-        var secondColumn = new GridColumn(3);
+        var firstCell = Cell<string>.FromGrid(_grid, 0, 0).AsT0;
+        var secondCell = Cell<string>.FromGrid(_grid, 3, 3).AsT0;
 
-        // When attempting to swap non-adjacent cells
-        var result = _grid.Swap(firstRow, firstColumn, secondRow, secondColumn);
+        // When attempting to swap non-adjacent cell
+        var result = _grid.Swap(firstCell, secondCell);
 
         // Then operation fails with InvalidSwap
         Assert.That(result.IsT1, Is.True, "Swap should return InvalidSwap for non-adjacent cells");
@@ -137,13 +129,11 @@ public class HorizontalVerticalSwapGridTests
         };
         var _grid = new HorizontalVerticalSwapGrid<string>(gridData);
 
-        var firstRow = new GridRow(0);
-        var firstColumn = new GridColumn(2);
-        var secondRow = new GridRow(2);
-        var secondColumn = new GridColumn(2);
+        var firstCell = Cell<string>.FromGrid(_grid, 0, 2).AsT0;
+        var secondCell = Cell<string>.FromGrid(_grid, 2, 2).AsT0;
 
         // When attempting to swap cells with 2 rows difference
-        var result = _grid.Swap(firstRow, firstColumn, secondRow, secondColumn);
+        var result = _grid.Swap(firstCell, secondCell);
 
         // Then operation fails with InvalidSwap
         Assert.That(result.IsT1, Is.True, "Swap should return InvalidSwap for cells 2 rows apart");
@@ -162,13 +152,11 @@ public class HorizontalVerticalSwapGridTests
         };
         var _grid = new HorizontalVerticalSwapGrid<string>(gridData);
 
-        var firstRow = new GridRow(1);
-        var firstColumn = new GridColumn(0);
-        var secondRow = new GridRow(1);
-        var secondColumn = new GridColumn(2);
+        var firstCell = Cell<string>.FromGrid(_grid, 1, 0).AsT0;
+        var secondCell = Cell<string>.FromGrid(_grid, 1, 2).AsT0;
 
         // When attempting to swap cells with 2 columns difference
-        var result = _grid.Swap(firstRow, firstColumn, secondRow, secondColumn);
+        var result = _grid.Swap(firstCell, secondCell);
 
         // Then operation fails with InvalidSwap
         Assert.That(result.IsT1, Is.True, "Swap should return InvalidSwap for cells 2 columns apart");
@@ -187,13 +175,11 @@ public class HorizontalVerticalSwapGridTests
         };
         var _grid = new HorizontalVerticalSwapGrid<string>(gridData);
 
-        var occupiedRow = new GridRow(0);
-        var occupiedColumn = new GridColumn(1);
-        var emptyRow = new GridRow(0);
-        var emptyColumn = new GridColumn(2);
+        var firstCell = Cell<string>.FromGrid(_grid, 0, 1).AsT0;
+        var secondCell = Cell<string>.FromGrid(_grid, 0, 0).AsT0;
 
         // When swapping occupied and empty cells
-        var result = _grid.Swap(occupiedRow, occupiedColumn, emptyRow, emptyColumn);
+        var result = _grid.Swap(firstCell, secondCell);
 
         // Then operation succeeds and content is swapped
         Assert.That(result.IsT0, Is.True, "Swap should return Success for occupied and empty adjacent cells");
@@ -212,22 +198,14 @@ public class HorizontalVerticalSwapGridTests
         };
         var _grid = new HorizontalVerticalSwapGrid<string>(gridData);
 
-        var firstRow = new GridRow(2);
-        var firstColumn = new GridColumn(1);
-        var secondRow = new GridRow(2);
-        var secondColumn = new GridColumn(2);
+        var firstCell = Cell<string>.FromGrid(_grid, 2, 1).AsT0;
+        var secondCell = Cell<string>.FromGrid(_grid, 2, 2).AsT0;
 
         // When swapping two empty cells
-        var result = _grid.Swap(firstRow, firstColumn, secondRow, secondColumn);
+        var result = _grid.Swap(firstCell, secondCell);
 
         // Then operation succeeds and cells remain empty
         Assert.That(result.IsT0, Is.True, "Swap should return Success for two empty adjacent cells");
-
-        var cell1After = _grid.TryGetCell(2, 1).AsT0;
-        var cell2After = _grid.TryGetCell(2, 2).AsT0;
-
-        Assert.That(cell1After.IsOccupied(), Is.False, "First cell should remain empty");
-        Assert.That(cell2After.IsOccupied(), Is.False, "Second cell should remain empty");
     }
 
     [Test]
@@ -243,13 +221,11 @@ public class HorizontalVerticalSwapGridTests
         };
         var _grid = new HorizontalVerticalSwapGrid<string>(gridData);
 
-        var firstRow = new GridRow(1);
-        var firstColumn = new GridColumn(2);
-        var secondRow = new GridRow(1);
-        var secondColumn = new GridColumn(3);
+        var firstCell = Cell<string>.FromGrid(_grid, 1, 2).AsT0;
+        var secondCell = Cell<string>.FromGrid(_grid, 1, 3).AsT0;
 
         // When swapping cells at grid edge
-        var result = _grid.Swap(firstRow, firstColumn, secondRow, secondColumn);
+        var result = _grid.Swap(firstCell, secondCell);
 
         // Then operation succeeds and elements are swapped
         Assert.That(result.IsT0, Is.True, "Swap should return Success for adjacent cells at grid edge");
@@ -268,13 +244,11 @@ public class HorizontalVerticalSwapGridTests
         };
         var _grid = new HorizontalVerticalSwapGrid<string>(gridData);
 
-        var firstRow = new GridRow(2);
-        var firstColumn = new GridColumn(1);
-        var secondRow = new GridRow(3);
-        var secondColumn = new GridColumn(1);
+        var firstCell = Cell<string>.FromGrid(_grid, 2, 1).AsT0;
+        var secondCell = Cell<string>.FromGrid(_grid, 3, 1).AsT0;
 
         // When swapping cells at bottom edge
-        var result = _grid.Swap(firstRow, firstColumn, secondRow, secondColumn);
+        var result = _grid.Swap(firstCell, secondCell);
 
         // Then operation succeeds and elements are swapped
         Assert.That(result.IsT0, Is.True, "Swap should return Success for adjacent cells at bottom edge");

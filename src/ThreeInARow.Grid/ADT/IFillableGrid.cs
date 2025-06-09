@@ -14,20 +14,24 @@ public interface IFillableGrid<TElement>
 
     /// <remarks>Precondition: The column is not full.</remarks>
     /// <remarks>Postcondition: The elements in the column are shifted down by one row, and the topmost cell is empty.</remarks>
-    OneOf<Success, ColumnIsFull, CanNotShiftDown> ShiftDown(GridColumn column);
+    OneOf<Success, ColumnIndexOutOfBounds, CanNotShiftDown> ShiftDown(int columnIndex);
 
     /// <remarks>Precondition: The column is not full.</remarks>
     /// <remarks>Postcondition: The element is added to the top of the column.</remarks>
-    OneOf<Success, ColumnIsFull> AddTop(GridColumn column, TElement element);
+    OneOf<Success, ColumnIndexOutOfBounds, CanNotAddTop> AddTop(int columnIndex, TElement element);
 
 
     // Queries
 
-    bool IsColumnFull(GridColumn column);
+    OneOf<bool, ColumnIndexOutOfBounds> IsColumnFull(int columnIndex);
 
-    OneOf<bool, ColumnIsFull> CanShiftDown(GridColumn column);
+    OneOf<bool, ColumnIndexOutOfBounds> CanShiftDown(int columnIndex);
 
-    List<GridColumn> FillableColumns { get; }
+    List<int> FillableColumns { get; }
 }
 
 public struct CanNotShiftDown;
+
+public struct CanNotAddTop;
+
+public struct ColumnIndexOutOfBounds;
