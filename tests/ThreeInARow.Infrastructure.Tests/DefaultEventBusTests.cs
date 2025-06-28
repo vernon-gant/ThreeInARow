@@ -65,4 +65,12 @@ public class DefaultEventBusTests
         handler1.Received(1).Handle(@event);
         handler2.Received(1).Handle(@event);
     }
+
+    [Test]
+    public void GivenBusWithNoHandlers_WhenPublishingEvent_ThenNoExceptionIsThrown()
+    {
+        // Given - No handlers registered
+        // When & Then
+        Assert.DoesNotThrow(() => _eventBus.Publish(new TestEvent()));
+    }
 }
