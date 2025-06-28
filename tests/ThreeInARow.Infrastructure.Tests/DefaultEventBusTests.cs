@@ -47,4 +47,22 @@ public class DefaultEventBusTests
         // Then
         handler.DidNotReceive().Handle(Arg.Any<TestEvent>());
     }
+
+    [Test]
+    public void GivenBusWithMultipleHandlers_WhenPublishingEvent_ThenAllHandlersAreInvoked()
+    {
+        // Given
+        var handler1 = Substitute.For<IEventHandler<TestEvent>>();
+        var handler2 = Substitute.For<IEventHandler<TestEvent>>();
+        _eventBus.Register(handler1);
+        _eventBus.Register(handler2);
+
+        // When
+        var @event = new TestEvent();
+        _eventBus.Publish(@event);
+
+        // Then
+        handler1.Received(1).Handle(@event);
+        handler2.Received(1).Handle(@event);
+    }
 }
