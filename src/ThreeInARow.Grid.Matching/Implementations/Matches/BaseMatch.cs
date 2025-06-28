@@ -7,7 +7,7 @@ namespace ThreeInARow.Grid.Matching.Implementations.Matches;
 
 public abstract class BaseMatch<TElement>(HashSet<Cell<TElement>> cells) : IMatch<TElement>
 {
-    protected HashSet<Cell<TElement>> _cells = cells;
+    private HashSet<Cell<TElement>> _cells = cells;
 
     public int Count => _cells.Count;
 

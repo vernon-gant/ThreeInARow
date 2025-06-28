@@ -7,7 +7,7 @@ namespace ThreeInARow.TestingUtilities;
 
 public static class CellExtensions
 {
-    public static Cell<T> CreateTestCell<T>(T content, int row, int column)
+    public static Cell<T> CreateCell<T>(T content, int row, int column)
     {
         var gridMock = Substitute.For<IReadableGrid<T>>();
         var result = OneOf<CellContent<T>, CellOutOfBounds>.FromT0(content);
