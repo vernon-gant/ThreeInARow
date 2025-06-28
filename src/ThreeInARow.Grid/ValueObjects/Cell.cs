@@ -32,40 +32,6 @@ public readonly record struct Cell<TElement>
         }
     }
 
-    public OneOf<Cell<TElement>, CellOutOfBounds> Top(IReadableGrid<TElement> grid)
-    {
-        if (RowIndex == 0)
-            return new CellOutOfBounds();
-
-        return new Cell<TElement>(grid.ContentAt(RowIndex - 1, ColumnIndex).AsT0, RowIndex - 1, ColumnIndex);
-    }
-
-    public OneOf<Cell<TElement>, CellOutOfBounds> Bottom(IReadableGrid<TElement> grid)
-    {
-        if (RowIndex == grid.RowCount - 1)
-            return new CellOutOfBounds();
-
-        return new Cell<TElement>(grid.ContentAt(RowIndex + 1, ColumnIndex).AsT0, RowIndex + 1, ColumnIndex);
-    }
-
-    public OneOf<Cell<TElement>, CellOutOfBounds> Left(IReadableGrid<TElement> grid)
-    {
-        if (ColumnIndex == 0)
-            return new CellOutOfBounds();
-
-        return new Cell<TElement>(grid.ContentAt(RowIndex, ColumnIndex - 1).AsT0, RowIndex, ColumnIndex - 1);
-    }
-
-    public OneOf<Cell<TElement>, CellOutOfBounds> Right(IReadableGrid<TElement> grid)
-    {
-        if (ColumnIndex == grid.ColumnCount - 1)
-            return new CellOutOfBounds();
-
-        return new Cell<TElement>(grid.ContentAt(RowIndex, ColumnIndex + 1).AsT0, RowIndex, ColumnIndex + 1);
-    }
-
-    public bool HasSameCoordinatesAs(Cell<TElement> other) => RowIndex == other.RowIndex && ColumnIndex == other.ColumnIndex;
-
     public static OneOf<Cell<TElement>, CellOutOfBounds> FromGrid(IReadableGrid<TElement> grid, int row, int column)
     {
         var cellContent = grid.ContentAt(row, column);
