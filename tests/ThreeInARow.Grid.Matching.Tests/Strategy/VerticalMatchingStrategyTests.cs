@@ -2,7 +2,7 @@
 using ThreeInARow.Grid.Matching.Implementations.MatchingStrategies;
 using ThreeInARow.TestingUtilities;
 
-namespace ThreeInARow.Grid.Matching.Tests;
+namespace ThreeInARow.Grid.Matching.Tests.Strategy;
 
 public class VerticalMatchingStrategyTests : MGridTestUtility
 {

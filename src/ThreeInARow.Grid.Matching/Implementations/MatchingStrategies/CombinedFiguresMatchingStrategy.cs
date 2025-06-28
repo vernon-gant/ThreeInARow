@@ -3,6 +3,7 @@ using System.Diagnostics;
 using ThreeInARow.Grid.ADT;
 using ThreeInARow.Grid.Matching.ADT;
 using ThreeInARow.Grid.ValueObjects;
+using ThreeInARow.Grid.ValueObjects.Extensions;
 
 namespace ThreeInARow.Grid.Matching.Implementations.MatchingStrategies;
 
