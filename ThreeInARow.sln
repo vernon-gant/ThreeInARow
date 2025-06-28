@@ -22,7 +22,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThreeInARow.TestingUtilitie
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Progression", "Progression", "{36D9CABD-2DA1-498E-BE91-162DDF4CB454}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThreeInARow.Progression.Scoring", "src\ThreeInARow.Progression.Scoring\ThreeInARow.Progression.Scoring.csproj", "{176396FA-B98A-452F-8920-89D0F2B8261A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThreeInARow.Progression.Statistics", "src\ThreeInARow.Progression.Statistics\ThreeInARow.Progression.Statistics.csproj", "{176396FA-B98A-452F-8920-89D0F2B8261A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThreeInARow.Infrastructure", "src\ThreeInARow.Infrastructure\ThreeInARow.Infrastructure.csproj", "{480E2F00-1566-404D-A992-E320E04CC824}"
 EndProject
