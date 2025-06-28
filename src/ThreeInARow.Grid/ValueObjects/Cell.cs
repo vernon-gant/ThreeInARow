@@ -3,7 +3,7 @@ using ThreeInARow.Grid.ADT;
 
 namespace ThreeInARow.Grid.ValueObjects;
 
-public readonly record struct Cell<TElement>
+public readonly struct Cell<TElement> : IEquatable<Cell<TElement>>
 {
     private readonly CellContent<TElement> _content;
 
@@ -31,6 +31,12 @@ public readonly record struct Cell<TElement>
             throw new InvalidOperationException("Cell is empty.");
         }
     }
+
+    public bool Equals(Cell<TElement> other) => RowIndex == other.RowIndex && ColumnIndex == other.ColumnIndex;
+
+    public override bool Equals(object? obj) => obj is Cell<TElement> cell && Equals(cell);
+
+    public override int GetHashCode() => HashCode.Combine(RowIndex, ColumnIndex);
 
     public static OneOf<Cell<TElement>, CellOutOfBounds> FromGrid(IReadableGrid<TElement> grid, int row, int column)
     {

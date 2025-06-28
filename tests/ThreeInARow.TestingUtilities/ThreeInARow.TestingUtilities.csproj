@@ -7,6 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\src\ThreeInARow.Grid.Matching\ThreeInARow.Grid.Matching.csproj" />
       <ProjectReference Include="..\..\src\ThreeInARow.Grid\ThreeInARow.Grid.csproj" />
     </ItemGroup>
 

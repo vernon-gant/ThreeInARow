@@ -3,6 +3,7 @@ using OneOf;
 using ThreeInARow.Grid.ADT;
 using ThreeInARow.Grid.Implementations.Queries;
 using ThreeInARow.Grid.Matching.ADT;
+using ThreeInARow.Grid.Matching.Implementations.Matches;
 using ThreeInARow.Grid.ValueObjects;
 
 namespace ThreeInARow.Grid.Matching.Implementations.MatchingStrategies;
@@ -12,7 +13,16 @@ public abstract class VerticalHorizontalMatchingStrategyBase<TElement>(int minMa
     public override List<IMatch<TElement>> FindMatches(IReadableGrid<TElement> grid) => grid.Where(cell => cell.IsOccupied).GroupBy(GroupingKey()).SelectMany(FindMatches).ToList();
 
     private IEnumerable<IMatch<TElement>> FindMatches(IGrouping<int, Cell<TElement>> rowGroup) =>
-        rowGroup.OrderBy(OrderByKey()).Aggregate(seed: new List<List<Cell<TElement>>>(), func: GroupConsecutiveMatchingCells).Where(group => group.Count >= _minMatchLength).Select(CreateMatch);
+        rowGroup.OrderBy(OrderByKey())
+            .Aggregate(seed: new List<List<Cell<TElement>>>(), func: GroupConsecutiveMatchingCells)
+            .Where(group => group.Count >= _minMatchLength)
+            .Select(list =>
+            {
+                Debug.Assert(list.Count >= _minMatchLength, "Group should have at least minMatchLength elements");
+                var result = DistinctCells<TElement>.Create(list);
+                Debug.Assert(result.IsT0, "Expected result to be a DistinctCells<TElement>.");
+                return CreateMatch(result.AsT0);
+            });
 
     private List<List<Cell<TElement>>> GroupConsecutiveMatchingCells(List<List<Cell<TElement>>> groups, Cell<TElement> currentCell)
     {

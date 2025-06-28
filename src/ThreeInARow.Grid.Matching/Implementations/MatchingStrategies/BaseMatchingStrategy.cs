@@ -1,6 +1,7 @@
 ﻿using OneOf;
 using ThreeInARow.Grid.ADT;
 using ThreeInARow.Grid.Matching.ADT;
+using ThreeInARow.Grid.Matching.Implementations.Matches;
 using ThreeInARow.Grid.ValueObjects;
 
 namespace ThreeInARow.Grid.Matching.Implementations.MatchingStrategies;
@@ -13,5 +14,5 @@ public abstract class BaseMatchingStrategy<TElement>(int minMatchLength) : IMatc
 
     public abstract OneOf<bool, GridHasEmptyCells, GridHasMatches> HasPotentialMatches(IReadableGrid<TElement> grid);
 
-    protected abstract IMatch<TElement> CreateMatch(IEnumerable<Cell<TElement>> cells);
+    protected abstract IMatch<TElement> CreateMatch(DistinctCells<TElement> cells);
 }

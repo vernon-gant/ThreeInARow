@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using ThreeInARow.Grid.ADT;
 using ThreeInARow.Grid.Matching.ADT;
+using ThreeInARow.Grid.Matching.Implementations.Matches;
 using ThreeInARow.Grid.ValueObjects;
 using ThreeInARow.Grid.ValueObjects.Extensions;
 
@@ -60,7 +61,7 @@ public abstract class CombinedFiguresMatchingStrategy<TElement>(int minMatchLeng
 
         var mergedMatch = mergedMatchResult.AsT0;
 
-        mergedMatch.IntersectWith(surroundingIntersection);
+        mergedMatch.IntersectWith(DistinctCells<TElement>.Create(surroundingIntersection).AsT0);
 
         return mergedMatch.Count == FigureIntersectionPointCount();
     }

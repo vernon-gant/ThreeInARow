@@ -10,5 +10,5 @@ public class CrossMatchingStrategy<TElement>(int minMatchLength, HorizontalMatch
     private const int IntersectionPointCount = 5;
 
     protected override int FigureIntersectionPointCount() => IntersectionPointCount;
-    protected override IMatch<TElement> CreateMatch(IEnumerable<Cell<TElement>> cells) => new CrossMatch<TElement>(cells.ToHashSet());
+    protected override IMatch<TElement> CreateMatch(DistinctCells<TElement> cells) => CrossMatch<TElement>.Create(cells).AsT0;
 }

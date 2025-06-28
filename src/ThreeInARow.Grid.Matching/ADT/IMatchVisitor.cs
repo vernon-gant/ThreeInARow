@@ -2,7 +2,7 @@
 
 namespace ThreeInARow.Grid.Matching.ADT;
 
-public interface IMatchVisitor<TResult, TElement>
+public interface IMatchVisitor<TResult, TElement> where TElement : IEquatable<TElement>
 {
     TResult Visit(HorizontalMatch<TElement> match);
 

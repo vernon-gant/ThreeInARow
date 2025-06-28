@@ -26,5 +26,5 @@ public class HorizontalMatchingStrategy<TElement>(int minMatchLength) : Vertical
 
     protected override Func<Cell<TElement>, int> OrderByKey() => cell => cell.ColumnIndex;
 
-    protected override IMatch<TElement> CreateMatch(IEnumerable<Cell<TElement>> cells) => new HorizontalMatch<TElement>(cells.ToHashSet());
+    protected override IMatch<TElement> CreateMatch(DistinctCells<TElement> cells) => HorizontalMatch<TElement>.Create(cells).AsT0;
 }
