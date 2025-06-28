@@ -6,6 +6,8 @@ namespace ThreeInARow.Infrastructure.Tests;
 
 public class TestEvent : IEvent;
 
+public class AnotherTestEvent : IEvent;
+
 [TestFixture]
 public class DefaultEventBusTests
 {
@@ -30,5 +32,19 @@ public class DefaultEventBusTests
 
         // Then
         handler.Received(1).Handle(@event);
+    }
+
+    [Test]
+    public void GivenBusWithOneRegisteredHandler_WhenPublishingEventForAnotherHandler_ThenHandlerIsNotInvoked()
+    {
+        // Given
+        var handler = Substitute.For<IEventHandler<TestEvent>>();
+        _eventBus.Register(handler);
+
+        // When
+        _eventBus.Publish(new AnotherTestEvent());
+
+        // Then
+        handler.DidNotReceive().Handle(Arg.Any<TestEvent>());
     }
 }
