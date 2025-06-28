@@ -4,7 +4,7 @@ namespace ThreeInARow.Infrastructure.Implementation;
 
 public class DefaultEventBus : IEventBus
 {
-    private readonly Dictionary<Type, List<object>> _handlers = new();
+    private readonly Dictionary<Type, HashSet<object>> _handlers = new();
 
     public void Publish<TEvent>(TEvent @event) where TEvent : IEvent
     {
