@@ -15,7 +15,7 @@ public readonly record struct PositiveInt
         Value = value;
     }
 
-    public int Value { get; }
+    private int Value { get; }
 
     public PositiveInt Multiply(MultiplyFactor factor) => new (Value * factor.Value);
 
@@ -28,4 +28,6 @@ public readonly record struct PositiveInt
     }
 
     public static PositiveInt operator +(PositiveInt left, PositiveInt right) => new (left.Value + right.Value);
+
+    public override string ToString() => Value.ToString();
 }

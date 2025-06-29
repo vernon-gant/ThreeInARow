@@ -20,4 +20,8 @@
         <Using Include="NUnit.Framework"/>
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\..\src\ThreeInARow.Progression.Statistics\ThreeInARow.Progression.Statistics.csproj" />
+    </ItemGroup>
+
 </Project>
