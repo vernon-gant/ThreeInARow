@@ -9,6 +9,8 @@
     <ItemGroup>
       <ProjectReference Include="..\src\ThreeInARow.Grid.Matching\ThreeInARow.Grid.Matching.csproj" />
       <ProjectReference Include="..\src\ThreeInARow.Infrastructure\ThreeInARow.Infrastructure.csproj" />
+      <ProjectReference Include="..\ThreeInARow.Grid.Matching\ThreeInARow.Grid.Matching.csproj" />
+      <ProjectReference Include="..\ThreeInARow.Infrastructure\ThreeInARow.Infrastructure.csproj" />
     </ItemGroup>
 
 </Project>

@@ -30,7 +30,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{C3120CF6
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThreeInARow.Infrastructure.Tests", "tests\ThreeInARow.Infrastructure.Tests\ThreeInARow.Infrastructure.Tests.csproj", "{5C0F95D7-D659-4722-9F5D-8400881EAC9C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThreeInARow.Progression.Events", "ThreeInARow.Progression.Events\ThreeInARow.Progression.Events.csproj", "{840C0C15-5304-44CC-8C12-3964D2B681FA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThreeInARow.Progression.Events", "src\ThreeInARow.Progression.Events\ThreeInARow.Progression.Events.csproj", "{840C0C15-5304-44CC-8C12-3964D2B681FA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{3287CD11-FA95-4C7E-B7CE-25EF3B5FB962}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThreeInARow.Progression.Statistics.Tests", "tests\ThreeInARow.Progression.Statistics.Tests\ThreeInARow.Progression.Statistics.Tests.csproj", "{B220EA0F-B691-4F01-B7C4-5255549FD24C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -82,6 +86,10 @@ Global
 		{840C0C15-5304-44CC-8C12-3964D2B681FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{840C0C15-5304-44CC-8C12-3964D2B681FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{840C0C15-5304-44CC-8C12-3964D2B681FA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B220EA0F-B691-4F01-B7C4-5255549FD24C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B220EA0F-B691-4F01-B7C4-5255549FD24C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B220EA0F-B691-4F01-B7C4-5255549FD24C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B220EA0F-B691-4F01-B7C4-5255549FD24C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{10287E80-7813-4400-BE78-8A4EB95C6CF6} = {A267EED7-5F19-428F-B9C2-12F8F1223A6A}
@@ -97,5 +105,7 @@ Global
 		{C3120CF6-3F30-44FD-B2C2-C3BA65ECE2FA} = {82600212-FC1A-458A-9CC8-4C41547F080C}
 		{5C0F95D7-D659-4722-9F5D-8400881EAC9C} = {C3120CF6-3F30-44FD-B2C2-C3BA65ECE2FA}
 		{840C0C15-5304-44CC-8C12-3964D2B681FA} = {36D9CABD-2DA1-498E-BE91-162DDF4CB454}
+		{3287CD11-FA95-4C7E-B7CE-25EF3B5FB962} = {36D9CABD-2DA1-498E-BE91-162DDF4CB454}
+		{B220EA0F-B691-4F01-B7C4-5255549FD24C} = {3287CD11-FA95-4C7E-B7CE-25EF3B5FB962}
 	EndGlobalSection
 EndGlobal

@@ -9,7 +9,9 @@ public interface IStatistic
 
     public OneOf<string, None> Description { get; }
 
-    public string Value { get; }
+    public OneOf<string, None> Unit { get; }
 
-    public string Unit { get; }
+    public OneOf<string, NotEnoughData> Value { get; }
 }
+
+public struct NotEnoughData;
