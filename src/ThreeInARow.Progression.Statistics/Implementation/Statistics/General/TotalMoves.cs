@@ -8,16 +8,18 @@ namespace ThreeInARow.Progression.Statistics.Implementation.Statistics.General;
 
 public class TotalMoves : IStatistic, IEventHandler<MoveMade>
 {
-    public string Name { get; }
+    private int _totalMoves;
 
-    public OneOf<string, None> Description { get; }
+    public string Name => "Total Moves";
 
-    public OneOf<string, None> Unit { get; }
+    public OneOf<string, None> Description => "Only counts moves that could be placed on the board";
 
-    public OneOf<string, NotEnoughData> Value { get; }
+    public OneOf<string, None> Unit => new None();
+
+    public OneOf<string, NotEnoughData> Value => _totalMoves.ToString();
 
     public void Handle(MoveMade notification)
     {
-        throw new NotImplementedException();
+        _totalMoves++;
     }
 }
