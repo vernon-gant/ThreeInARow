@@ -1,6 +1,5 @@
 ﻿using OneOf;
 using ThreeInARow.Grid.ADT;
-using ThreeInARow.Grid.ValueObjects;
 
 namespace ThreeInARow.Grid.Filling.ADT;
 

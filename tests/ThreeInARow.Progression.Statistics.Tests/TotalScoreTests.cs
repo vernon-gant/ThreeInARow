@@ -3,7 +3,7 @@ using NSubstitute;
 using OneOf.Types;
 using ThreeInARow.Infrastructure.ValueObjects;
 using ThreeInARow.Progression.Statistics.ADT;
-using ThreeInARow.Progression.Statistics.Implementation.Statistics;
+using ThreeInARow.Progression.Statistics.Implementation.Statistics.General;
 using ThreeInARow.TestingUtilities;
 
 namespace ThreeInARow.Progression.Statistics.Tests;

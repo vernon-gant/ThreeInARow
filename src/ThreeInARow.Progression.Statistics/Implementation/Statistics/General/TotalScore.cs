@@ -2,7 +2,7 @@
 using OneOf.Types;
 using ThreeInARow.Progression.Statistics.ADT;
 
-namespace ThreeInARow.Progression.Statistics.Implementation.Statistics;
+namespace ThreeInARow.Progression.Statistics.Implementation.Statistics.General;
 
 public class TotalScore(IScoreTracker scoreTracker) : IStatistic
 {

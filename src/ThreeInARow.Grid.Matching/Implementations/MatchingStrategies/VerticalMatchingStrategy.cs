@@ -1,6 +1,5 @@
 ﻿using OneOf;
 using ThreeInARow.Grid.ADT;
-using ThreeInARow.Grid.Implementations.Queries;
 using ThreeInARow.Grid.Matching.ADT;
 using ThreeInARow.Grid.Matching.Implementations.Matches;
 using ThreeInARow.Grid.ValueObjects;

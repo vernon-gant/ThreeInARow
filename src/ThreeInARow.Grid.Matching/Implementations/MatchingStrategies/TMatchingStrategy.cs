@@ -1,6 +1,5 @@
 ﻿using ThreeInARow.Grid.Matching.ADT;
 using ThreeInARow.Grid.Matching.Implementations.Matches;
-using ThreeInARow.Grid.ValueObjects;
 
 namespace ThreeInARow.Grid.Matching.Implementations.MatchingStrategies;
 
