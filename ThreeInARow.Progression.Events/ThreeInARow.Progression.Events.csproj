@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\src\ThreeInARow.Grid.Matching\ThreeInARow.Grid.Matching.csproj" />
+      <ProjectReference Include="..\src\ThreeInARow.Infrastructure\ThreeInARow.Infrastructure.csproj" />
+    </ItemGroup>
+
+</Project>
