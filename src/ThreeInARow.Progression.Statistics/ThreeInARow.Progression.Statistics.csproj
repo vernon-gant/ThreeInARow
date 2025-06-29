@@ -10,8 +10,4 @@
       <ProjectReference Include="..\ThreeInARow.Infrastructure\ThreeInARow.Infrastructure.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Implementation\" />
-    </ItemGroup>
-
 </Project>
