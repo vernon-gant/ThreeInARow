@@ -7,6 +7,8 @@
         <PackageReference Include="NUnit.Analyzers" Version="4.4.0"/>
         <PackageReference Include="NUnit3TestAdapter" Version="4.6.0"/>
         <PackageReference Include="FluentAssertions" Version="8.4.0" />
+
+        <ProjectReference Include="$(MSBuildThisFileDirectory)tests\ThreeInARow.TestingUtilities\ThreeInARow.TestingUtilities.csproj" />
     </ItemGroup>
 
     <ItemGroup>
