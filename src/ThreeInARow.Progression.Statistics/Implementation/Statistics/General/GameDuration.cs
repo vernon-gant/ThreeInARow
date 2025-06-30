@@ -13,5 +13,5 @@ public class GameDuration(IGameTimer gameTimer) : IStatistic
 
     public OneOf<string, None> Unit => "mm:ss";
 
-    public OneOf<string, NotEnoughData> Value => !gameTimer.HasGameEnded ? new NotEnoughData() : gameTimer.ElapsedGameTime.Match(t => $"{t.Minutes:D2}:{t.Seconds:D2}", _ => throw new InvalidOperationException("Impossible"));
+    public OneOf<string, NotEnoughData> Value => gameTimer.ElapsedGameTime.Match<OneOf<string, NotEnoughData>>(time => $"{time.Minutes:D2}:{time.Seconds:D2}", _ => new NotEnoughData());
 }

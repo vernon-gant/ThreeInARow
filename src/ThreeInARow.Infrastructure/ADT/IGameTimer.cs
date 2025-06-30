@@ -5,17 +5,11 @@ namespace ThreeInARow.Infrastructure.ADT;
 
 public interface IGameTimer
 {
-    OneOf<Success, GameRunning> StartGame();
+    OneOf<Success, NotPossible> StartGame();
 
-    OneOf<Success, GameNotRunning> StopGame();
+    OneOf<Success, NotPossible> StopGame();
 
-    bool IsGameRunning { get; }
-
-    bool HasGameEnded  { get; }
-
-    OneOf<TimeSpan, GameNotRunning> ElapsedGameTime { get; }
+    OneOf<TimeSpan, NotPossible> ElapsedGameTime { get; }
 }
 
-public struct GameRunning;
-
-public struct GameNotRunning;
+public struct NotPossible;

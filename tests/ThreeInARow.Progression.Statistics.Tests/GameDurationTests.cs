@@ -59,10 +59,10 @@ public class GameDurationTests
     #region Value Property Tests
 
     [Test]
-    public void GivenGameNotEnded_WhenValueIsQueried_ThenReturnsNotEnoughData()
+    public void GivenNotPossibleElapsedTime_WhenValueIsQueried_ThenReturnsNotEnoughData()
     {
         // Given
-        _gameTimer.HasGameEnded.Returns(false);
+        _gameTimer.ElapsedGameTime.Returns(new NotPossible());
 
         // When
         var value = _gameDuration.Value;
@@ -72,10 +72,9 @@ public class GameDurationTests
     }
 
     [Test]
-    public void GivenGameEnded_WhenValueIsQueried_ThenReturnsFormattedSeconds()
+    public void GivenNormalElapsedTime_WhenValueIsQueried_ThenReturnsFormattedDuration()
     {
         // Given
-        _gameTimer.HasGameEnded.Returns(true);
         _gameTimer.ElapsedGameTime.Returns(TimeSpan.FromSeconds(123));
 
         // When

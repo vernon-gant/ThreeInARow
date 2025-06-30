@@ -7,147 +7,155 @@ using ThreeInARow.TestingUtilities;
 namespace ThreeInARow.Infrastructure.Tests;
 
 [TestFixture]
-public class SystemOneShotStopwatchTests
+public class SystemStopwatchTests
 {
-    private SystemOneShotStopwatch _systemOneShotStopwatch;
+    private SystemStopwatchTimer _systemStopwatch;
 
     [SetUp]
-    public void Setup() => _systemOneShotStopwatch = new SystemOneShotStopwatch();
+    public void Setup() => _systemStopwatch = new SystemStopwatchTimer();
 
     [Test]
-    public void GivenNotStartedStopwatch_WhenStateIsQueried_ThenDefaultsAreCorrect()
+    public void GivenNewTimer_WhenElapsedQueried_ThenReturnsNotPossible()
     {
         // Given / When
+        var result = _systemStopwatch.ElapsedGameTime;
 
         // Then
-        _systemOneShotStopwatch.IsRunning.Should().BeFalse();
-        _systemOneShotStopwatch.FinishedFullCycle.Should().BeFalse();
-        _systemOneShotStopwatch.Elapsed.ShouldBeOfTypeOneOf<NeverStarted>();
-        _systemOneShotStopwatch.Stop().ShouldBeOfTypeOneOf<NeverStarted>();
+        result.ShouldBeOfTypeOneOf<NotPossible>();
     }
 
     [Test]
-    public void GivenNotStartedStopwatch_WhenStartIsCalled_ThenReturnsSuccessAndIsRunningAndNoFullCycle()
+    public void GivenNewTimer_WhenStopGameCalled_ThenReturnsNotPossible()
     {
         // When
-        var result = _systemOneShotStopwatch.Start();
+        var result = _systemStopwatch.StopGame();
 
         // Then
-        result.ShouldBeOfTypeOneOf<Success>();
-        _systemOneShotStopwatch.IsRunning.Should().BeTrue();
-        _systemOneShotStopwatch.FinishedFullCycle.Should().BeFalse();
+        result.ShouldBeOfTypeOneOf<NotPossible>();
     }
 
     [Test]
-    public void GivenStartedStopwatch_WhenStateIsQueried_ThenRunningAndNoFullCycle()
+    public void GivenNewTimer_WhenStartGameCalled_ThenReturnsSuccess()
     {
-        // Given
-        _systemOneShotStopwatch.Start();
-
-        // When / Then
-        _systemOneShotStopwatch.IsRunning.Should().BeTrue();
-        _systemOneShotStopwatch.FinishedFullCycle.Should().BeFalse();
-        _systemOneShotStopwatch.Elapsed.ShouldBeOfTypeOneOf<TimeSpan>();
-    }
-
-    [Test]
-    public void GivenStartedStopwatch_WhenStartIsCalledAgain_ThenReportsAlreadyRunningAndElapsedContinuesAndNoFullCycle()
-    {
-        // Given
-        _systemOneShotStopwatch.Start();
-        Thread.Sleep(50);
-        var initial = _systemOneShotStopwatch.Elapsed.AsT0;
-
         // When
-        var result = _systemOneShotStopwatch.Start();
-
-        // Then
-        result.ShouldBeOfTypeOneOf<AlreadyRunning>();
-        _systemOneShotStopwatch.IsRunning.Should().BeTrue();
-        _systemOneShotStopwatch.FinishedFullCycle.Should().BeFalse();
-        _systemOneShotStopwatch.Elapsed.AsT0.Should().BeGreaterThan(initial);
-    }
-
-    [Test]
-    public void GivenStartedStopwatch_WhenStopIsCalled_ThenReturnsSuccessAndStopsAndMarksFullCycle()
-    {
-        // Given
-        _systemOneShotStopwatch.Start();
-
-        // When
-        var result = _systemOneShotStopwatch.Stop();
+        var result = _systemStopwatch.StartGame();
 
         // Then
         result.ShouldBeOfTypeOneOf<Success>();
-        _systemOneShotStopwatch.IsRunning.Should().BeFalse();
-        _systemOneShotStopwatch.FinishedFullCycle.Should().BeTrue();
     }
 
     [Test]
-    public void GivenStoppedStopwatch_WhenElapsedIsReadMultipleTimes_ThenValueStaysConstantAndFullCycleStaysTrue()
+    public void GivenStartedTimer_WhenStartGameCalledAgain_ThenReturnsNotPossibleAndElapsedTimeIncreases()
     {
         // Given
-        _systemOneShotStopwatch.Start();
-        Thread.Sleep(50);
-        _systemOneShotStopwatch.Stop();
-
-        // When / Then
-        _systemOneShotStopwatch.Elapsed.ShouldBeOfTypeOneOf<TimeSpan>();
-        var first = _systemOneShotStopwatch.Elapsed.AsT0;
-        _systemOneShotStopwatch.Elapsed.ShouldBeOfTypeOneOf<TimeSpan>();
-        var second = _systemOneShotStopwatch.Elapsed.AsT0;
-
-        first.Should().Be(second);
-        _systemOneShotStopwatch.FinishedFullCycle.Should().BeTrue();
-    }
-
-    [Test]
-    public void GivenStoppedStopwatch_WhenStopIsCalledAgain_ThenReportsNeverStartedAndElapsedUnchangedAndFullCycleStaysTrue()
-    {
-        // Given
-        _systemOneShotStopwatch.Start();
-        _systemOneShotStopwatch.Stop();
-        var frozen = _systemOneShotStopwatch.Elapsed.AsT0;
+        _systemStopwatch.StartGame();
+        var firstElapsed = _systemStopwatch.ElapsedGameTime.AsT0;
+        Thread.Sleep(20);
 
         // When
-        var result = _systemOneShotStopwatch.Stop();
+        var result = _systemStopwatch.StartGame();
 
         // Then
-        result.ShouldBeOfTypeOneOf<NeverStarted>();
-        _systemOneShotStopwatch.IsRunning.Should().BeFalse();
-        _systemOneShotStopwatch.FinishedFullCycle.Should().BeTrue();
-        _systemOneShotStopwatch.Elapsed.AsT0.Should().Be(frozen);
+        result.ShouldBeOfTypeOneOf<NotPossible>();
+        var secondElapsed = _systemStopwatch.ElapsedGameTime.AsT0;
+        secondElapsed.Should().BeGreaterThan(firstElapsed);
     }
 
     [Test]
-    public void GivenRunningStopwatch_WhenElapsedReadTwice_ThenValueIncreasesAndNoFullCycle()
+    public void GivenStartedTimer_WhenElapsedQueried_ThenReturnsTimeSpan()
     {
         // Given
-        _systemOneShotStopwatch.Start();
-        Thread.Sleep(50);
+        _systemStopwatch.StartGame();
+        Thread.Sleep(20);
 
         // When
-        var first  = _systemOneShotStopwatch.Elapsed.AsT0;
-        Thread.Sleep(50);
-        var second = _systemOneShotStopwatch.Elapsed.AsT0;
+        var result = _systemStopwatch.ElapsedGameTime;
+
+        // Then
+        result.ShouldBeOfTypeOneOf<TimeSpan>();
+        result.AsT0.Should().BeGreaterThan(TimeSpan.Zero);
+    }
+
+    [Test]
+    public void GivenStartedTimer_WhenStopGameCalled_ThenReturnsSuccess()
+    {
+        // Given
+        _systemStopwatch.StartGame();
+        Thread.Sleep(20);
+
+        // When
+        var result = _systemStopwatch.StopGame();
+
+        // Then
+        result.ShouldBeOfTypeOneOf<Success>();
+    }
+
+    [Test]
+    public void GivenStoppedTimer_WhenElapsedReadMultipleTimes_ThenValueIsFrozen()
+    {
+        // Given
+        _systemStopwatch.StartGame();
+        Thread.Sleep(20);
+        _systemStopwatch.StopGame();
+        var first = _systemStopwatch.ElapsedGameTime.AsT0;
+
+        // When
+        Thread.Sleep(20);
+        var second = _systemStopwatch.ElapsedGameTime.AsT0;
+
+        // Then
+        second.Should().Be(first);
+    }
+
+    [Test]
+    public void GivenStoppedTimer_WhenStopGameCalledAgain_ThenReturnsNotPossibleAndDoesNotChangeElapsedTime()
+    {
+        // Given
+        _systemStopwatch.StartGame();
+        Thread.Sleep(20);
+        _systemStopwatch.StopGame();
+        var firstElapsed = _systemStopwatch.ElapsedGameTime.AsT0;
+
+        // When
+        var result = _systemStopwatch.StopGame();
+
+        // Then
+        result.ShouldBeOfTypeOneOf<NotPossible>();
+        var secondElapsed = _systemStopwatch.ElapsedGameTime.AsT0;
+        secondElapsed.Should().Be(firstElapsed);
+    }
+
+    [Test]
+    public void GivenStoppedTimer_WhenStartGameCalledAgain_ThenReturnsSuccessAndResetsElapsedTime()
+    {
+        // Given
+        _systemStopwatch.StartGame();
+        Thread.Sleep(100);
+        var firstElapsed = _systemStopwatch.ElapsedGameTime.AsT0;
+        _systemStopwatch.StopGame();
+
+        // When
+        var result = _systemStopwatch.StartGame();
+
+        // Then
+        result.ShouldBeOfTypeOneOf<Success>();
+        var secondElapsed = _systemStopwatch.ElapsedGameTime.AsT0;
+        secondElapsed.Should().BeLessThan(firstElapsed);
+    }
+
+    [Test]
+    public void GivenRunningTimer_WhenElapsedReadTwice_ThenValueIncreases()
+    {
+        // Given
+        _systemStopwatch.StartGame();
+        Thread.Sleep(20);
+        var first = _systemStopwatch.ElapsedGameTime.AsT0;
+
+        // When
+        Thread.Sleep(20);
+        var second = _systemStopwatch.ElapsedGameTime.AsT0;
 
         // Then
         second.Should().BeGreaterThan(first);
-        _systemOneShotStopwatch.FinishedFullCycle.Should().BeFalse();
-    }
-
-    [Test]
-    public void GivenStartedStopwatch_WhenStopCalledThenElapsedRead_ThenElapsedGreaterThanZeroAndFullCycleTrue()
-    {
-        // Given
-        _systemOneShotStopwatch.Start();
-        Thread.Sleep(50);
-
-        // When
-        _systemOneShotStopwatch.Stop();
-
-        // Then
-        _systemOneShotStopwatch.Elapsed.AsT0.Should().BeGreaterThan(TimeSpan.Zero);
-        _systemOneShotStopwatch.FinishedFullCycle.Should().BeTrue();
     }
 }
