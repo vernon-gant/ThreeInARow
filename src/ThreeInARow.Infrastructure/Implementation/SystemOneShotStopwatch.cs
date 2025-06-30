@@ -5,7 +5,7 @@ using ThreeInARow.Infrastructure.ADT;
 
 namespace ThreeInARow.Infrastructure.Implementation;
 
-public class SystemStopwatch : IStopwatch
+public class SystemOneShotStopwatch : IOneShotStopwatch
 {
     private readonly Stopwatch _stopwatch = new();
     private TimeSpan? _endTime;
@@ -19,27 +19,19 @@ public class SystemStopwatch : IStopwatch
         return new Success();
     }
 
-    public OneOf<Success, HasNotStartedYet> Stop()
+    public OneOf<Success, NeverStarted> Stop()
     {
         if (!_stopwatch.IsRunning)
-            return new HasNotStartedYet();
+            return new NeverStarted();
 
         _endTime = _stopwatch.Elapsed;
         _stopwatch.Stop();
         return new Success();
     }
 
-    public void Reset()
-    {
-        _stopwatch.Reset();
-        _endTime = null;
-    }
-
     public bool IsRunning  => _stopwatch.IsRunning;
 
-    public bool FinishedFullCycle => _endTime.HasValue && !_stopwatch.IsRunning;
-
-    public OneOf<TimeSpan, HasNotStartedYet> Elapsed
+    public OneOf<TimeSpan, NeverStarted> Elapsed
     {
         get
         {
@@ -49,7 +41,7 @@ public class SystemStopwatch : IStopwatch
             if (_endTime.HasValue)
                 return _endTime.Value;
 
-            return new HasNotStartedYet();
+            return new NeverStarted();
         }
     }
 }

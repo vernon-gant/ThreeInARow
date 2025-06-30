@@ -3,23 +3,19 @@ using OneOf.Types;
 
 namespace ThreeInARow.Infrastructure.ADT;
 
-public interface IStopwatch
+public interface IOneShotStopwatch
 {
     // Commands
     OneOf<Success, AlreadyRunning> Start();
 
-    OneOf<Success, HasNotStartedYet> Stop();
-
-    void Reset();
+    OneOf<Success, NeverStarted> Stop();
 
     // Queries
     bool IsRunning { get; }
 
-    bool FinishedFullCycle { get; }
-
-OneOf<TimeSpan, HasNotStartedYet> Elapsed { get; }
+    OneOf<TimeSpan, NeverStarted> Elapsed { get; }
 }
 
 public struct AlreadyRunning;
 
-public struct HasNotStartedYet;
+public struct NeverStarted;
