@@ -15,7 +15,9 @@ public interface IStopwatch
     // Queries
     bool IsRunning { get; }
 
-    OneOf<TimeSpan, HasNotStartedYet> Elapsed { get; }
+    bool FinishedFullCycle { get; }
+
+OneOf<TimeSpan, HasNotStartedYet> Elapsed { get; }
 }
 
 public struct AlreadyRunning;
