@@ -11,7 +11,11 @@ public class SystemStopwatch : IStopwatch
 
     public OneOf<Success, IsRunning> Start()
     {
-        throw new NotImplementedException();
+        if (_stopwatch.IsRunning)
+            return new IsRunning();
+
+        _stopwatch.Start();
+        return new Success();
     }
 
     public OneOf<Success, IsNotRunning> Stop()

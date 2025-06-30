@@ -17,12 +17,24 @@ public class SystemStopwatchTests
     }
 
     [Test]
-    public void GivenNotStartedStopwatch_WhenTimeRelatedQueriesAreCalled_ThenNotRunningIsReturned()
+    public void GivenNotStartedStopwatch_WhenStateIsQueried_ThenIsRunningShouldBeFalseAndElapsedShouldBeIsNotRunning()
     {
         // Given
         // When
         // Then
         _systemStopwatch.IsRunning.Should().BeFalse();
         _systemStopwatch.Elapsed.ShouldBeOfTypeOneOf<IsNotRunning>();
+    }
+
+    [Test]
+    public void GivenStartedStopwatch_WhenStateIsQueried_ThenIsRunningShouldBeTrueAndElapsedShouldBeTimeSpan()
+    {
+        // Given
+        _systemStopwatch.Start();
+
+        // When
+        // Then
+        _systemStopwatch.IsRunning.Should().BeTrue();
+        _systemStopwatch.Elapsed.ShouldBeOfTypeOneOf<TimeSpan>();
     }
 }
