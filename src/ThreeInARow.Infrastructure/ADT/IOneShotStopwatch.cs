@@ -13,6 +13,8 @@ public interface IOneShotStopwatch
     // Queries
     bool IsRunning { get; }
 
+    bool FinishedFullCycle { get; }
+
     OneOf<TimeSpan, NeverStarted> Elapsed { get; }
 }
 

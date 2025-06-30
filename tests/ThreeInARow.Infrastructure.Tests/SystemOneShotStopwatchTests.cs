@@ -12,10 +12,7 @@ public class SystemOneShotStopwatchTests
     private SystemOneShotStopwatch _systemOneShotStopwatch;
 
     [SetUp]
-    public void Setup()
-    {
-        _systemOneShotStopwatch = new SystemOneShotStopwatch();
-    }
+    public void Setup() => _systemOneShotStopwatch = new SystemOneShotStopwatch();
 
     [Test]
     public void GivenNotStartedStopwatch_WhenStateIsQueried_ThenDefaultsAreCorrect()
@@ -24,12 +21,13 @@ public class SystemOneShotStopwatchTests
 
         // Then
         _systemOneShotStopwatch.IsRunning.Should().BeFalse();
+        _systemOneShotStopwatch.FinishedFullCycle.Should().BeFalse();
         _systemOneShotStopwatch.Elapsed.ShouldBeOfTypeOneOf<NeverStarted>();
         _systemOneShotStopwatch.Stop().ShouldBeOfTypeOneOf<NeverStarted>();
     }
 
     [Test]
-    public void GivenNotStartedStopwatch_WhenStartIsCalled_ThenReturnsSuccessAndIsRunning()
+    public void GivenNotStartedStopwatch_WhenStartIsCalled_ThenReturnsSuccessAndIsRunningAndNoFullCycle()
     {
         // When
         var result = _systemOneShotStopwatch.Start();
@@ -37,6 +35,7 @@ public class SystemOneShotStopwatchTests
         // Then
         result.ShouldBeOfTypeOneOf<Success>();
         _systemOneShotStopwatch.IsRunning.Should().BeTrue();
+        _systemOneShotStopwatch.FinishedFullCycle.Should().BeFalse();
     }
 
     [Test]
@@ -47,15 +46,16 @@ public class SystemOneShotStopwatchTests
 
         // When / Then
         _systemOneShotStopwatch.IsRunning.Should().BeTrue();
+        _systemOneShotStopwatch.FinishedFullCycle.Should().BeFalse();
         _systemOneShotStopwatch.Elapsed.ShouldBeOfTypeOneOf<TimeSpan>();
     }
 
     [Test]
-    public void GivenStartedStopwatch_WhenStartIsCalledAgain_ThenReportsAlreadyRunningAndDoesNotReset()
+    public void GivenStartedStopwatch_WhenStartIsCalledAgain_ThenReportsAlreadyRunningAndElapsedContinuesAndNoFullCycle()
     {
         // Given
         _systemOneShotStopwatch.Start();
-        Thread.Sleep(250);
+        Thread.Sleep(50);
         var initial = _systemOneShotStopwatch.Elapsed.AsT0;
 
         // When
@@ -64,11 +64,12 @@ public class SystemOneShotStopwatchTests
         // Then
         result.ShouldBeOfTypeOneOf<AlreadyRunning>();
         _systemOneShotStopwatch.IsRunning.Should().BeTrue();
+        _systemOneShotStopwatch.FinishedFullCycle.Should().BeFalse();
         _systemOneShotStopwatch.Elapsed.AsT0.Should().BeGreaterThan(initial);
     }
 
     [Test]
-    public void GivenStartedStopwatch_WhenStopIsCalled_ThenStopsAndMarksFullCycle()
+    public void GivenStartedStopwatch_WhenStopIsCalled_ThenReturnsSuccessAndStopsAndMarksFullCycle()
     {
         // Given
         _systemOneShotStopwatch.Start();
@@ -79,33 +80,34 @@ public class SystemOneShotStopwatchTests
         // Then
         result.ShouldBeOfTypeOneOf<Success>();
         _systemOneShotStopwatch.IsRunning.Should().BeFalse();
+        _systemOneShotStopwatch.FinishedFullCycle.Should().BeTrue();
     }
 
     [Test]
-    public void GivenStoppedStopwatch_WhenElapsedIsReadMultipleTimes_ThenValueStaysConstant()
+    public void GivenStoppedStopwatch_WhenElapsedIsReadMultipleTimes_ThenValueStaysConstantAndFullCycleStaysTrue()
     {
         // Given
         _systemOneShotStopwatch.Start();
-        Thread.Sleep(100);
+        Thread.Sleep(50);
         _systemOneShotStopwatch.Stop();
 
         // When / Then
         _systemOneShotStopwatch.Elapsed.ShouldBeOfTypeOneOf<TimeSpan>();
         var first = _systemOneShotStopwatch.Elapsed.AsT0;
-
         _systemOneShotStopwatch.Elapsed.ShouldBeOfTypeOneOf<TimeSpan>();
         var second = _systemOneShotStopwatch.Elapsed.AsT0;
 
         first.Should().Be(second);
+        _systemOneShotStopwatch.FinishedFullCycle.Should().BeTrue();
     }
 
     [Test]
-    public void GivenStoppedStopwatch_WhenStopIsCalledAgain_ThenReportsHasNotStartedYetAndReturnsSameElapsedTime()
+    public void GivenStoppedStopwatch_WhenStopIsCalledAgain_ThenReportsNeverStartedAndElapsedUnchangedAndFullCycleStaysTrue()
     {
         // Given
         _systemOneShotStopwatch.Start();
         _systemOneShotStopwatch.Stop();
-        var elapsed = _systemOneShotStopwatch.Elapsed.AsT0;
+        var frozen = _systemOneShotStopwatch.Elapsed.AsT0;
 
         // When
         var result = _systemOneShotStopwatch.Stop();
@@ -113,11 +115,12 @@ public class SystemOneShotStopwatchTests
         // Then
         result.ShouldBeOfTypeOneOf<NeverStarted>();
         _systemOneShotStopwatch.IsRunning.Should().BeFalse();
-        _systemOneShotStopwatch.Elapsed.AsT0.Should().Be(elapsed);
+        _systemOneShotStopwatch.FinishedFullCycle.Should().BeTrue();
+        _systemOneShotStopwatch.Elapsed.AsT0.Should().Be(frozen);
     }
 
     [Test]
-    public void GivenRunningStopwatch_WhenElapsedReadTwice_ThenValueIncreases()
+    public void GivenRunningStopwatch_WhenElapsedReadTwice_ThenValueIncreasesAndNoFullCycle()
     {
         // Given
         _systemOneShotStopwatch.Start();
@@ -130,10 +133,11 @@ public class SystemOneShotStopwatchTests
 
         // Then
         second.Should().BeGreaterThan(first);
+        _systemOneShotStopwatch.FinishedFullCycle.Should().BeFalse();
     }
 
     [Test]
-    public void GivenStartedStopwatch_WhenStopIsCalled_ThenElapsedIsGreaterThanZero()
+    public void GivenStartedStopwatch_WhenStopCalledThenElapsedRead_ThenElapsedGreaterThanZeroAndFullCycleTrue()
     {
         // Given
         _systemOneShotStopwatch.Start();
@@ -144,5 +148,6 @@ public class SystemOneShotStopwatchTests
 
         // Then
         _systemOneShotStopwatch.Elapsed.AsT0.Should().BeGreaterThan(TimeSpan.Zero);
+        _systemOneShotStopwatch.FinishedFullCycle.Should().BeTrue();
     }
 }

@@ -31,6 +31,8 @@ public class SystemOneShotStopwatch : IOneShotStopwatch
 
     public bool IsRunning  => _stopwatch.IsRunning;
 
+    public bool FinishedFullCycle => _endTime.HasValue && !_stopwatch.IsRunning;
+
     public OneOf<TimeSpan, NeverStarted> Elapsed
     {
         get
