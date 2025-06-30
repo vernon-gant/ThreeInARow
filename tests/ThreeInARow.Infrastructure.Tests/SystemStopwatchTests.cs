@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using OneOf.Types;
 using ThreeInARow.Infrastructure.ADT;
 using ThreeInARow.Infrastructure.Implementation;
 using ThreeInARow.TestingUtilities;
@@ -24,6 +25,7 @@ public class SystemStopwatchTests
         // Then
         _systemStopwatch.IsRunning.Should().BeFalse();
         _systemStopwatch.Elapsed.ShouldBeOfTypeOneOf<HasNotStartedYet>();
+        _systemStopwatch.Stop().ShouldBeOfTypeOneOf<HasNotStartedYet>();
     }
 
     [Test]
@@ -53,5 +55,19 @@ public class SystemStopwatchTests
         result.ShouldBeOfTypeOneOf<AlreadyRunning>();
         _systemStopwatch.IsRunning.Should().BeTrue();
         _systemStopwatch.Elapsed.AsT0.Should().BeGreaterThan(initialElapsed);
+    }
+
+    [Test]
+    public void GivenStartedStopwatch_WhenStopIsCalled_ThenShouldReturnSuccessAndStopRunning()
+    {
+        // Given
+        _systemStopwatch.Start();
+
+        // When
+        var result = _systemStopwatch.Stop();
+
+        // Then
+        result.ShouldBeOfTypeOneOf<Success>();
+        _systemStopwatch.IsRunning.Should().BeFalse();
     }
 }

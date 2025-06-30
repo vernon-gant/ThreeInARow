@@ -20,7 +20,11 @@ public class SystemStopwatch : IStopwatch
 
     public OneOf<Success, HasNotStartedYet> Stop()
     {
-        throw new NotImplementedException();
+        if (!_stopwatch.IsRunning)
+            return new HasNotStartedYet();
+
+        _stopwatch.Stop();
+        return new Success();
     }
 
     public void Reset()
