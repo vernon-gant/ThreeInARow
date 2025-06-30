@@ -6,18 +6,18 @@ namespace ThreeInARow.Infrastructure.ADT;
 public interface IStopwatch
 {
     // Commands
-    OneOf<Success, IsRunning> Start();
+    OneOf<Success, AlreadyRunning> Start();
 
-    OneOf<Success, IsNotRunning> Stop();
+    OneOf<Success, HasNotStartedYet> Stop();
 
     void Reset();
 
     // Queries
     bool IsRunning { get; }
 
-    OneOf<TimeSpan, IsNotRunning> Elapsed { get; }
+    OneOf<TimeSpan, HasNotStartedYet> Elapsed { get; }
 }
 
-public struct IsRunning;
+public struct AlreadyRunning;
 
-public struct IsNotRunning;
+public struct HasNotStartedYet;

@@ -9,16 +9,16 @@ public class SystemStopwatch : IStopwatch
 {
     private readonly Stopwatch _stopwatch = new();
 
-    public OneOf<Success, IsRunning> Start()
+    public OneOf<Success, AlreadyRunning> Start()
     {
         if (_stopwatch.IsRunning)
-            return new IsRunning();
+            return new AlreadyRunning();
 
         _stopwatch.Start();
         return new Success();
     }
 
-    public OneOf<Success, IsNotRunning> Stop()
+    public OneOf<Success, HasNotStartedYet> Stop()
     {
         throw new NotImplementedException();
     }
@@ -30,5 +30,5 @@ public class SystemStopwatch : IStopwatch
 
     public bool IsRunning  => _stopwatch.IsRunning;
 
-    public OneOf<TimeSpan, IsNotRunning> Elapsed => _stopwatch.IsRunning ? _stopwatch.Elapsed : new IsNotRunning();
+    public OneOf<TimeSpan, HasNotStartedYet> Elapsed => _stopwatch.IsRunning ? _stopwatch.Elapsed : new HasNotStartedYet();
 }
