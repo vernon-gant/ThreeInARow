@@ -92,4 +92,20 @@ public class SystemStopwatchTests
         first.Should().Be(second);
         _systemStopwatch.FinishedFullCycle.Should().BeTrue("once stopped it stays in full-cycle state until Reset()");
     }
+
+    [Test]
+    public void GivenStoppedStopwatch_WhenResetIsCalled_ThenResetsToInitialState()
+    {
+        // Given
+        _systemStopwatch.Start();
+        _systemStopwatch.Stop();
+
+        // When
+        _systemStopwatch.Reset();
+
+        // Then
+        _systemStopwatch.IsRunning.Should().BeFalse();
+        _systemStopwatch.FinishedFullCycle.Should().BeFalse("we just reset, no cycle completed");
+        _systemStopwatch.Elapsed.ShouldBeOfTypeOneOf<HasNotStartedYet>();
+    }
 }
