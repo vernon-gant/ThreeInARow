@@ -1,6 +1,7 @@
 ﻿using OneOf;
 using OneOf.Types;
 using ThreeInARow.Infrastructure.ADT;
+using ThreeInARow.Infrastructure.ValueObjects;
 using ThreeInARow.Progression.Events.Events;
 using ThreeInARow.Progression.Statistics.ADT;
 
@@ -10,16 +11,13 @@ public class TotalMoves : IStatistic, IEventHandler<MoveMade>
 {
     private int _totalMoves;
 
-    public string Name => "Total Moves";
+    public NonEmptyString Name => "Total Moves".ToNonEmptyString();
 
-    public OneOf<string, None> Description => "Only counts moves that could be placed on the board";
+    public Optional<NonEmptyString> Description => "Only counts moves that could be placed on the board".ToNonEmptyString();
 
-    public OneOf<string, None> Unit => new None();
+    public Optional<NonEmptyString> Unit => new None();
 
-    public OneOf<string, NotEnoughData> Value => _totalMoves.ToString();
+    public OneOf<NonEmptyString, NotEnoughData> Value => _totalMoves.ToNonEmptyString();
 
-    public void Handle(MoveMade notification)
-    {
-        _totalMoves++;
-    }
+    public void Handle(MoveMade notification) => _totalMoves++;
 }

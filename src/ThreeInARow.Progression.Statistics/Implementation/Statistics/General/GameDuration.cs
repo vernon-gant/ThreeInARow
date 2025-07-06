@@ -1,17 +1,17 @@
 ﻿using OneOf;
-using OneOf.Types;
 using ThreeInARow.Infrastructure.ADT;
+using ThreeInARow.Infrastructure.ValueObjects;
 using ThreeInARow.Progression.Statistics.ADT;
 
 namespace ThreeInARow.Progression.Statistics.Implementation.Statistics.General;
 
 public class GameDuration(IGameTimer gameTimer) : IStatistic
 {
-    public string Name => "Game Duration";
+    public NonEmptyString Name => "Game Duration".ToNonEmptyString();
 
-    public OneOf<string, None> Description => "Total time from start to end of the game";
+    public Optional<NonEmptyString> Description => "Total time from start to end of the game".ToNonEmptyString();
 
-    public OneOf<string, None> Unit => "mm:ss";
+    public Optional<NonEmptyString> Unit => "mm:ss".ToNonEmptyString();
 
-    public OneOf<string, NotEnoughData> Value => gameTimer.ElapsedGameTime.Match<OneOf<string, NotEnoughData>>(time => $"{time.Minutes:D2}:{time.Seconds:D2}", _ => new NotEnoughData());
+    public OneOf<NonEmptyString, NotEnoughData> Value => gameTimer.ElapsedGameTime.Match<OneOf<NonEmptyString, NotEnoughData>>(time => $"{time.Minutes:D2}:{time.Seconds:D2}".ToNonEmptyString(), _ => new NotEnoughData());
 }

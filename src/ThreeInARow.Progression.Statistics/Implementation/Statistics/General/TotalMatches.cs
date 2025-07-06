@@ -1,6 +1,7 @@
 ﻿using OneOf;
 using OneOf.Types;
 using ThreeInARow.Infrastructure.ADT;
+using ThreeInARow.Infrastructure.ValueObjects;
 using ThreeInARow.Progression.Events.Events;
 using ThreeInARow.Progression.Statistics.ADT;
 
@@ -10,16 +11,13 @@ public class TotalMatches<TElement> : IStatistic, IEventHandler<MatchFound<TElem
 {
     private int _totalMatches;
 
-    public string Name => "Total Matches";
+    public NonEmptyString Name => "Total Matches".ToNonEmptyString();
 
-    public OneOf<string, None> Description => "Counts all matches including cascades";
+    public Optional<NonEmptyString> Description => "Counts all matches including cascades".ToNonEmptyString();
 
-    public OneOf<string, None> Unit => new None();
+    public Optional<NonEmptyString> Unit => new None();
 
-    public OneOf<string, NotEnoughData> Value => _totalMatches.ToString();
+    public OneOf<NonEmptyString, NotEnoughData> Value => _totalMatches.ToString().ToNonEmptyString();
 
-    public void Handle(MatchFound<TElement> notification)
-    {
-        _totalMatches++;
-    }
+    public void Handle(MatchFound<TElement> notification) => _totalMatches++;
 }

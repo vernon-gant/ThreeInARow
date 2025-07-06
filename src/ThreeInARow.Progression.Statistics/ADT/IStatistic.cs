@@ -1,17 +1,18 @@
 ﻿using OneOf;
 using OneOf.Types;
+using ThreeInARow.Infrastructure.ValueObjects;
 
 namespace ThreeInARow.Progression.Statistics.ADT;
 
 public interface IStatistic
 {
-    public string Name { get; }
+    public NonEmptyString Name { get; }
 
-    public OneOf<string, None> Description { get; }
+    public Optional<NonEmptyString> Description { get; }
 
-    public OneOf<string, None> Unit { get; }
+    public Optional<NonEmptyString> Unit { get; }
 
-    public OneOf<string, NotEnoughData> Value { get; }
+    public OneOf<NonEmptyString, NotEnoughData> Value { get; }
 }
 
 public struct NotEnoughData;
