@@ -21,22 +21,18 @@ public class TotalScoreTests
         _totalScore = new TotalScore(_scoreTracker);
     }
 
-    #region Name Property Tests
+    #region Basic Property Tests
 
     [Test]
     public void GivenTotalScore_WhenGettingName_ThenReturnsTotalScore()
     {
         // Given
         // When
-        var name = _totalScore.Name;
+        var name = _totalScore.Name.Value;
 
         // Then
         name.Should().Be("Total Score");
     }
-
-    #endregion
-
-    #region Description Property Tests
 
     [Test]
     public void GivenTotalScore_WhenGettingDescription_ThenReturnsNone()
@@ -48,10 +44,6 @@ public class TotalScoreTests
         // Then
         description.ShouldBeOfTypeOneOf<None>();
     }
-
-    #endregion
-
-    #region Unit Property Tests
 
     [Test]
     public void GivenTotalScore_WhenGettingUnit_ThenReturnsNone()
@@ -81,8 +73,8 @@ public class TotalScoreTests
         var result = _totalScore.Value;
 
         // Then
-        result.ShouldBeOfTypeOneOf<string>();
-        result.AsT0.Should().Be(value.ToString(), "because the value should be formatted as a string");
+        result.ShouldBeOfTypeOneOf<NonEmptyString>();
+        result.AsT0.Value.Should().Be(value.ToString(), "because the value should be formatted as a string");
     }
 
     #endregion

@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using NSubstitute;
 using ThreeInARow.Infrastructure.ADT;
+using ThreeInARow.Infrastructure.ValueObjects;
 using ThreeInARow.Progression.Statistics.ADT;
 using ThreeInARow.Progression.Statistics.Implementation.Statistics.General;
 using ThreeInARow.TestingUtilities;
@@ -29,7 +30,7 @@ public class GameDurationTests
         var name = _gameDuration.Name;
 
         // Then
-        name.Should().Be("Game Duration");
+        name.Value.Should().Be("Game Duration");
     }
 
     [Test]
@@ -39,8 +40,8 @@ public class GameDurationTests
         var desc = _gameDuration.Description;
 
         // Then
-        desc.ShouldBeOfTypeOneOf<string>();
-        desc.AsT0.Should().Be("Total time from start to end of the game");
+        desc.ShouldBeOfTypeOneOf<NonEmptyString>();
+        desc.AsT0.Value.Should().Be("Total time from start to end of the game");
     }
 
     [Test]
@@ -50,8 +51,8 @@ public class GameDurationTests
         var unit = _gameDuration.Unit;
 
         // Then
-        unit.ShouldBeOfTypeOneOf<string>();
-        unit.AsT0.Should().Be("mm:ss");
+        unit.ShouldBeOfTypeOneOf<NonEmptyString>();
+        unit.AsT0.Value.Should().Be("mm:ss");
     }
 
     #endregion
@@ -81,8 +82,8 @@ public class GameDurationTests
         var value = _gameDuration.Value;
 
         // Then
-        value.ShouldBeOfTypeOneOf<string>();
-        value.AsT0.Should().Be("02:03", "because the elapsed time should be formatted as mm:ss");
+        value.ShouldBeOfTypeOneOf<NonEmptyString>();
+        value.AsT0.Value.Should().Be("02:03", "because the elapsed time should be formatted as mm:ss");
     }
 
     #endregion

@@ -2,6 +2,7 @@
 using NSubstitute;
 using OneOf.Types;
 using ThreeInARow.Grid.Matching.ADT;
+using ThreeInARow.Infrastructure.ValueObjects;
 using ThreeInARow.Progression.Events.Events;
 using ThreeInARow.Progression.Statistics.Implementation.Statistics.General;
 using ThreeInARow.TestingUtilities;
@@ -31,7 +32,7 @@ public class TotalMatchesTests
         var name = _totalMatches.Name;
 
         // Then
-        name.Should().Be("Total Matches");
+        name.Value.Should().Be("Total Matches");
     }
 
     [Test]
@@ -42,8 +43,8 @@ public class TotalMatchesTests
         var description = _totalMatches.Description;
 
         // Then
-        description.ShouldBeOfTypeOneOf<string>();
-        description.AsT0.Should().Be("Counts all matches including cascades");
+        description.ShouldBeOfTypeOneOf<NonEmptyString>();
+        description.AsT0.Value.Should().Be("Counts all matches including cascades");
     }
 
     [Test]
@@ -69,8 +70,8 @@ public class TotalMatchesTests
         var value = _totalMatches.Value;
 
         // Then
-        value.ShouldBeOfTypeOneOf<string>();
-        value.AsT0.Should().Be("0");
+        value.ShouldBeOfTypeOneOf<NonEmptyString>();
+        value.AsT0.Value.Should().Be("0");
     }
 
     [Test]
@@ -89,7 +90,7 @@ public class TotalMatchesTests
 
         // Then
         value.IsT0.Should().BeTrue();
-        value.AsT0.Should().Be("1");
+        value.AsT0.Value.Should().Be("1");
     }
 
     [Test]
@@ -108,7 +109,7 @@ public class TotalMatchesTests
 
         // Then
         value.IsT0.Should().BeTrue();
-        value.AsT0.Should().Be("1");
+        value.AsT0.Value.Should().Be("1");
     }
 
     [Test]
@@ -124,7 +125,7 @@ public class TotalMatchesTests
 
         // Then
         value.IsT0.Should().BeTrue();
-        value.AsT0.Should().Be("3");
+        value.AsT0.Value.Should().Be("3");
     }
 
     [Test]
@@ -140,7 +141,7 @@ public class TotalMatchesTests
 
         // Then
         value.IsT0.Should().BeTrue();
-        value.AsT0.Should().Be("3");
+        value.AsT0.Value.Should().Be("3");
     }
 
     [Test]
@@ -158,7 +159,7 @@ public class TotalMatchesTests
 
         // Then
         value.IsT0.Should().BeTrue();
-        value.AsT0.Should().Be("5", "should count all matches regardless of cascade status");
+        value.AsT0.Value.Should().Be("5", "should count all matches regardless of cascade status");
     }
 
     #endregion
@@ -180,7 +181,7 @@ public class TotalMatchesTests
         _totalMatches.Handle(matchEvent);
 
         // Then
-        var newValue = int.Parse(_totalMatches.Value.AsT0);
+        var newValue = int.Parse(_totalMatches.Value.AsT0.Value);
         newValue.Should().Be(initialValue + 1);
     }
 
@@ -199,7 +200,7 @@ public class TotalMatchesTests
         _totalMatches.Handle(matchEvent);
 
         // Then
-        var newValue = int.Parse(_totalMatches.Value.AsT0);
+        var newValue = int.Parse(_totalMatches.Value.AsT0.Value);
         newValue.Should().Be(initialValue + 1);
     }
 
@@ -225,7 +226,7 @@ public class TotalMatchesTests
         }
 
         // Then
-        _totalMatches.Value.AsT0.Should().Be("7", "should count all matches in the sequence");
+        _totalMatches.Value.AsT0.Value.Should().Be("7", "should count all matches in the sequence");
     }
 
     [Test]
@@ -247,7 +248,7 @@ public class TotalMatchesTests
         }
 
         // Then
-        _totalMatches.Value.AsT0.Should().Be(totalMatchCount.ToString());
+        _totalMatches.Value.AsT0.Value.Should().Be(totalMatchCount.ToString());
     }
 
     [Test]
@@ -264,7 +265,7 @@ public class TotalMatchesTests
         _totalMatches.Handle(new MatchFound<string> { Match = tShapeMatch, IsCascade = false });
 
         // Then
-        _totalMatches.Value.AsT0.Should().Be("3", "should count all match types");
+        _totalMatches.Value.AsT0.Value.Should().Be("3", "should count all match types");
     }
 
     #endregion

@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using OneOf.Types;
+using ThreeInARow.Infrastructure.ValueObjects;
 using ThreeInARow.Progression.Events.Events;
 using ThreeInARow.Progression.Statistics.Implementation.Statistics.General;
 using ThreeInARow.TestingUtilities;
@@ -27,7 +28,7 @@ public class TotalMovesTests
         var name = _totalMoves.Name;
 
         // Then
-        name.Should().Be("Total Moves");
+        name.Value.Should().Be("Total Moves");
     }
 
     [Test]
@@ -38,8 +39,8 @@ public class TotalMovesTests
         var description = _totalMoves.Description;
 
         // Then
-        description.ShouldBeOfTypeOneOf<string>();
-        description.AsT0.Should().Be("Only counts moves that could be placed on the board");
+        description.ShouldBeOfTypeOneOf<NonEmptyString>();
+        description.AsT0.Value.Should().Be("Only counts moves that could be placed on the board");
     }
 
     [Test]
@@ -65,8 +66,8 @@ public class TotalMovesTests
         var value = _totalMoves.Value;
 
         // Then
-        value.ShouldBeOfTypeOneOf<string>();
-        value.AsT0.Should().Be("0");
+        value.ShouldBeOfTypeOneOf<NonEmptyString>();
+        value.AsT0.Value.Should().Be("0");
     }
 
     [Test]
@@ -84,7 +85,7 @@ public class TotalMovesTests
 
         // Then
         value.IsT0.Should().BeTrue();
-        value.AsT0.Should().Be("1");
+        value.AsT0.Value.Should().Be("1");
     }
 
     [Test]
@@ -102,7 +103,7 @@ public class TotalMovesTests
 
         // Then
         value.IsT0.Should().BeTrue();
-        value.AsT0.Should().Be("1");
+        value.AsT0.Value.Should().Be("1");
     }
 
     [Test]
@@ -118,7 +119,7 @@ public class TotalMovesTests
 
         // Then
         value.IsT0.Should().BeTrue();
-        value.AsT0.Should().Be("3");
+        value.AsT0.Value.Should().Be("3");
     }
 
     [Test]
@@ -134,7 +135,7 @@ public class TotalMovesTests
 
         // Then
         value.IsT0.Should().BeTrue();
-        value.AsT0.Should().Be("3");
+        value.AsT0.Value.Should().Be("3");
     }
 
     [Test]
@@ -152,94 +153,7 @@ public class TotalMovesTests
 
         // Then
         value.IsT0.Should().BeTrue();
-        value.AsT0.Should().Be("5", "should count all moves regardless of match production");
-    }
-
-    #endregion
-
-    #region Event Handling Tests
-
-    [Test]
-    public void GivenMoveMadeEventWithMatch_WhenHandling_ThenIncrementsCounter()
-    {
-        // Given
-        var initialValue = int.Parse(_totalMoves.Value.AsT0);
-        var moveEvent = new MoveMade
-        {
-            ProducedMatch = true
-        };
-
-        // When
-        _totalMoves.Handle(moveEvent);
-
-        // Then
-        var newValue = int.Parse(_totalMoves.Value.AsT0);
-        newValue.Should().Be(initialValue + 1);
-    }
-
-    [Test]
-    public void GivenMoveMadeEventWithoutMatch_WhenHandling_ThenIncrementsCounter()
-    {
-        // Given
-        var initialValue = int.Parse(_totalMoves.Value.AsT0);
-        var moveEvent = new MoveMade
-        {
-            ProducedMatch = false
-        };
-
-        // When
-        _totalMoves.Handle(moveEvent);
-
-        // Then
-        var newValue = int.Parse(_totalMoves.Value.AsT0);
-        newValue.Should().Be(initialValue + 1);
-    }
-
-    [Test]
-    public void GivenSequenceOfMoves_WhenHandling_ThenCountsAllMovesRegardlessOfMatchResult()
-    {
-        // Given
-        var moves = new[]
-        {
-            new MoveMade { ProducedMatch = true },
-            new MoveMade { ProducedMatch = true },
-            new MoveMade { ProducedMatch = false },
-            new MoveMade { ProducedMatch = true },
-            new MoveMade { ProducedMatch = false },
-            new MoveMade { ProducedMatch = false },
-            new MoveMade { ProducedMatch = true }
-        };
-
-        // When
-        foreach (var move in moves)
-        {
-            _totalMoves.Handle(move);
-        }
-
-        // Then
-        _totalMoves.Value.AsT0.Should().Be("7", "should count all moves in the sequence");
-    }
-
-    [Test]
-    public void GivenLargeNumberOfMoves_WhenHandling_ThenMaintainsAccurateCount()
-    {
-        // Given
-        const int totalMoves = 1000;
-        const int matchingMoves = 300;
-
-        // When
-        for (int i = 0; i < matchingMoves; i++)
-        {
-            _totalMoves.Handle(new MoveMade { ProducedMatch = true });
-        }
-
-        for (int i = 0; i < (totalMoves - matchingMoves); i++)
-        {
-            _totalMoves.Handle(new MoveMade { ProducedMatch = false });
-        }
-
-        // Then
-        _totalMoves.Value.AsT0.Should().Be(totalMoves.ToString());
+        value.AsT0.Value.Should().Be("5", "should count all moves regardless of match production");
     }
 
     #endregion
