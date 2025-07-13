@@ -1,6 +1,6 @@
 ﻿using ThreeInARow.Infrastructure.ADT;
 
-namespace ThreeInARow.Progression.Events.Events;
+namespace ThreeInARow.Progression.Events;
 
 public record MoveMade : IEvent
 {

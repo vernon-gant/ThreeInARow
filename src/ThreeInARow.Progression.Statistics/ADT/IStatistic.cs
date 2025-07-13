@@ -1,6 +1,5 @@
 ﻿using OneOf;
-using OneOf.Types;
-using ThreeInARow.Infrastructure.ValueObjects;
+using ThreeInARow.ValueObjects;
 
 namespace ThreeInARow.Progression.Statistics.ADT;
 

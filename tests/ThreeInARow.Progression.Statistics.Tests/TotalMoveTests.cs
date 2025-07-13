@@ -1,9 +1,9 @@
 ﻿using FluentAssertions;
 using OneOf.Types;
-using ThreeInARow.Infrastructure.ValueObjects;
-using ThreeInARow.Progression.Events.Events;
+using ThreeInARow.Progression.Events;
 using ThreeInARow.Progression.Statistics.Implementation.Statistics.General;
 using ThreeInARow.TestingUtilities;
+using ThreeInARow.ValueObjects;
 
 namespace ThreeInARow.Progression.Statistics.Tests;
 

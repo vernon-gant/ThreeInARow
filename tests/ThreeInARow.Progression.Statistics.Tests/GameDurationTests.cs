@@ -1,10 +1,10 @@
 ﻿using FluentAssertions;
 using NSubstitute;
 using ThreeInARow.Infrastructure.ADT;
-using ThreeInARow.Infrastructure.ValueObjects;
 using ThreeInARow.Progression.Statistics.ADT;
 using ThreeInARow.Progression.Statistics.Implementation.Statistics.General;
 using ThreeInARow.TestingUtilities;
+using ThreeInARow.ValueObjects;
 
 namespace ThreeInARow.Progression.Statistics.Tests;
 

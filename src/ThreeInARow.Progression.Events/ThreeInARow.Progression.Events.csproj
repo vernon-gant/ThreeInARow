@@ -11,6 +11,7 @@
       <ProjectReference Include="..\ThreeInARow.Infrastructure\ThreeInARow.Infrastructure.csproj" />
       <ProjectReference Include="..\ThreeInARow.Grid.Matching\ThreeInARow.Grid.Matching.csproj" />
       <ProjectReference Include="..\ThreeInARow.Infrastructure\ThreeInARow.Infrastructure.csproj" />
+      <ProjectReference Include="..\ThreeInARow.ValueObjects\ThreeInARow.ValueObjects.csproj" />
     </ItemGroup>
 
 </Project>

@@ -1,7 +1,7 @@
 ﻿using ThreeInARow.Infrastructure.ADT;
-using ThreeInARow.Infrastructure.ValueObjects;
+using ThreeInARow.ValueObjects;
 
-namespace ThreeInARow.Progression.Events.Events;
+namespace ThreeInARow.Progression.Events;
 
 public record ElementsCleared<TElement> : IEvent
 {

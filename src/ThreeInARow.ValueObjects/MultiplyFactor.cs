@@ -1,4 +1,4 @@
-﻿namespace ThreeInARow.Infrastructure.ValueObjects;
+﻿namespace ThreeInARow.ValueObjects;
 
 public readonly record struct MultiplyFactor
 {

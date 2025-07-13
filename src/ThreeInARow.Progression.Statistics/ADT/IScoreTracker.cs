@@ -1,4 +1,4 @@
-﻿using ThreeInARow.Infrastructure.ValueObjects;
+﻿using ThreeInARow.ValueObjects;
 
 namespace ThreeInARow.Progression.Statistics.ADT;
 

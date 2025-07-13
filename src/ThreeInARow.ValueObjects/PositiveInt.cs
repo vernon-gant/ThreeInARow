@@ -1,21 +1,19 @@
 ﻿using OneOf;
 using OneOf.Types;
 
-namespace ThreeInARow.Infrastructure.ValueObjects;
+namespace ThreeInARow.ValueObjects;
 
 public readonly record struct PositiveInt
 {
-    public PositiveInt() => Value = 0;
-
     public PositiveInt(int value)
     {
-        if (Value < 0)
+        if (Value <= 0)
             throw new ArgumentOutOfRangeException(nameof(value), "Value must be greater than or equal to 0.");
 
         Value = value;
     }
 
-    private int Value { get; }
+    public int Value { get; }
 
     public PositiveInt Multiply(MultiplyFactor factor) => new (Value * factor.Value);
 

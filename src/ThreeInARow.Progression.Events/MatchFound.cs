@@ -1,7 +1,7 @@
 ﻿using ThreeInARow.Grid.Matching.ADT;
 using ThreeInARow.Infrastructure.ADT;
 
-namespace ThreeInARow.Progression.Events.Events;
+namespace ThreeInARow.Progression.Events;
 
 public record MatchFound<TElement> : IEvent where TElement : IEquatable<TElement>
 {

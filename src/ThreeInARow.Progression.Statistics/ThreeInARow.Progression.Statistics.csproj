@@ -9,6 +9,7 @@
     <ItemGroup>
       <ProjectReference Include="..\ThreeInARow.Infrastructure\ThreeInARow.Infrastructure.csproj" />
       <ProjectReference Include="..\ThreeInARow.Progression.Events\ThreeInARow.Progression.Events.csproj" />
+      <ProjectReference Include="..\ThreeInARow.ValueObjects\ThreeInARow.ValueObjects.csproj" />
     </ItemGroup>
 
 </Project>
